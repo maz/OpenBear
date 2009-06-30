@@ -76,6 +76,7 @@ if(!window.ob){
 		},
 		body:null,
 		Body:null,
+		_tbox:null,
 		createCanvas:function(size){
 			var elem=document.createElement('canvas');
 			elem.width=size.attr('width');
@@ -552,10 +553,25 @@ if(!window.ob){
 		ob.body._bigcan.style.position="absolute";
 		ob.body._bigcan.style.top="0px";
 		ob.body._bigcan.style.left="0px";
+		ob.body._bigcan.style.zIndex=50;
 		document.body.appendChild(ob.body._bigcan);
 		document.observe('resize',function(){
 			var d=document.viewport.getDemensions();
 			ob.body.attr('size',new OBSize(d.width,d.height));
 		});
+		ob._tbox=Element.extend(document.createElement("input"));
+		ob._tbox.type="text";
+		ob._tbox.style.position="absolute";
+		ob._tbox.style.top="-100px";
+		ob._tbox.style.left="-100px";
+		ob._tbox.style.zIndex=1;
+		document.body.appendChild(ob._tbox);
+		ob._tbox.focus();
+		ob._tbox.observe("blur",function(){
+			ob._tbox.focus();
+		});
+		ob._tbox.observe("keydown",function(evt){
+			//evt.preventDefault();
+		}.bindAsEventListener(window));
 	});
 }
