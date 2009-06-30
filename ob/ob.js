@@ -474,7 +474,7 @@ if(!window.ob){
 				chld._drawIntoParent();
 			});
 			if(this.attr('focused')){
-				this._ctx.strokeStyle=OBView.FocusColor;
+				this._ctx.strokeStyle=OBView.FocusColor.toString();
 				var clip=this.attr('clip');
 				this._ctx.lineWidth=OBView.FocusWidth;
 				this._ctx.strokeRect(clip.attr('x'),clip.attr('y'),clip.attr('w'),clip.attr('h'));
