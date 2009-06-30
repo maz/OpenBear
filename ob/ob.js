@@ -250,6 +250,9 @@ if(!window.ob){
 		},
 		toString:function(){
 			return "#<OBRect:["+this.origin.inspect()+","+this.size.inspect()+"]>";
+		},
+		toArray:function(){
+			return [this.attr('x'),this.attr('y'),this.attr('width'),this.attr('height')];
 		}
 	});
 	window.OBColor=Class.create(OBAttr,{
@@ -475,9 +478,8 @@ if(!window.ob){
 			});
 			if(this.attr('focused')){
 				this._ctx.strokeStyle=OBView.FocusColor.toString();
-				var clip=this.attr('clip');
 				this._ctx.lineWidth=OBView.FocusWidth;
-				this._ctx.strokeRect(clip.attr('x'),clip.attr('y'),clip.attr('w'),clip.attr('h'));
+				this._ctx.strokeRect.apply(this._ctx,this.attr('clip').toArray());
 			}
 			if(this.parent)
 				this.parent.updateBig();
@@ -558,13 +560,13 @@ if(!window.ob){
 			}
 		},
 		focus:function(){
-			if(this.attr('focused'))
+			if(this.attr('focused') && this.acceptsFocus)
 				return;
 			if(OBView.focused)
 				OBView.focused.blur();
 			OBView.focused=this;
 			this.fire('got_focus');
-			this.updateBig();
+			this.update();
 		},
 		blur:function(){
 			if(this.attr('focused')){
