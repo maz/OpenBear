@@ -318,7 +318,7 @@ if(!window.ob){
 		_drawIntoParent:function(){
 			var clip=this.attr('clip');
 			if(this.parent)
-				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),this.attr('height'));
+				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),clip.attr('height'));
 		},
 		getter_clip:function(){
 			if(this._clip){
