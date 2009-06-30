@@ -473,6 +473,12 @@ if(!window.ob){
 			this.children.each(function(chld){
 				chld._drawIntoParent();
 			});
+			if(this.attr('focused')){
+				this._ctx.strokeStyle=OBView.FocusColor;
+				var clip=this.attr('clip');
+				this._ctx.lineWidth=OBView.FocusWidth;
+				this._ctx.strokeRect(clip.attr('x'),clip.attr('y'),clip.attr('w'),clip.attr('h'));
+			}
 			if(this.parent)
 				this.parent.updateBig();
 		},
@@ -538,11 +544,40 @@ if(!window.ob){
 		setter_height:function(v){
 			this.attr('size',new OBSize(this.attr('w'),v));
 		},
-		redraw:function(){}
+		redraw:function(){},
+		acceptsFocus:true,
+		nextKeyView:null,
+		getter_focused:function(){
+			return OBView.focused==this;
+		},
+		setter_focused:function(v){
+			if(v){
+				this.focus();
+			}else{
+				this.blur();
+			}
+		},
+		focus:function(){
+			if(this.attr('focused'))
+				return;
+			if(OBView.focused)
+				OBView.focused.blur();
+			OBView.focused=this;
+			this.fire('got_focus');
+			this.updateBig();
+		},
+		blur:function(){
+			if(this.attr('focused')){
+				OBView.focused=null;
+				this.fire('lost_focus');
+				this.updateBig();
+			}
+		}
 	});
 	
 	OBView.focused=null;
 	OBView.FocusColor=OBColor.Orange;
+	OBView.FocusWidth=5;
 	
 	document.observe("dom:loaded",function(){
 		document.body.innerHTML="";
