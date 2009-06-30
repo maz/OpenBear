@@ -253,6 +253,15 @@ if(!window.ob){
 		},
 		toArray:function(){
 			return [this.attr('x'),this.attr('y'),this.attr('width'),this.attr('height')];
+		},
+		intersects:function(val){
+			if(val instanceof OBPoint){
+				return val.attr('x')>=this.attr('x') && val.attr("x")=<this.attr('x')+this.attr("width") && val.attr('y')>=this.attr('y') && val.attr("y")=<this.attr('y')+this.attr("height");
+			}else if(val instanceof OBRect){
+				throw new Error("OBRect.intersects(OBRect) is not implemented");
+			}else{
+				return false;
+			}
 		}
 	});
 	window.OBColor=Class.create(OBAttr,{
@@ -574,6 +583,12 @@ if(!window.ob){
 				this.fire('lost_focus');
 				this.updateBig();
 			}
+		},
+		setter_dispRect:function(){
+			throw new Error("OBView.attr('dispRect') is a read-only property");
+		},
+		getter_dispRect:function(){
+			return new OBRect(this.attr('frame').attr('origin'),this.attr('clip').attr('size'));
 		}
 	});
 	
