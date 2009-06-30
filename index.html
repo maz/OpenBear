@@ -1,0 +1,27 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>Test</title>
+		<script src="ob/prototype.js" type="text/javascript" charset="utf-8"></script>
+		<script src="ob/ob.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			window.WeirdView=Class.create(OBView,{
+				redraw:function(){
+					this.ctx.fillStyle="black";
+					this.ctx.fillRect(0,0,this.attr('width'),this.attr('height'));
+					this.ctx.strokeStyle="blue";
+					this.ctx.lineWidth=50;
+					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
+				}
+			});
+			document.observe("dom:loaded",function(){
+				window.z=new WeirdView(null,new OBRect(10,10,300,300));
+			});
+		</script>
+	</head>
+	<body>
+		<div style="text-align:center">
+			LOADING...
+		</div>
+	</body>
+</html>
