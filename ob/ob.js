@@ -17,7 +17,7 @@ This file is part of OpenBear.
 */
 
 if(!window.Prototype){
-	throw new Error("You need to include prototype.");
+	throw new Error("You need to include prototype (http://www.prototypejs.org/).");
 }
 if(Prototype.Browser.IE){
 	(function(){
