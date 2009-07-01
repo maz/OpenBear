@@ -860,6 +860,7 @@ if(!window.ob){
 				left:left
 			});
 			ob._onRun=false;
+			evt.stop();
 		}.bindAsEventListener(window));
 		document.observe("dblclick",function(evt){
 			evt=Event.extend(evt);
