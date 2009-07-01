@@ -660,6 +660,7 @@ if(!window.ob){
 		ob.body._bigcan.style.top="0px";
 		ob.body._bigcan.style.left="0px";
 		ob.body._bigcan.style.zIndex=50;
+		ob.body.acceptsFocus=false;
 		document.body.appendChild(ob.body._bigcan);
 		document.observe('resize',function(){
 			var d=document.viewport.getDemensions();
@@ -696,7 +697,7 @@ if(!window.ob){
 			ob.body._handleEvt('_mousedown',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
-				left:!right;
+				left:!right
 			});
 		}.bindAsEventListener(window));
 		document.observe("mouseup",function(evt){
@@ -705,7 +706,7 @@ if(!window.ob){
 			ob.body._handleEvt('mouseup',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
-				left:!right;
+				left:!right
 			});
 		}.bindAsEventListener(window));
 		document.observe("mousemove",function(evt){
