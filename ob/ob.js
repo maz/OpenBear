@@ -714,6 +714,15 @@ if(!window.ob){
 				OBView.focused._keydown(evt);
 			}
 			ob.ctrl=evt.ctrlKey;
+			var can=true;
+			if((navigator.platform.indexOf("Mac")!=-1){
+				can=evt.metaKey;
+			}else{
+				can=evt.ctrlKey;
+			}
+			if(!can){
+				evt.stop();
+			}
 		}.bindAsEventListener(window));
 		ob._tbox.observe("keyup",function(evt){
 			evt=Event.extend(evt);
