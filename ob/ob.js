@@ -716,7 +716,7 @@ if(!window.ob){
 					view.mouseout();
 				}
 			});
-			ob.over.each(function(view){
+			ob._over.each(function(view){
 				if(old.indexOf(view)==-1){
 					view.mouseover();
 				}
