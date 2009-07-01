@@ -115,46 +115,6 @@ if(!window.ob){
 				ob._mspan.innerHTML=txt.escapeHTML();
 				return new OBSize(w,ob._mspan.offsetHeight);
 			};
-			//START OF BORROWED CODE FROM http://webreflection.blogspot.com/2009/01/ellipse-and-circle-for-canvas-2d.html
-			ctx.circle=function(aX, aY, aDiameter){
-				ctx.ellipse(aX, aY, aDiameter, aDiameter);
-			},
-			ctx.fillCircle=function(aX, aY, aDiameter){
-				ctx.beginPath();
-				ctx.circle(aX, aY, aDiameter);
-				ctx.fill();
-			},
-			ctx.strokeCircle=function(aX, aY, aDiameter){
-				ctx.beginPath();
-				ctx.circle(aX, aY, aDiameter);
-				ctx.stroke();
-			},
-			// Ellipse methods
-			ctx.ellipse=function(aX, aY, aWidth, aHeight){
-				var hB = (aWidth / 2) * .5522848,
-					vB = (aHeight / 2) * .5522848,
-					eX = aX + aWidth,
-					eY = aY + aHeight,
-					mX = aX + aWidth / 2,
-					mY = aY + aHeight / 2;
-				ctx.moveTo(aX, mY);
-				ctx.bezierCurveTo(aX, mY - vB, mX - hB, aY, mX, aY);
-				ctx.bezierCurveTo(mX + hB, aY, eX, mY - vB, eX, mY);
-				ctx.bezierCurveTo(eX, mY + vB, mX + hB, eY, mX, eY);
-				ctx.bezierCurveTo(mX - hB, eY, aX, mY + vB, aX, mY);
-				ctx.closePath();
-			};
-			ctx.fillEllipse=function(aX, aY, aWidth, aHeight){
-				ctx.beginPath();
-				ctx.ellipse(aX, aY, aWidth, aHeight);
-				ctx.fill();
-			};
-			ctx.strokeEllipse=function(aX, aY, aWidth, aHeight){
-				ctx.beginPath();
-				ctx.ellipse(aX, aY, aWidth, aHeight);
-				ctx.stroke();
-			};
-			//END OF BORROWED CODE
 			return [elem,ctx];
 		}
 	};
