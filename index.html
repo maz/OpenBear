@@ -12,7 +12,9 @@
 					this.ctx.strokeStyle="blue";
 					this.ctx.lineWidth=50;
 					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
-				}
+				},
+				mouseover:function(){console.info("mouseover");},
+				mouseout:function(){console.info("mouseout");}
 			});
 			window.Clicker=Class.create(OBView,{
 				setup:function(){
@@ -32,7 +34,9 @@
 				},
 				mousedrag:function(evt){
 					this.mousedown(evt);
-				}
+				},
+				mouseover:function(){console.info("mouseover");},
+				mouseout:function(){console.info("mouseout");}
 			});
 			document.observe("dom:loaded",function(){
 				window.z=new WeirdView(null,new OBRect(10,10,300,300));
