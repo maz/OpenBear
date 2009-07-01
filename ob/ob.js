@@ -720,7 +720,7 @@ if(!window.ob){
 				},this);
 				this.fire("finished");
 			}else{
-				var dur=this.duration*100;
+				var dur=this.duration*1000;
 				var othis=this;
 				var pe=[];
 				this.buffer.each(function(pair){
@@ -734,8 +734,8 @@ if(!window.ob){
 					pe.each(function(x){
 						x.stop();
 					});
-					this.duration=0;
-					this.start();//just to ensure that everything is properly set
+					othis.duration=0;
+					othis.start();//just to ensure that everything is properly set
 				},dur);
 			}
 		}
