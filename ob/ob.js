@@ -699,7 +699,6 @@ if(!window.ob){
 			});
 		}.bindAsEventListener(window));
 		document.observe("mousemove",function(evt){
-			//TODO: mouse over, mouse out
 			evt=Event.extend(evt);
 			var old=ob._over;
 			old=old?old:[];
