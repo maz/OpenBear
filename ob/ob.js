@@ -448,6 +448,8 @@ if(!window.ob){
 		ctx:null,
 		parent:null,
 		childern:null,
+		visible:true,
+		opacity:1.0,
 		initialize:function(parent,frame){
 			this.children=[];
 			this.parent=parent?parent:ob.body;//ob.body will be null until it is created therefore, when we make the ob.body view, it will be null
@@ -487,8 +489,11 @@ if(!window.ob){
 		},
 		_drawIntoParent:function(){
 			var clip=this.attr('clip');
-			if(this.parent){
+			if(this.parent && this.attr('visible')){
+				var x=this.parent._ctx.globalAlpha;
+				this.parent._ctx.globalAlpha=this.attr('opacity');
 				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),clip.attr('height'));
+				this.parent._ctx.globalAlpha=x;
 			}
 		},
 		getter_clip:function(){
