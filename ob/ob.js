@@ -583,6 +583,15 @@ if(!window.ob){
 		mousedown:function(evt){},
 		mouseup:function(evt){},
 		mousemove:function(evt){},
+		_mousemove:function(evt){
+			var x=this.mousemove(evt);
+			var y=false;
+			if(this._md){
+				y=this.mousedrag(evt);
+			}
+			return x||y;
+		},
+		mousedrag:function(evt){},
 		_keydown:function(evt){
 			if(evt.keyCode==Event.KEY_TAB && this.nextKeyView){
 				this.nextKeyView.focus();
@@ -606,6 +615,11 @@ if(!window.ob){
 					this._children.push(chld);
 				}
 			},this);
+			if(name=='_mousedown'){
+				this._md=true;
+			}else if(name=='mouseup'){
+				this._md=false;
+			}
 			if((c && !c._handleEvt(name,evt)) || !c){
 				return this[name](evt);
 			}else{
@@ -680,7 +694,14 @@ if(!window.ob){
 			});
 		}.bindAsEventListener(window));
 		document.observe("mousemove",function(evt){
-			//TODO: mouse over, mouse out, mouse move
+			//TODO: mouse over, mouse out
+			evt=Event.extend(evt);
+			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			ob.body._handleEvt('_mousemove',{
+				point:new OBPoint(evt.pointerX(),evt.pointerY()),
+				right:right,
+				left:!right
+			});
 		}.bindAsEventListener(window));
 		document.body.oncontextmenu=function(evt){
 			evt=evt?evt:window.event;
