@@ -278,17 +278,23 @@ if(!window.ob){
 		red:0,
 		green:0,
 		blue:0,
-		initialize:function(r,g,b){
+		alpha:0,
+		initialize:function(r,g,b,a){
 			if(Object.isArray(r)){
 				this.intiailize.apply(this,r);
 			}else{
 				this.red=r;
 				this.green=g;
 				this.blue=b;
+				if(Object.isNumber(a)){
+					this.alpha=a;
+				}else{
+					this.alpha=1.0;
+				}
 			}
 		},
 		toString:function(){
-			return "rgb("+this.red+","+this.green+","+this.blue+")";
+			return "rgba("+this.red+","+this.green+","+this.blue+","+this.alpha+")";
 		},
 		clone:function(){
 			return new OBColor(this.red,this.green,this.blue);
@@ -604,14 +610,14 @@ if(!window.ob){
 			return new OBRect(this.attr('frame').attr('origin'),this.attr('clip').attr('size'));
 		},
 		_mousedown:function(evt){
-			if(this.acceptsFocus){
+			if(this.acceptsFocus && (!ob._onRun || this._children.length==0)){
 				if(this.attr('focused')){
-					this.mousedown(evt);
+					return this.mousedown(evt);
 				}else{
 					this.focus();
 				}
 			}else{
-				this.mousedown(evt);
+				return this.mousedown(evt);
 			}
 		},
 		mousedown:function(evt){},
@@ -633,9 +639,11 @@ if(!window.ob){
 			evt.point.attr('x',(evt.point.attr('x')-this.attr('x'))+clip.attr('x'));
 			evt.point.attr('y',(evt.point.attr('y')-this.attr('y'))+clip.attr('y'));
 			var c=null;
+			this._children=[];
 			this.children.each(function(chld){
 				if(chld.attr('dispRect').intersects(evt.point)){
 					c=chld;
+					this._children.push(chld);
 				}
 			},this);
 			if((c && !c._handleEvt(name,evt)) || !c){
@@ -694,11 +702,13 @@ if(!window.ob){
 		document.observe("mousedown",function(evt){
 			evt=Event.extend(evt);
 			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			ob._onRun=true;
 			ob.body._handleEvt('_mousedown',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
 				left:!right
 			});
+			ob._onRun=false;
 		}.bindAsEventListener(window));
 		document.observe("mouseup",function(evt){
 			evt=Event.extend(evt);
