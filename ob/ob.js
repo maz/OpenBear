@@ -694,6 +694,53 @@ if(!window.ob){
 	
 	OBView._cursors=[];
 	
+	window.OBViewAnimation=Class.create(OBResponder,{
+		buffer:null,
+		duration:1,//(seconds)
+		smoothing:100,//lower the smoother - number of times a second to update
+		initialize:function(view){
+			this.view=view;
+			this.buffer=$H();
+		},
+		attr:function(name,value){
+			if(arguments.length==1){
+				return this.view.attr(name);
+			}else{
+				if(Object.isNumber(value)){
+					this.buffer.set(name,value);
+				}else if(window.console){
+					console.warn("OBViewAnimation can only animate number properties, unlike the value that you have provided for "+name);
+				}
+			}
+		},
+		start:function(){
+			if(this.duration==0){
+				this.buffer.each(function(pair){
+					this.view.attr(pair.key,pair.value);
+				},this);
+				this.fire("finished");
+			}else{
+				var dur=this.duration*100;
+				var othis=this;
+				var pe=[];
+				this.buffer.each(function(pair){
+					var key=pair.key;
+					var d=((pair.value-this.view.attr(key))/(dur/this.smoothing));
+					pe.push(new PeriodicalExecuter(function(){
+						othis.view.attr(othis.view.attr(key)+d);
+					},this.smoothing));
+				},this);
+				setTimeout(function(){
+					pe.each(function(x){
+						x.stop();
+					});
+					this.duration=0;
+					this.start();//just to ensure that everything is properly set
+				},dur);
+			}
+		}
+	});
+	
 	document.observe("dom:loaded",function(){
 		document.body.innerHTML="";
 		document.body.style.overflow="hidden";
