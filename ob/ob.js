@@ -178,6 +178,18 @@ if(!window.ob){
 		},
 		clone:function(){
 			return new OBSize(this.width,this.height);
+		},
+		setter_h:function(h){
+			this.height=h;
+		},
+		getter_h:function(){
+			return this.height;
+		},
+		setter_w:function(h){
+			this.width=h;
+		},
+		getter_w:function(){
+			return this.width;
 		}
 	});
 	window.OBRect=Class.create(OBAttr,{
@@ -218,6 +230,18 @@ if(!window.ob){
 		},
 		getter_height:function(){
 			return this.size.height;
+		},
+		getter_w:function(){
+			return this.getter_width();
+		},
+		getter_h:function(){
+			return this.getter_height();
+		},
+		setter_w:function(v){
+			this.setter_width(v);
+		},
+		setter_h:function(v){
+			this.setter_height(v);
 		},
 		inspect:function(){
 			return this.toString();
@@ -265,6 +289,24 @@ if(!window.ob){
 		},
 		clone:function(){
 			return new OBColor(this.red,this.green,this.blue);
+		},
+		setter_r:function(v){
+			this.red=v;
+		},
+		getter_r:function(){
+			return this.red;
+		},
+		setter_g:function(v){
+			this.green=v;
+		},
+		getter_g:function(){
+			return this.green;
+		},
+		setter_b:function(v){
+			this.blue=v;
+		},
+		getter_b:function(){
+			return this.blue;
 		}
 	});
 	OBColor.IndianRed=new OBColor(205,92,92);
@@ -564,6 +606,18 @@ if(!window.ob){
 		},
 		setter_height:function(v){
 			this.attr('size',new OBSize(this.attr('width'),v));
+		},
+		getter_w:function(){
+			return this.getter_width();
+		},
+		getter_h:function(){
+			return this.getter_height();
+		},
+		setter_w:function(v){
+			this.setter_width(v);
+		},
+		setter_h:function(v){
+			this.setter_height(v);
 		},
 		redraw:function(){},
 		acceptsFocus:true,
