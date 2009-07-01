@@ -14,8 +14,25 @@
 					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
 				}
 			});
+			window.Clicker=Class.create(OBView,{
+				setup:function(){
+					this.points=[];
+				},
+				redraw:function(){
+					this.ctx.strokeStyle=OBColor.Yellow.toString();
+					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
+					this.ctx.fillStyle=OBColor.Green;
+					this.points.each(function(point){
+						this.ctx.fillCircle(point.attr('x'),point.attr('y'));
+					},this);
+				},
+				mousedown:function(evt){
+					this.points.push(evt.point);
+				}
+			});
 			document.observe("dom:loaded",function(){
 				window.z=new WeirdView(null,new OBRect(10,10,300,300));
+				window.click=new Clicker(window.z,new OBRect(10,10,200,200));
 			});
 		</script>
 	</head>
