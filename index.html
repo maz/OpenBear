@@ -21,7 +21,7 @@
 				redraw:function(){
 					this.ctx.strokeStyle=OBColor.Yellow.toString();
 					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
-					this.ctx.fillStyle=OBColor.Green;
+					this.ctx.fillStyle=OBColor.Green.toString();
 					this.points.each(function(point){
 						this.ctx.fillCircle(point.attr('x'),point.attr('y'));
 					},this);
