@@ -40,8 +40,9 @@ if(!window.ob){
 					throw $break;
 				}
 			});
-			if(!pkg)
+			if(!pkg){
 				return;
+			}
 			var arr=pkg.split('.');
 			var file=arr.pop();
 			var op=Ajax.getTransport();
@@ -68,8 +69,9 @@ if(!window.ob){
 			var arr=path.split(".");
 			var name=arr.pop();
 			arr.each(function(part){
-				if(!obj[part])
-					obj[part]={}
+				if(!obj[part]){
+					obj[part]={};
+				}
 				obj=obj[part];
 			});
 			obj[name]=value;
@@ -137,10 +139,12 @@ if(!window.ob){
 	};
 	window.OBPoint=Class.create(OBAttr,{
 		initialize:function(x,y){
-			if(x)
+			if(x){
 				this.x=x;
-			if(y)
+			}
+			if(y){
 				this.y=y;
+			}
 		},
 		x:0,
 		y:0,
@@ -158,10 +162,12 @@ if(!window.ob){
 		width:0,
 		height:0,
 		initialize:function(w,h){
-			if(w)
+			if(w){
 				this.width=w;
-			if(h)
+			}
+			if(h){
 				this.height=h;
+			}
 		},
 		toString:function(){
 			return this.inspect();
@@ -177,7 +183,7 @@ if(!window.ob){
 		origin:null,
 		size:null,
 		initialize:function(x,y,w,h){
-			if(x==undefined ||  x==null){//assume no arguments
+			if(x===undefined ||  x===null){//assume no arguments
 				this.origin=new OBPoint(0,0);
 				this.size=new OBSize(0,0);
 			}else if(x instanceof OBPoint){
@@ -260,162 +266,165 @@ if(!window.ob){
 			return new OBColor(this.red,this.green,this.blue);
 		}
 	});
-	OBColor.IndianRed=new OBColor(205,92,92)
-	OBColor.LightCoral=new OBColor(240,128,128)
-	OBColor.Salmon=new OBColor(250,128,114)
-	OBColor.DarkSalmon=new OBColor(233,150,122)
-	OBColor.LightSalmon=new OBColor(255,160,122)
-	OBColor.Crimson=new OBColor(220,20,60)
-	OBColor.Red=new OBColor(255,0,0)
-	OBColor.FireBrick=new OBColor(178,34,34)
-	OBColor.DarkRed=new OBColor(139,0,0)
-	OBColor.Pink=new OBColor(255,192,203)
-	OBColor.LightPink=new OBColor(255,182,193)
-	OBColor.HotPink=new OBColor(255,105,180)
-	OBColor.DeepPink=new OBColor(255,20,147)
-	OBColor.MediumVioletRed=new OBColor(199,21,133)
-	OBColor.PaleVioletRed=new OBColor(219,112,147)
-	OBColor.LightSalmon=new OBColor(255,160,122)
-	OBColor.Coral=new OBColor(255,127,80)
-	OBColor.Tomato=new OBColor(255,99,71)
-	OBColor.OrangeRed=new OBColor(255,69,0)
-	OBColor.DarkOrange=new OBColor(255,140,0)
-	OBColor.Orange=new OBColor(255,165,0)
-	OBColor.Gold=new OBColor(255,215,0)
-	OBColor.Yellow=new OBColor(255,255,0)
-	OBColor.LightYellow=new OBColor(255,255,224)
-	OBColor.LemonChiffon=new OBColor(255,250,205)
-	OBColor.LightGoldenrodYellow=new OBColor(250,250,210)
-	OBColor.PapayaWhip=new OBColor(255,239,213)
-	OBColor.Moccasin=new OBColor(255,228,181)
-	OBColor.PeachPuff=new OBColor(255,218,185)
-	OBColor.PaleGoldenrod=new OBColor(238,232,170)
-	OBColor.Khaki=new OBColor(240,230,140)
-	OBColor.DarkKhaki=new OBColor(189,183,107)
-	OBColor.Lavender=new OBColor(230,230,250)
-	OBColor.Thistle=new OBColor(216,191,216)
-	OBColor.Plum=new OBColor(221,160,221)
-	OBColor.Violet=new OBColor(238,130,238)
-	OBColor.Orchid=new OBColor(218,112,214)
-	OBColor.Fuchsia=new OBColor(255,0,255)
-	OBColor.Magenta=new OBColor(255,0,255)
-	OBColor.MediumOrchid=new OBColor(186,85,211)
-	OBColor.MediumPurple=new OBColor(147,112,219)
-	OBColor.Amethyst=new OBColor(153,102,204)
-	OBColor.BlueViolet=new OBColor(138,43,226)
-	OBColor.DarkViolet=new OBColor(148,0,211)
-	OBColor.DarkOrchid=new OBColor(153,50,204)
-	OBColor.DarkMagenta=new OBColor(139,0,139)
-	OBColor.Purple=new OBColor(128,0,128)
-	OBColor.Indigo=new OBColor(75,0,130)
-	OBColor.SlateBlue=new OBColor(106,90,205)
-	OBColor.DarkSlateBlue=new OBColor(72,61,139)
-	OBColor.MediumSlateBlue=new OBColor(123,104,238)
-	OBColor.GreenYellow=new OBColor(173,255,47)
-	OBColor.Chartreuse=new OBColor(127,255,0)
-	OBColor.LawnGreen=new OBColor(124,252,0)
-	OBColor.Lime=new OBColor(0,255,0)
-	OBColor.LimeGreen=new OBColor(50,205,50)
-	OBColor.PaleGreen=new OBColor(152,251,152)
-	OBColor.LightGreen=new OBColor(144,238,144)
-	OBColor.MediumSpringGreen=new OBColor(0,250,154)
-	OBColor.SpringGreen=new OBColor(0,255,127)
-	OBColor.MediumSeaGreen=new OBColor(60,179,113)
-	OBColor.SeaGreen=new OBColor(46,139,87)
-	OBColor.ForestGreen=new OBColor(34,139,34)
-	OBColor.Green=new OBColor(0,128,0)
-	OBColor.DarkGreen=new OBColor(0,100,0)
-	OBColor.YellowGreen=new OBColor(154,205,50)
-	OBColor.OliveDrab=new OBColor(107,142,35)
-	OBColor.Olive=new OBColor(128,128,0)
-	OBColor.DarkOliveGreen=new OBColor(85,107,47)
-	OBColor.MediumAquamarine=new OBColor(102,205,170)
-	OBColor.DarkSeaGreen=new OBColor(143,188,143)
-	OBColor.LightSeaGreen=new OBColor(32,178,170)
-	OBColor.DarkCyan=new OBColor(0,139,139)
-	OBColor.Teal=new OBColor(0,128,128)
-	OBColor.Aqua=new OBColor(0,255,255)
-	OBColor.Cyan=new OBColor(0,255,255)
-	OBColor.LightCyan=new OBColor(224,255,255)
-	OBColor.PaleTurquoise=new OBColor(175,238,238)
-	OBColor.Aquamarine=new OBColor(127,255,212)
-	OBColor.Turquoise=new OBColor(64,224,208)
-	OBColor.MediumTurquoise=new OBColor(72,209,204)
-	OBColor.DarkTurquoise=new OBColor(0,206,209)
-	OBColor.CadetBlue=new OBColor(95,158,160)
-	OBColor.SteelBlue=new OBColor(70,130,180)
-	OBColor.LightSteelBlue=new OBColor(176,196,222)
-	OBColor.PowderBlue=new OBColor(176,224,230)
-	OBColor.LightBlue=new OBColor(173,216,230)
-	OBColor.SkyBlue=new OBColor(135,206,235)
-	OBColor.LightSkyBlue=new OBColor(135,206,250)
-	OBColor.DeepSkyBlue=new OBColor(0,191,255)
-	OBColor.DodgerBlue=new OBColor(30,144,255)
-	OBColor.CornflowerBlue=new OBColor(100,149,237)
-	OBColor.MediumSlateBlue=new OBColor(123,104,238)
-	OBColor.RoyalBlue=new OBColor(65,105,225)
-	OBColor.Blue=new OBColor(0,0,255)
-	OBColor.MediumBlue=new OBColor(0,0,205)
-	OBColor.DarkBlue=new OBColor(0,0,139)
-	OBColor.Navy=new OBColor(0,0,128)
-	OBColor.MidnightBlue=new OBColor(25,25,112)
-	OBColor.Cornsilk=new OBColor(255,248,220)
-	OBColor.BlanchedAlmond=new OBColor(255,235,205)
-	OBColor.Bisque=new OBColor(255,228,196)
-	OBColor.NavajoWhite=new OBColor(255,222,173)
-	OBColor.Wheat=new OBColor(245,222,179)
-	OBColor.BurlyWood=new OBColor(222,184,135)
-	OBColor.Tan=new OBColor(210,180,140)
-	OBColor.RosyBrown=new OBColor(188,143,143)
-	OBColor.SandyBrown=new OBColor(244,164,96)
-	OBColor.Goldenrod=new OBColor(218,165,32)
-	OBColor.DarkGoldenrod=new OBColor(184,134,11)
-	OBColor.Peru=new OBColor(205,133,63)
-	OBColor.Chocolate=new OBColor(210,105,30)
-	OBColor.SaddleBrown=new OBColor(139,69,19)
-	OBColor.Sienna=new OBColor(160,82,45)
-	OBColor.Brown=new OBColor(165,42,42)
-	OBColor.Maroon=new OBColor(128,0,0)
-	OBColor.White=new OBColor(255,255,255)
-	OBColor.Snow=new OBColor(255,250,250)
-	OBColor.Honeydew=new OBColor(240,255,240)
-	OBColor.MintCream=new OBColor(245,255,250)
-	OBColor.Azure=new OBColor(240,255,255)
-	OBColor.AliceBlue=new OBColor(240,248,255)
-	OBColor.GhostWhite=new OBColor(248,248,255)
-	OBColor.WhiteSmoke=new OBColor(245,245,245)
-	OBColor.Seashell=new OBColor(255,245,238)
-	OBColor.Beige=new OBColor(245,245,220)
-	OBColor.OldLace=new OBColor(253,245,230)
-	OBColor.FloralWhite=new OBColor(255,250,240)
-	OBColor.Ivory=new OBColor(255,255,240)
-	OBColor.AntiqueWhite=new OBColor(250,235,215)
-	OBColor.Linen=new OBColor(250,240,230)
-	OBColor.LavenderBlush=new OBColor(255,240,245)
-	OBColor.MistyRose=new OBColor(255,228,225)
-	OBColor.Gainsboro=new OBColor(220,220,220)
-	OBColor.LightGrey=new OBColor(211,211,211)
-	OBColor.Silver=new OBColor(192,192,192)
-	OBColor.DarkGray=new OBColor(169,169,169)
-	OBColor.Gray=new OBColor(128,128,128)
-	OBColor.DimGray=new OBColor(105,105,105)
-	OBColor.LightSlateGray=new OBColor(119,136,153)
-	OBColor.SlateGray=new OBColor(112,128,144)
-	OBColor.DarkSlateGray=new OBColor(47,79,79)
-	OBColor.Black=new OBColor(0,0,0)
+	OBColor.IndianRed=new OBColor(205,92,92);
+	OBColor.LightCoral=new OBColor(240,128,128);
+	OBColor.Salmon=new OBColor(250,128,114);
+	OBColor.DarkSalmon=new OBColor(233,150,122);
+	OBColor.LightSalmon=new OBColor(255,160,122);
+	OBColor.Crimson=new OBColor(220,20,60);
+	OBColor.Red=new OBColor(255,0,0);
+	OBColor.FireBrick=new OBColor(178,34,34);
+	OBColor.DarkRed=new OBColor(139,0,0);
+	OBColor.Pink=new OBColor(255,192,203);
+	OBColor.LightPink=new OBColor(255,182,193);
+	OBColor.HotPink=new OBColor(255,105,180);
+	OBColor.DeepPink=new OBColor(255,20,147);
+	OBColor.MediumVioletRed=new OBColor(199,21,133);
+	OBColor.PaleVioletRed=new OBColor(219,112,147);
+	OBColor.LightSalmon=new OBColor(255,160,122);
+	OBColor.Coral=new OBColor(255,127,80);
+	OBColor.Tomato=new OBColor(255,99,71);
+	OBColor.OrangeRed=new OBColor(255,69,0);
+	OBColor.DarkOrange=new OBColor(255,140,0);
+	OBColor.Orange=new OBColor(255,165,0);
+	OBColor.Gold=new OBColor(255,215,0);
+	OBColor.Yellow=new OBColor(255,255,0);
+	OBColor.LightYellow=new OBColor(255,255,224);
+	OBColor.LemonChiffon=new OBColor(255,250,205);
+	OBColor.LightGoldenrodYellow=new OBColor(250,250,210);
+	OBColor.PapayaWhip=new OBColor(255,239,213);
+	OBColor.Moccasin=new OBColor(255,228,181);
+	OBColor.PeachPuff=new OBColor(255,218,185);
+	OBColor.PaleGoldenrod=new OBColor(238,232,170);
+	OBColor.Khaki=new OBColor(240,230,140);
+	OBColor.DarkKhaki=new OBColor(189,183,107);
+	OBColor.Lavender=new OBColor(230,230,250);
+	OBColor.Thistle=new OBColor(216,191,216);
+	OBColor.Plum=new OBColor(221,160,221);
+	OBColor.Violet=new OBColor(238,130,238);
+	OBColor.Orchid=new OBColor(218,112,214);
+	OBColor.Fuchsia=new OBColor(255,0,255);
+	OBColor.Magenta=new OBColor(255,0,255);
+	OBColor.MediumOrchid=new OBColor(186,85,211);
+	OBColor.MediumPurple=new OBColor(147,112,219);
+	OBColor.Amethyst=new OBColor(153,102,204);
+	OBColor.BlueViolet=new OBColor(138,43,226);
+	OBColor.DarkViolet=new OBColor(148,0,211);
+	OBColor.DarkOrchid=new OBColor(153,50,204);
+	OBColor.DarkMagenta=new OBColor(139,0,139);
+	OBColor.Purple=new OBColor(128,0,128);
+	OBColor.Indigo=new OBColor(75,0,130);
+	OBColor.SlateBlue=new OBColor(106,90,205);
+	OBColor.DarkSlateBlue=new OBColor(72,61,139);
+	OBColor.MediumSlateBlue=new OBColor(123,104,238);
+	OBColor.GreenYellow=new OBColor(173,255,47);
+	OBColor.Chartreuse=new OBColor(127,255,0);
+	OBColor.LawnGreen=new OBColor(124,252,0);
+	OBColor.Lime=new OBColor(0,255,0);
+	OBColor.LimeGreen=new OBColor(50,205,50);
+	OBColor.PaleGreen=new OBColor(152,251,152);
+	OBColor.LightGreen=new OBColor(144,238,144);
+	OBColor.MediumSpringGreen=new OBColor(0,250,154);
+	OBColor.SpringGreen=new OBColor(0,255,127);
+	OBColor.MediumSeaGreen=new OBColor(60,179,113);
+	OBColor.SeaGreen=new OBColor(46,139,87);
+	OBColor.ForestGreen=new OBColor(34,139,34);
+	OBColor.Green=new OBColor(0,128,0);
+	OBColor.DarkGreen=new OBColor(0,100,0);
+	OBColor.YellowGreen=new OBColor(154,205,50);
+	OBColor.OliveDrab=new OBColor(107,142,35);
+	OBColor.Olive=new OBColor(128,128,0);
+	OBColor.DarkOliveGreen=new OBColor(85,107,47);
+	OBColor.MediumAquamarine=new OBColor(102,205,170);
+	OBColor.DarkSeaGreen=new OBColor(143,188,143);
+	OBColor.LightSeaGreen=new OBColor(32,178,170);
+	OBColor.DarkCyan=new OBColor(0,139,139);
+	OBColor.Teal=new OBColor(0,128,128);
+	OBColor.Aqua=new OBColor(0,255,255);
+	OBColor.Cyan=new OBColor(0,255,255);
+	OBColor.LightCyan=new OBColor(224,255,255);
+	OBColor.PaleTurquoise=new OBColor(175,238,238);
+	OBColor.Aquamarine=new OBColor(127,255,212);
+	OBColor.Turquoise=new OBColor(64,224,208);
+	OBColor.MediumTurquoise=new OBColor(72,209,204);
+	OBColor.DarkTurquoise=new OBColor(0,206,209);
+	OBColor.CadetBlue=new OBColor(95,158,160);
+	OBColor.SteelBlue=new OBColor(70,130,180);
+	OBColor.LightSteelBlue=new OBColor(176,196,222);
+	OBColor.PowderBlue=new OBColor(176,224,230);
+	OBColor.LightBlue=new OBColor(173,216,230);
+	OBColor.SkyBlue=new OBColor(135,206,235);
+	OBColor.LightSkyBlue=new OBColor(135,206,250);
+	OBColor.DeepSkyBlue=new OBColor(0,191,255);
+	OBColor.DodgerBlue=new OBColor(30,144,255);
+	OBColor.CornflowerBlue=new OBColor(100,149,237);
+	OBColor.MediumSlateBlue=new OBColor(123,104,238);
+	OBColor.RoyalBlue=new OBColor(65,105,225);
+	OBColor.Blue=new OBColor(0,0,255);
+	OBColor.MediumBlue=new OBColor(0,0,205);
+	OBColor.DarkBlue=new OBColor(0,0,139);
+	OBColor.Navy=new OBColor(0,0,128);
+	OBColor.MidnightBlue=new OBColor(25,25,112);
+	OBColor.Cornsilk=new OBColor(255,248,220);
+	OBColor.BlanchedAlmond=new OBColor(255,235,205);
+	OBColor.Bisque=new OBColor(255,228,196);
+	OBColor.NavajoWhite=new OBColor(255,222,173);
+	OBColor.Wheat=new OBColor(245,222,179);
+	OBColor.BurlyWood=new OBColor(222,184,135);
+	OBColor.Tan=new OBColor(210,180,140);
+	OBColor.RosyBrown=new OBColor(188,143,143);
+	OBColor.SandyBrown=new OBColor(244,164,96);
+	OBColor.Goldenrod=new OBColor(218,165,32);
+	OBColor.DarkGoldenrod=new OBColor(184,134,11);
+	OBColor.Peru=new OBColor(205,133,63);
+	OBColor.Chocolate=new OBColor(210,105,30);
+	OBColor.SaddleBrown=new OBColor(139,69,19);
+	OBColor.Sienna=new OBColor(160,82,45);
+	OBColor.Brown=new OBColor(165,42,42);
+	OBColor.Maroon=new OBColor(128,0,0);
+	OBColor.White=new OBColor(255,255,255);
+	OBColor.Snow=new OBColor(255,250,250);
+	OBColor.Honeydew=new OBColor(240,255,240);
+	OBColor.MintCream=new OBColor(245,255,250);
+	OBColor.Azure=new OBColor(240,255,255);
+	OBColor.AliceBlue=new OBColor(240,248,255);
+	OBColor.GhostWhite=new OBColor(248,248,255);
+	OBColor.WhiteSmoke=new OBColor(245,245,245);
+	OBColor.Seashell=new OBColor(255,245,238);
+	OBColor.Beige=new OBColor(245,245,220);
+	OBColor.OldLace=new OBColor(253,245,230);
+	OBColor.FloralWhite=new OBColor(255,250,240);
+	OBColor.Ivory=new OBColor(255,255,240);
+	OBColor.AntiqueWhite=new OBColor(250,235,215);
+	OBColor.Linen=new OBColor(250,240,230);
+	OBColor.LavenderBlush=new OBColor(255,240,245);
+	OBColor.MistyRose=new OBColor(255,228,225);
+	OBColor.Gainsboro=new OBColor(220,220,220);
+	OBColor.LightGrey=new OBColor(211,211,211);
+	OBColor.Silver=new OBColor(192,192,192);
+	OBColor.DarkGray=new OBColor(169,169,169);
+	OBColor.Gray=new OBColor(128,128,128);
+	OBColor.DimGray=new OBColor(105,105,105);
+	OBColor.LightSlateGray=new OBColor(119,136,153);
+	OBColor.SlateGray=new OBColor(112,128,144);
+	OBColor.DarkSlateGray=new OBColor(47,79,79);
+	OBColor.Black=new OBColor(0,0,0);
 	window.OBResponder={
 		observe:function(name,handler){
-			if(!this._evts)
+			if(!this._evts){
 				this._evts={};
+			}
 			if(this._evts[name]===undefined){
 				this._evts[name]=[];
 			}
-			if(this._evts[name].indexOf(handler)==-1)
+			if(this._evts[name].indexOf(handler)==-1){
 				this._evts[name].push(handler);
+			}
 		},
 		fire:function(name,evt){
-			if(!this._evts)
+			if(!this._evts){
 				this._evts={};
+			}
 			if(this._evts[name]){
 				this._evts[name].each(function(f){
 					f(evt);
@@ -423,8 +432,9 @@ if(!window.ob){
 			}
 		},
 		stopObserving:function(name,handler){
-			if(!this._evts)
+			if(!this._evts){
 				this._evts={};
+			}
 			this._evts[name].splice($A(this._evts[name]).indexOf(handler));
 		}
 	};
@@ -440,8 +450,9 @@ if(!window.ob){
 		initialize:function(parent,frame){
 			this.children=[];
 			this.parent=parent?parent:ob.body;//ob.body will be null until it is created therefore, when we make the ob.body view, it will be null
-			if(this.parent)
+			if(this.parent){
 				this.parent.children.push(this);
+			}
 			this.frame=frame;
 			var arr=ob.createCanvas(this.frame.attr('size'));
 			this._bigcan=arr[0];
@@ -469,13 +480,15 @@ if(!window.ob){
 				this._ctx.lineWidth=OBView.FocusWidth;
 				this._ctx.strokeRect.apply(this._ctx,this.attr('clip').toArray());
 			}
-			if(this.parent)
+			if(this.parent){
 				this.parent.updateBig();
+			}
 		},
 		_drawIntoParent:function(){
 			var clip=this.attr('clip');
-			if(this.parent)
+			if(this.parent){
 				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),clip.attr('height'));
+			}
 		},
 		getter_clip:function(){
 			if(this._clip){
@@ -497,8 +510,9 @@ if(!window.ob){
 		},
 		setter_origin:function(v){
 			this.attr('frame').attr('origin',v);
-			if(this.parent)
+			if(this.parent){
 				this.parent.updateBig();
+			}
 			this.fire("origin_changed");
 		},
 		setter_size:function(v){
@@ -548,10 +562,12 @@ if(!window.ob){
 			}
 		},
 		focus:function(){
-			if(this.attr('focused') && this.acceptsFocus)
+			if(this.attr('focused') && this.acceptsFocus){
 				return;
-			if(OBView.focused)
+			}
+			if(OBView.focused){
 				OBView.focused.blur();
+			}
 			OBView.focused=this;
 			this.fire('got_focus');
 			this.update();
@@ -570,7 +586,7 @@ if(!window.ob){
 			return new OBRect(this.attr('frame').attr('origin'),this.attr('clip').attr('size'));
 		},
 		_mousedown:function(evt){
-			if(this.acceptsFocus && (!ob._onRun || this._children.length==0)){
+			if(this.acceptsFocus && (!ob._onRun || this._children.length===0)){
 				if(this.attr('focused')){
 					return this.mousedown(evt);
 				}else{
@@ -637,28 +653,28 @@ if(!window.ob){
 	OBView.FocusWidth=5;
 	
 	OBView.Cursors={
-		Resize:{
-			Row:"row-resize",
-			Column:"col-resize",
-			N:"N-resize",
-			NE:"NE-resize",
-			E:"E-resize",
-			SE:"SE-resize",
-			S:"S-resize",
-			SW:"SW-resize",
-			W:"W-resize",
-			NW:"NW-resize"
+		"Resize":{
+			"Row":"row-resize",
+			"Column":"col-resize",
+			"N":"N-resize",
+			"NE":"NE-resize",
+			"E":"E-resize",
+			"SE":"SE-resize",
+			"S":"S-resize",
+			"SW":"SW-resize",
+			"W":"W-resize",
+			"NW":"NW-resize"
 		},
-		Crosshair:"crosshair",
-		Pointer:"default",
-		Link:"pointer",
-		Help:"Help",
-		Move:"move",
-		NoDrop:"no-drop",
-		Disallowed,"not-allowed",
-		Progress:"progress",
-		Text:"text",
-		Wait:"wait"
+		"Crosshair":"crosshair",
+		"Pointer":"default",
+		"Link":"pointer",
+		"Help":"Help",
+		"Move":"move",
+		"NoDrop":"no-drop",
+		"Disallowed":"not-allowed",
+		"Progress":"progress",
+		"Text":"text",
+		"Wait":"wait"
 	};
 	
 	OBView._cursors=[];
@@ -754,8 +770,9 @@ if(!window.ob){
 		}.bindAsEventListener(window));
 		document.body.oncontextmenu=function(evt){
 			evt=evt?evt:window.event;
-			if(evt.preventDefault)
+			if(evt.preventDefault){
 				evt.preventDefault();
+			}
 			return false;
 		};
 	});
