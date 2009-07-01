@@ -738,7 +738,6 @@ if(!window.ob){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
-			ob._onRun=true;
 			ob.body._handleEvt('dblclick',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
