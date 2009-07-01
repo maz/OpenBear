@@ -557,10 +557,10 @@ if(!window.ob){
 			this.attr('origin',new OBPoint(this.attr('x'),v));
 		},
 		setter_width:function(v){
-			this.attr('size',new OBSize(v,this.attr('h')));
+			this.attr('size',new OBSize(v,this.attr('height')));
 		},
 		setter_height:function(v){
-			this.attr('size',new OBSize(this.attr('w'),v));
+			this.attr('size',new OBSize(this.attr('width'),v));
 		},
 		redraw:function(){},
 		acceptsFocus:true,
@@ -722,18 +722,21 @@ if(!window.ob){
 			}else{
 				var dur=this.duration*1000;
 				var othis=this;
-				var pe=[];
 				this.buffer.each(function(pair){
 					var key=pair.key;
 					var d=((pair.value-this.view.attr(key))/(dur/this.smoothing));
-					pe.push(new PeriodicalExecuter(function(){
-						othis.view.attr(othis.view.attr(key)+d);
-					},this.smoothing));
+					var i=0;
+					var buf={};
+					var z=setInterval(function(){
+						othis.view.attr(key,othis.view.attr(key)+d);
+						i+=othis.smoothing;
+						if(i>=dur){
+							clearInterval(buf.z);//because we call setInterval to get the value we need
+						}
+					},this.smoothing);
+					buf.z=z;
 				},this);
 				setTimeout(function(){
-					pe.each(function(x){
-						x.stop();
-					});
 					othis.duration=0;
 					othis.start();//just to ensure that everything is properly set
 				},dur);
