@@ -628,12 +628,19 @@ if(!window.ob){
 			}else{
 				return true;
 			}
-		}
+		},
+		cursor:"default"
 	});
 	
 	OBView.focused=null;
 	OBView.FocusColor=OBColor.Orange;
 	OBView.FocusWidth=5;
+	
+	OBView.Cursors={
+		
+	};
+	
+	OBView._cursors=[];
 	
 	document.observe("dom:loaded",function(){
 		document.body.innerHTML="";
@@ -713,13 +720,16 @@ if(!window.ob){
 			old.each(function(view){
 				if(ob._over.indexOf(view)==-1){
 					view.mouseout();
+					OBView._cursors.pop();
 				}
 			});
 			ob._over.each(function(view){
 				if(old.indexOf(view)==-1){
 					view.mouseover();
+					OBView._cursors.push(view.cursor);
 				}
 			});
+			document.body.style.cursor=OBView._cursors[OBView._cursors.length-1];
 		}.bindAsEventListener(window));
 		document.body.oncontextmenu=function(evt){
 			evt=evt?evt:window.event;
