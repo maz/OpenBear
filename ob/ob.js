@@ -530,6 +530,9 @@ if(!window.ob){
 			this.fire("origin_changed");
 		},
 		setter_size:function(v){
+			v=v.clone();
+			v.attr('width',Math.max(1,Math.round(v.attr('width'))));
+			v.attr('height',Math.max(1,Math.round(v.attr('height'))));
 			this.attr('frame').attr('size',v);
 			this._bigcan.width=this.attr('width');
 			this._bigcan.height=this.attr('height');
