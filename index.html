@@ -29,6 +29,9 @@
 				mousedown:function(evt){
 					this.points.push(evt.point);
 					this.update();
+				},
+				mousedrag:function(evt){
+					this.mousedown(evt);
 				}
 			});
 			document.observe("dom:loaded",function(){
