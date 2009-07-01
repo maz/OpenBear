@@ -77,6 +77,7 @@ if(!window.ob){
 		body:null,
 		Body:null,
 		_tbox:null,
+		_ctrl:false,
 		createCanvas:function(size){
 			var elem=document.createElement('canvas');
 			elem.width=size.attr('width');
@@ -188,6 +189,9 @@ if(!window.ob){
 		},
 		inspect:function(){
 			return "#<OBPoint:["+this.attr('x')+","+this.attr('y')+"]>";
+		},
+		clone:function(){
+			return new OBPoint(this.x,this.y);
 		}
 	});
 	window.OBSize=Class.create(OBAttr,{
@@ -204,6 +208,9 @@ if(!window.ob){
 		},
 		inspect:function(){
 			return "#<OBSize:["+this.attr('width')+","+this.attr('height')+"]>";
+		},
+		clone:function(){
+			return new OBSize(this.width,this.height);
 		}
 	});
 	window.OBRect=Class.create(OBAttr,{
@@ -256,12 +263,15 @@ if(!window.ob){
 		},
 		intersects:function(val){
 			if(val instanceof OBPoint){
-				return val.attr('x')>=this.attr('x') && val.attr("x")=<this.attr('x')+this.attr("width") && val.attr('y')>=this.attr('y') && val.attr("y")=<this.attr('y')+this.attr("height");
+				return val.attr('x')>=this.attr('x') && val.attr("x")<=this.attr('x')+this.attr("width") && val.attr('y')>=this.attr('y') && val.attr("y")<=this.attr('y')+this.attr("height");
 			}else if(val instanceof OBRect){
 				throw new Error("OBRect.intersects(OBRect) is not implemented");
 			}else{
 				return false;
 			}
+		},
+		clone:function(){
+			return new OBRect(this.origin.clone(),this.size.clone());
 		}
 	});
 	window.OBColor=Class.create(OBAttr,{
@@ -279,6 +289,9 @@ if(!window.ob){
 		},
 		toString:function(){
 			return "rgb("+this.red+","+this.green+","+this.blue+")";
+		},
+		clone:function(){
+			return new OBColor(this.red,this.green,this.blue);
 		}
 	});
 	OBColor.IndianRed=new OBColor(205,92,92)
@@ -589,6 +602,47 @@ if(!window.ob){
 		},
 		getter_dispRect:function(){
 			return new OBRect(this.attr('frame').attr('origin'),this.attr('clip').attr('size'));
+		},
+		_mousedown:function(evt){
+			if(this.acceptsFocus){
+				if(this.attr('focused')){
+					this.mousedown(evt);
+				}else{
+					this.focus();
+				}
+			}else{
+				this.mousedown(evt);
+			}
+		},
+		mousedown:function(evt){},
+		mouseup:function(evt){},
+		mousemove:function(evt){},
+		_keydown:function(evt){
+			if(evt.keyCode==Event.KEY_TAB && this.nextKeyView){
+				this.nextKeyView.focus();
+			}else{
+				this.keydown(evt);
+			}
+		},
+		keydown:function(evt){},
+		keyup:function(evt){},
+		_handleEvt:function(name,e){
+			var evt=e;
+			var clip=this.attr('clip');
+			evt.point=evt.point.clone();
+			evt.point.attr('x',(evt.point.attr('x')-this.attr('x'))+clip.attr('x'));
+			evt.point.attr('y',(evt.point.attr('y')-this.attr('y'))+clip.attr('y'));
+			var c=null;
+			this.children.each(function(chld){
+				if(chld.attr('dispRect').intersects(evt.point)){
+					c=chld;
+				}
+			},this);
+			if((c && !c._handleEvt(name,evt)) || !c){
+				return this[name](evt);
+			}else{
+				return true;
+			}
 		}
 	});
 	
@@ -623,7 +677,45 @@ if(!window.ob){
 			ob._tbox.focus();
 		});
 		ob._tbox.observe("keydown",function(evt){
-			//evt.preventDefault();
+			evt=Event.extend(evt);
+			if(OBView.focused){
+				OBView.focused._keydown(evt);
+			}
+			ob.ctrl=evt.ctrlKey;
 		}.bindAsEventListener(window));
+		ob._tbox.observe("keyup",function(evt){
+			evt=Event.extend(evt);
+			if(OBView.focused){
+				OBView.focused.keyup(evt);
+			}
+			ob.ctrl=evt.ctrlKey;
+		}.bindAsEventListener(window));
+		document.observe("mousedown",function(evt){
+			evt=Event.extend(evt);
+			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			ob.body._handleEvt('_mousedown',{
+				point:new OBPoint(evt.pointerX(),evt.pointerY()),
+				right:right,
+				left:!right;
+			});
+		}.bindAsEventListener(window));
+		document.observe("mouseup",function(evt){
+			evt=Event.extend(evt);
+			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			ob.body._handleEvt('mouseup',{
+				point:new OBPoint(evt.pointerX(),evt.pointerY()),
+				right:right,
+				left:!right;
+			});
+		}.bindAsEventListener(window));
+		document.observe("mousemove",function(evt){
+			//TODO: mouse over, mouse out, mouse move
+		}.bindAsEventListener(window));
+		document.body.oncontextmenu=function(evt){
+			evt=evt?evt:window.event;
+			if(evt.preventDefault)
+				evt.preventDefault();
+			return false;
+		};
 	});
 }
