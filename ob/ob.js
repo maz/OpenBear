@@ -80,6 +80,7 @@ if(!window.ob){
 		Body:null,
 		_tbox:null,
 		_ctrl:false,
+		_over:[],
 		createCanvas:function(size){
 			var elem=document.createElement('canvas');
 			elem.width=size.attr('width');
@@ -645,7 +646,8 @@ if(!window.ob){
 				return true;
 			}
 		},
-		cursor:"default"
+		cursor:"default",
+		dblclick:function(){}
 	});
 	
 	OBView.focused=null;
@@ -731,6 +733,17 @@ if(!window.ob){
 				left:left
 			});
 			ob._onRun=false;
+		}.bindAsEventListener(window));
+		document.observe("dblclick",function(evt){
+			evt=Event.extend(evt);
+			var left=evt.isLeftClick();
+			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			ob._onRun=true;
+			ob.body._handleEvt('dblclick',{
+				point:new OBPoint(evt.pointerX(),evt.pointerY()),
+				right:right,
+				left:left
+			});
 		}.bindAsEventListener(window));
 		document.observe("mouseup",function(evt){
 			evt=Event.extend(evt);
