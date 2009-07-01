@@ -637,7 +637,28 @@ if(!window.ob){
 	OBView.FocusWidth=5;
 	
 	OBView.Cursors={
-		
+		Resize:{
+			Row:"row-resize",
+			Column:"col-resize",
+			N:"N-resize",
+			NE:"NE-resize",
+			E:"E-resize",
+			SE:"SE-resize",
+			S:"S-resize",
+			SW:"SW-resize",
+			W:"W-resize",
+			NW:"NW-resize"
+		},
+		Crosshair:"crosshair",
+		Pointer:"default",
+		Link:"pointer",
+		Help:"Help",
+		Move:"move",
+		NoDrop:"no-drop",
+		Disallowed,"not-allowed",
+		Progress:"progress",
+		Text:"text",
+		Wait:"wait"
 	};
 	
 	OBView._cursors=[];
