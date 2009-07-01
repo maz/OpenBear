@@ -23,11 +23,12 @@
 					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
 					this.ctx.fillStyle=OBColor.Green.toString();
 					this.points.each(function(point){
-						this.ctx.fillCircle(point.attr('x'),point.attr('y'));
+						this.ctx.fillRect(point.attr('x'),point.attr("y"),5,5);
 					},this);
 				},
 				mousedown:function(evt){
 					this.points.push(evt.point);
+					this.update();
 				}
 			});
 			document.observe("dom:loaded",function(){
