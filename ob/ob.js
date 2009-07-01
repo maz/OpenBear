@@ -583,6 +583,8 @@ if(!window.ob){
 		mousedown:function(evt){},
 		mouseup:function(evt){},
 		mousemove:function(evt){},
+		mouseover:function(){},
+		mouseout:function(){},
 		_mousemove:function(evt){
 			var x=this.mousemove(evt);
 			var y=false;
@@ -602,6 +604,7 @@ if(!window.ob){
 		keydown:function(evt){},
 		keyup:function(evt){},
 		_handleEvt:function(name,e){
+			ob._over.push(this);
 			var evt=e;
 			var clip=this.attr('clip');
 			evt.point=evt.point.clone();
@@ -675,32 +678,48 @@ if(!window.ob){
 		}.bindAsEventListener(window));
 		document.observe("mousedown",function(evt){
 			evt=Event.extend(evt);
-			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			var left=evt.isLeftClick();
+			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
 			ob._onRun=true;
 			ob.body._handleEvt('_mousedown',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
-				left:!right
+				left:left
 			});
 			ob._onRun=false;
 		}.bindAsEventListener(window));
 		document.observe("mouseup",function(evt){
 			evt=Event.extend(evt);
-			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			var left=evt.isLeftClick();
+			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
 			ob.body._handleEvt('mouseup',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
-				left:!right
+				left:left
 			});
 		}.bindAsEventListener(window));
 		document.observe("mousemove",function(evt){
 			//TODO: mouse over, mouse out
 			evt=Event.extend(evt);
-			var right=(!evt.isLeftClick() || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
+			var old=ob._over;
+			old=old?old:[];
+			ob._over=[];
+			var left=evt.isLeftClick();
+			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
 			ob.body._handleEvt('_mousemove',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
-				left:!right
+				left:left
+			});
+			old.each(function(view){
+				if(ob._over.indexOf(view)==-1){
+					view.mouseout();
+				}
+			});
+			ob.over.each(function(view){
+				if(old.indexOf(view)==-1){
+					view.mouseover();
+				}
 			});
 		}.bindAsEventListener(window));
 		document.body.oncontextmenu=function(evt){
