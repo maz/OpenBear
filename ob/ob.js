@@ -749,8 +749,6 @@ if(!window.ob){
 		"Wait":"wait"
 	};
 	
-	OBView._cursors=[];
-	
 	window.OBViewAnimation=Class.create(OBResponder,{
 		buffer:null,
 		duration:1,//(seconds)
@@ -895,19 +893,7 @@ if(!window.ob){
 				right:right,
 				left:left
 			});
-			old.each(function(view){
-				if(ob._over.indexOf(view)==-1){
-					view.mouseout();
-					OBView._cursors.pop();
-				}
-			});
-			ob._over.each(function(view){
-				if(old.indexOf(view)==-1){
-					view.mouseover();
-					OBView._cursors.push(view.cursor);
-				}
-			});
-			document.body.style.cursor=OBView._cursors[OBView._cursors.length-1];
+			document.body.style.cursor=ob._over[ob._over.length-1].cursor;
 		}.bindAsEventListener(window));
 		document.body.oncontextmenu=function(evt){
 			evt=evt?evt:window.event;
