@@ -508,6 +508,14 @@ if(!window.ob){
 			this.fire("clip_changed");
 			this.update();
 		},
+		setter_opacity:function(v){
+			this.opacity=v;
+			this.updateBig();
+		},
+		setter_visible:function(v){
+			this.visible=v;
+			this.updateBig();
+		},
 		getter_origin:function(){
 			return this.attr('frame').attr('origin');
 		},
