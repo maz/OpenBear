@@ -836,6 +836,7 @@ if(!window.ob){
 			}else{
 				var dur=this.duration*1000;
 				var othis=this;
+				var arr=[];
 				this.buffer.each(function(pair){
 					var key=pair.key;
 					var d=((pair.value-this.view.attr(key))/(dur/this.smoothing));
@@ -851,10 +852,14 @@ if(!window.ob){
 							clearInterval(buf.z);//because we call setInterval to get the value we need
 						}
 					},this.smoothing);
+					arr.push(z);
 					buf.z=z;
 				},this);
 				setTimeout(function(){
 					othis.duration=0;
+					arr.each(function(timer){
+						clearInterval(timer);
+					});
 					othis.start();//just to ensure that everything is properly set
 				},dur);
 			}
