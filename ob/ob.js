@@ -44,6 +44,7 @@ if(!window.ob){
 		_trconst:Math.PI/180,
 		_tdconst:180/Math.PI,
 		_loadedPkgs:[],
+		/** @id ob_load */
 		load:function ob_load(p){
 			var pkg=p;
 			ob._loadedPkgs.each(function(elem){
@@ -67,6 +68,7 @@ if(!window.ob){
 				x.apply(window,[]);
 			}
 		},
+		/** @id ob_moduleUrl */
 		moduleUrl:function ob_moduleUrl(pkg, file){
 			var arr=pkg.split(".");
 			var base=window.OBDirectoryPrefix?window.OBDirectoryPrefix:"";
@@ -76,6 +78,7 @@ if(!window.ob){
 			}
 			return x+file;
 		},
+		/** @id ob_setObject */
 		setObject:function ob_setObject(path,value){
 			var obj=window;
 			var arr=path.split(".");
@@ -93,6 +96,7 @@ if(!window.ob){
 		_tbox:null,
 		_ctrl:false,
 		_over:[],
+		/** @id ob_createCanvas*/
 		createCanvas:function ob_createCanvas(size){
 			var elem=document.createElement('canvas');
 			elem.width=size.attr('width');
@@ -133,7 +137,9 @@ if(!window.ob){
 			return [elem,ctx];
 		}
 	};
+	/** @id OBAttr */
 	window.OBAttr={
+		/** @id OBAttr_attr */
 		attr:function OBAttr_attr(name,val){
 			if(arguments.length==1){//if only one argument
 				if(this["getter_"+name]){
@@ -151,6 +157,7 @@ if(!window.ob){
 		}
 	};
 	window.OBPoint=Class.create(OBAttr,{
+		/** @id OPPoint */
 		initialize:function OBPoint_constructor(x,y){
 			if(x){
 				this.x=x;
@@ -813,9 +820,11 @@ if(!window.ob){
 		},
 		start:function OBViewAnimation_start(){
 			if(this.duration==0){
+				this.view.buffer();
 				this.buffer.each(function(pair){
 					this.view.attr(pair.key,pair.value);
 				},this);
+				this.view.commit();
 				this.fire("finished");
 			}else{
 				var dur=this.duration*1000;
