@@ -805,8 +805,9 @@ if(!window.ob){
 			duration:1.0//seconds
 		};
 		Object.extend(opts,options);
+		view.attr("visible",true);
 		var a=new OBViewAnimation(view);
-		a.attr("opacity",0);
+		a.attr("opacity",0.0);
 		a.duration=opts.duration;
 		a.observe("finished",function(){
 			a.view.attr("visible",false);
@@ -821,8 +822,9 @@ if(!window.ob){
 			duration:1.0//seconds
 		};
 		Object.extend(opts,options);
+		view.attr("visible",true);
 		var a=new OBViewAnimation(view);
-		a.attr("opacity",1);
+		a.attr("opacity",1.0);
 		a.duration=opts.duration;
 		a.observe("finished",function(){
 			a.view.attr("visible",true);
