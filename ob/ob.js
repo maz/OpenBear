@@ -520,6 +520,7 @@ if(!window.ob){
 				this.parent.children.push(this);
 			}
 			this.frame=frame;
+			this._rcenter=new OBPoint((this.attr('width')/2)+this.attr('x'),(this.attr('height')/2)+this.attr('y'));
 			var arr=ob.createCanvas(this.frame.attr('size'));
 			this._bigcan=arr[0];
 			this._ctx=arr[1];
@@ -567,7 +568,11 @@ if(!window.ob){
 			var clip=this.attr('clip');
 			if(this.parent && this.attr('visible')){
 				this.parent._ctx.save();
+				var x=this._rcenter.attr('x');//(this.attr('width')/2)+this.attr('x');
+				var y=this._rcenter.attr('y');//(this.attr('height')/2)+this.attr('y');
+				this.parent._ctx.translate(x,y);
 				this.parent._ctx.rotate(this.rotation);
+				this.parent._ctx.translate(-1*x,-1*y);
 				this.parent._ctx.globalAlpha=this.attr('opacity');
 				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),clip.attr('height'));
 				this.parent._ctx.restore();
@@ -605,6 +610,7 @@ if(!window.ob){
 		},
 		setter_origin:function OBView_setter_origin(v){
 			this.attr('frame').attr('origin',v);
+			this._rcenter=new OBPoint((this.attr('width')/2)+this.attr('x'),(this.attr('height')/2)+this.attr('y'));
 			if(this.parent){
 				this.parent.updateBig();
 			}
@@ -614,6 +620,7 @@ if(!window.ob){
 			v=v.clone();
 			v.attr('width',Math.max(1,Math.round(v.attr('width'))));
 			v.attr('height',Math.max(1,Math.round(v.attr('height'))));
+			this._rcenter=new OBPoint((this.attr('width')/2)+this.attr('x'),(this.attr('height')/2)+this.attr('y'));
 			this.attr('frame').attr('size',v);
 			this._bigcan.width=this.attr('width');
 			this._bigcan.height=this.attr('height');
