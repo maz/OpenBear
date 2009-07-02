@@ -30,7 +30,15 @@ if(Prototype.Browser.IE){
 	})();
 }
 if(!window.ob){
+	Number.prototype.toRadians=function(){
+		return this*ob._trconst;
+	};
+	Number.prototype.toDegrees=function(){
+		return this*ob._tdconst;
+	};
 	window.ob={
+		_trconst:Math.PI/180,
+		_tdconst:180/Math.PI,
 		_loadedPkgs:[],
 		load:function(p){
 			var pkg=p;
