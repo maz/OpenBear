@@ -724,6 +724,7 @@ if(!window.ob){
 				var i=this.parent.children.indexOf(this);
 				if(i!=-1){
 					this.parent.children.splice(i,1);
+					this.parent.updateBig();
 					this.fire("removed");
 					this.parent.fire("child_removed",this);
 				}
