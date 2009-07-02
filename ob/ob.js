@@ -563,7 +563,6 @@ if(!window.ob){
 			}
 		},
 		setter_rotation:function(v){
-			throw new Error("Not implemented yet...");
 			this.rotation=v;
 			this.updateBig();
 		},
