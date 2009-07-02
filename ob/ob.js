@@ -799,6 +799,36 @@ if(!window.ob){
 		}
 	});
 	
+	OBViewAnimation.FadeOut=function(view,options){
+		var opts={
+			callback:Prototype.emptyFunction,
+			duration:1.0//seconds
+		};
+		Object.extend(opts,options);
+		var a=new OBViewAnimation(view);
+		a.attr("opacity",0);
+		a.duration=opts.duration;
+		a.observe("finished",function(){
+			a.view.attr("visible",false);
+			opts.callback();
+		});
+	};
+	
+	OBViewAnimation.FadeIn=function(view,options){
+		var opts={
+			callback:Prototype.emptyFunction,
+			duration:1.0//seconds
+		};
+		Object.extend(opts,options);
+		var a=new OBViewAnimation(view);
+		a.attr("opacity",1);
+		a.duration=opts.duration;
+		a.observe("finished",function(){
+			a.view.attr("visible",true);
+			opts.callback();
+		});
+	};
+	
 	document.observe("dom:loaded",function(){
 		document.body.innerHTML="";
 		document.body.style.overflow="hidden";
