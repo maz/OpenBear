@@ -504,7 +504,7 @@ if(!window.ob){
 		opacity:1.0,
 		rotation:0,//radians
 		_buffer:false,
-		initialize:function(parent,frame){
+		initialize:function OBView_constructor(parent,frame){
 			this.children=[];
 			this.parent=parent?parent:ob.body;//ob.body will be null until it is created therefore, when we make the ob.body view, it will be null
 			if(this.parent){
@@ -523,13 +523,13 @@ if(!window.ob){
 			}
 			this.update();
 		},
-		setup:function(){},
-		update:function(){
+		setup:function OBView_setup(){},
+		update:function OBView_update(){
 			this.ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
 			this.redraw();
 			this.updateBig();
 		},
-		updateBig:function(){
+		updateBig:function OBView_updateBig(){
 			if(this._buffer){
 				return;
 			}
@@ -547,14 +547,14 @@ if(!window.ob){
 				this.parent.updateBig();
 			}
 		},
-		buffer:function(){
+		buffer:function OBView_buffer(){
 			this._buffer=true;
 		},
-		commit:function(){
+		commit:function OBView_commit(){
 			this._buffer=false;
 			this.updateBig();
 		},
-		_drawIntoParent:function(){
+		_drawIntoParent:function OBView__drawIntoParent(){
 			var clip=this.attr('clip');
 			if(this.parent && this.attr('visible')){
 				this.parent._ctx.save();
@@ -564,44 +564,44 @@ if(!window.ob){
 				this.parent._ctx.restore();
 			}
 		},
-		setter_rotation:function(v){
+		setter_rotation:function OBView_setter_rotation(v){
 			this.rotation=v;
 			this.updateBig();
 		},
-		getter_clip:function(){
+		getter_clip:function OBView_getter_clip(){
 			if(this._clip){
 				return this._clip;
 			}else{
 				return new OBRect(0,0,this.attr("width"),this.attr("height"));
 			}
 		},
-		setter_clip:function(clip){
+		setter_clip:function OBView_setter_clip(clip){
 			this._clip=clip;
 			this.fire("clip_changed");
 			this.update();
 		},
-		setter_opacity:function(v){
+		setter_opacity:function OBView_setter_opacity(v){
 			this.opacity=v;
 			this.updateBig();
 		},
-		setter_visible:function(v){
+		setter_visible:function OBView_setter_visible(v){
 			this.visible=v;
 			this.updateBig();
 		},
-		getter_origin:function(){
+		getter_origin:function OBView_getter_origin(){
 			return this.attr('frame').attr('origin');
 		},
-		getter_size:function(){
+		getter_size:function OBView_getter_size(){
 			return this.attr('frame').attr('size');
 		},
-		setter_origin:function(v){
+		setter_origin:function OBView_setter_origin(v){
 			this.attr('frame').attr('origin',v);
 			if(this.parent){
 				this.parent.updateBig();
 			}
 			this.fire("origin_changed");
 		},
-		setter_size:function(v){
+		setter_size:function OBView_setter_size(v){
 			v=v.clone();
 			v.attr('width',Math.max(1,Math.round(v.attr('width'))));
 			v.attr('height',Math.max(1,Math.round(v.attr('height'))));
@@ -613,49 +613,49 @@ if(!window.ob){
 			this.fire("size_changed");
 			this.update();
 		},
-		getter_x:function(){
+		getter_x:function OBView_getter_x(){
 			return this.attr('origin').attr('x');
 		},
-		getter_y:function(){
+		getter_y:function OBView_getter_y(){
 			return this.attr('origin').attr('y');
 		},
-		getter_width:function(){
+		getter_width:function OBView_getter_width(){
 			return this.attr('size').attr('width');
 		},
-		getter_height:function(){
+		getter_height:function OBView_getter_height(){
 			return this.attr('size').attr('height');
 		},
-		setter_x:function(v){
+		setter_x:function OBView_setter_x(v){
 			this.attr('origin',new OBPoint(v,this.attr('y')));
 		},
-		setter_y:function(v){
+		setter_y:function OBView_setter_y(v){
 			this.attr('origin',new OBPoint(this.attr('x'),v));
 		},
-		setter_width:function(v){
+		setter_width:function OBView_setter_width(v){
 			this.attr('size',new OBSize(v,this.attr('height')));
 		},
-		setter_height:function(v){
+		setter_height:function sOBView_etter_height(v){
 			this.attr('size',new OBSize(this.attr('width'),v));
 		},
-		getter_w:function(){
+		getter_w:function OBView_getter_w(){
 			return this.getter_width();
 		},
-		getter_h:function(){
+		getter_h:function OBView_getter_h(){
 			return this.getter_height();
 		},
-		setter_w:function(v){
+		setter_w:function OBView_setter_w(v){
 			this.setter_width(v);
 		},
-		setter_h:function(v){
+		setter_h:function OBView_setter_h(v){
 			this.setter_height(v);
 		},
-		redraw:function(){},
+		redraw:function OBView_redraw(){},
 		acceptsFocus:true,
 		nextKeyView:null,
-		getter_focused:function(){
+		getter_focused:function OBView_getter_focused(){
 			return OBView.focused==this;
 		},
-		setter_focused:function(v){
+		setter_focused:function OBView_setter_focused(v){
 			if(v){
 				this.focus();
 			}else{
@@ -673,20 +673,20 @@ if(!window.ob){
 			this.fire('got_focus');
 			this.update();
 		},
-		blur:function(){
+		blur:function OBView_blur(){
 			if(this.attr('focused')){
 				OBView.focused=null;
 				this.fire('lost_focus');
 				this.updateBig();
 			}
 		},
-		setter_dispRect:function(){
+		setter_dispRect:function OBView_setter_dispRect(){
 			throw new Error("OBView.attr('dispRect') is a read-only property");
 		},
-		getter_dispRect:function(){
+		getter_dispRect:function OBView_getter_dispRect(){
 			return new OBRect(this.attr('frame').attr('origin'),this.attr('clip').attr('size'));
 		},
-		_mousedown:function(evt){
+		_mousedown:function OBView__mousedown(evt){
 			if(this.acceptsFocus && (!ob._onRun || this._children.length===0)){
 				if(this.attr('focused')){
 					return this.mousedown(evt);
@@ -697,12 +697,12 @@ if(!window.ob){
 				return this.mousedown(evt);
 			}
 		},
-		mousedown:function(evt){},
-		mouseup:function(evt){},
-		mousemove:function(evt){},
-		mouseover:function(){},
-		mouseout:function(){},
-		_mousemove:function(evt){
+		mousedown:function OBView_mousedown(evt){},
+		mouseup:function OBView_mouseup(evt){},
+		mousemove:function OBView_mousemove(evt){},
+		mouseover:function OBView_mouseover(){},
+		mouseout:function OBView_mouseout(){},
+		_mousemove:function OBView__mousemove(evt){
 			var x=this.mousemove(evt);
 			var y=false;
 			if(this._md){
@@ -710,17 +710,17 @@ if(!window.ob){
 			}
 			return x||y;
 		},
-		mousedrag:function(evt){},
-		_keydown:function(evt){
+		mousedrag:function OBView_mousedrag(evt){},
+		_keydown:function OBView__keydown(evt){
 			if(evt.keyCode==Event.KEY_TAB && this.nextKeyView){
 				this.nextKeyView.focus();
 			}else{
 				this.keydown(evt);
 			}
 		},
-		keydown:function(evt){},
-		keyup:function(evt){},
-		remove:function(){
+		keydown:function OBView_keydown(evt){},
+		keyup:function OBView_keyup(evt){},
+		remove:function OBView_remove(){
 			if(this.parent){
 				var i=this.parent.children.indexOf(this);
 				if(i!=-1){
@@ -731,7 +731,7 @@ if(!window.ob){
 				}
 			}
 		},
-		_handleEvt:function(name,e){
+		_handleEvt:function OBView__handleEvt(name,e){
 			ob._over.push(this);
 			var evt=e;
 			var clip=this.attr('clip');
@@ -758,7 +758,7 @@ if(!window.ob){
 			}
 		},
 		cursor:"default",
-		dblclick:function(){}
+		dblclick:function OBView_dblclick(){}
 	});
 	
 	OBView.focused=null;
