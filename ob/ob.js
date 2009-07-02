@@ -492,6 +492,7 @@ if(!window.ob){
 		childern:null,
 		visible:true,
 		opacity:1.0,
+		rotation:0,//radians
 		initialize:function(parent,frame){
 			this.children=[];
 			this.parent=parent?parent:ob.body;//ob.body will be null until it is created therefore, when we make the ob.body view, it will be null
@@ -532,11 +533,18 @@ if(!window.ob){
 		_drawIntoParent:function(){
 			var clip=this.attr('clip');
 			if(this.parent && this.attr('visible')){
+				this.parent._ctx.save();
+				this.parent._ctx.rotate(this.rotation);
 				var x=this.parent._ctx.globalAlpha;
 				this.parent._ctx.globalAlpha=this.attr('opacity');
 				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),clip.attr('height'));
 				this.parent._ctx.globalAlpha=x;
+				this.parent._ctx.restore();
 			}
+		},
+		setter_rotation:function(v){
+			this.rotation=v;
+			this.updateBig();
 		},
 		getter_clip:function(){
 			if(this._clip){
