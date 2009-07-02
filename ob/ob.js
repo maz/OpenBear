@@ -792,7 +792,7 @@ if(!window.ob){
 	window.OBViewAnimation=Class.create(OBResponder,{
 		buffer:null,
 		duration:1,//(seconds)
-		smoothing:100,//lower the smoother - number of times a second to update
+		smoothing:100,//lower the smoother - milliseconds between upates
 		initialize:function(view){
 			this.view=view;
 			this.buffer=$H();
