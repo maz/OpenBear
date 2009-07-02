@@ -32,9 +32,11 @@ if(Prototype.Browser.IE){
 	throw new Error("Although this page has ExCanvas, ExCanvas (currently) does not support using canvas tags as quasy images.");
 }
 if(!window.ob){
+	/** @id Number_toRadians */
 	Number.prototype.toRadians=function Number_toRadians(){
 		return this*ob._trconst;
 	};
+	/** @id Number_toDegrees */
 	Number.prototype.toDegrees=function Number_toRadians(){
 		return this*ob._tdconst;
 	};

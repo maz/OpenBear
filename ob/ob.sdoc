@@ -1,0 +1,15 @@
+/**
+ * @author Maz
+ */
+
+/**
+ * @id Number_toRadians
+ * @memberOf Number
+ * @return {Number} The degrees converted to radians.
+ */
+
+/**
+ * @id Number_toDegrees
+ * @memberOf Number
+ * @return {Number} The radians converted to degrees.
+ */
