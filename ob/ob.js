@@ -794,11 +794,11 @@ if(!window.ob){
 		buffer:null,
 		duration:1,//(seconds)
 		smoothing:100,//lower the smoother - milliseconds between upates
-		initialize:function(view){
+		initialize:function OBViewAnimation_constructor(view){
 			this.view=view;
 			this.buffer=$H();
 		},
-		attr:function(name,value){
+		attr:function OBViewAnimation_attr(name,value){
 			if(arguments.length==1){
 				return this.view.attr(name);
 			}else{
@@ -809,7 +809,7 @@ if(!window.ob){
 				}
 			}
 		},
-		start:function(){
+		start:function OBViewAnimation_start(){
 			if(this.duration==0){
 				this.buffer.each(function(pair){
 					this.view.attr(pair.key,pair.value);
@@ -840,7 +840,7 @@ if(!window.ob){
 		}
 	});
 	
-	OBViewAnimation.FadeOut=function(view,options){
+	OBViewAnimation.FadeOut=function OBViewAnimation_FadeOut(view,options){
 		var opts={
 			callback:Prototype.emptyFunction,
 			smoothing:0,
@@ -864,7 +864,7 @@ if(!window.ob){
 		a.start();
 	};
 	
-	OBViewAnimation.FadeIn=function(view,options){
+	OBViewAnimation.FadeIn=function OBViewAnimation_FadeIn(view,options){
 		var opts={
 			callback:Prototype.emptyFunction,
 			smoothing:0,
@@ -888,7 +888,7 @@ if(!window.ob){
 		a.start();
 	};
 	
-	document.observe("dom:loaded",function(){
+	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
 		document.body.innerHTML="";
 		document.body.style.overflow="hidden";
 		var demin=document.viewport.getDimensions();
@@ -900,7 +900,7 @@ if(!window.ob){
 		ob.body._bigcan.style.zIndex=50;
 		ob.body.acceptsFocus=false;
 		document.body.appendChild(ob.body._bigcan);
-		document.observe('resize',function(){
+		document.observe('resize',function OBEvntHandler_Resize(){
 			var d=document.viewport.getDemensions();
 			ob.body.attr('size',new OBSize(d.width,d.height));
 		});
@@ -912,10 +912,10 @@ if(!window.ob){
 		ob._tbox.style.zIndex=1;
 		document.body.appendChild(ob._tbox);
 		ob._tbox.focus();
-		ob._tbox.observe("blur",function(){
+		ob._tbox.observe("blur",function OBEvntHandler_blur(){
 			ob._tbox.focus();
 		});
-		ob._tbox.observe("keydown",function(evt){
+		ob._tbox.observe("keydown",function OBEvntHandler_keydown(evt){
 			evt=Event.extend(evt);
 			if(OBView.focused){
 				OBView.focused._keydown(evt);
@@ -931,14 +931,14 @@ if(!window.ob){
 				evt.stop();
 			}
 		}.bindAsEventListener(window));
-		ob._tbox.observe("keyup",function(evt){
+		ob._tbox.observe("keyup",function OBEvntHandler_keyup(evt){
 			evt=Event.extend(evt);
 			if(OBView.focused){
 				OBView.focused.keyup(evt);
 			}
 			ob.ctrl=evt.ctrlKey;
 		}.bindAsEventListener(window));
-		document.observe("mousedown",function(evt){
+		document.observe("mousedown",function OBEvntHandler_mousedown(evt){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
@@ -951,7 +951,7 @@ if(!window.ob){
 			ob._onRun=false;
 			evt.stop();
 		}.bindAsEventListener(window));
-		document.observe("dblclick",function(evt){
+		document.observe("dblclick",function OBEvntHandler_dblclick(evt){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
@@ -961,7 +961,7 @@ if(!window.ob){
 				left:left
 			});
 		}.bindAsEventListener(window));
-		document.observe("mouseup",function(evt){
+		document.observe("mouseup",function OBEvntHandler_mouseup(evt){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
@@ -971,7 +971,7 @@ if(!window.ob){
 				left:left
 			});
 		}.bindAsEventListener(window));
-		document.observe("mousemove",function(evt){
+		document.observe("mousemove",function OBEvntHandler_mousemove(evt){
 			evt=Event.extend(evt);
 			var old=ob._over;
 			old=old?old:[];
@@ -985,7 +985,7 @@ if(!window.ob){
 			});
 			document.body.style.cursor=ob._over[ob._over.length-1].cursor;
 		}.bindAsEventListener(window));
-		document.body.oncontextmenu=function(evt){
+		document.body.oncontextmenu=function OBEvntHandler_ctxmenu(evt){
 			evt=evt?evt:window.event;
 			if(evt.preventDefault){
 				evt.preventDefault();
