@@ -32,17 +32,17 @@ if(Prototype.Browser.IE){
 	throw new Error("Although this page has ExCanvas, ExCanvas (currently) does not support using canvas tags as quasy images.");
 }
 if(!window.ob){
-	Number.prototype.toRadians=function(){
+	Number.prototype.toRadians=function Number_toRadians(){
 		return this*ob._trconst;
 	};
-	Number.prototype.toDegrees=function(){
+	Number.prototype.toDegrees=function Number_toRadians(){
 		return this*ob._tdconst;
 	};
 	window.ob={
 		_trconst:Math.PI/180,
 		_tdconst:180/Math.PI,
 		_loadedPkgs:[],
-		load:function(p){
+		load:function ob_load(p){
 			var pkg=p;
 			ob._loadedPkgs.each(function(elem){
 				if(elem==pkg){
@@ -65,7 +65,7 @@ if(!window.ob){
 				x.apply(window,[]);
 			}
 		},
-		moduleUrl:function(pkg, file){
+		moduleUrl:function ob_moduleUrl(pkg, file){
 			var arr=pkg.split(".");
 			var base=window.OBDirectoryPrefix?window.OBDirectoryPrefix:"";
 			var x=base+arr.join("/");
@@ -74,7 +74,7 @@ if(!window.ob){
 			}
 			return x+file;
 		},
-		setObject:function(path,value){
+		setObject:function ob_setObject(path,value){
 			var obj=window;
 			var arr=path.split(".");
 			var name=arr.pop();
@@ -91,7 +91,7 @@ if(!window.ob){
 		_tbox:null,
 		_ctrl:false,
 		_over:[],
-		createCanvas:function(size){
+		createCanvas:function ob_createCanvas(size){
 			var elem=document.createElement('canvas');
 			elem.width=size.attr('width');
 			elem.height=size.attr('height');
@@ -100,7 +100,7 @@ if(!window.ob){
 			}
 			var ctx=elem.getContext('2d');
 			if(ctx.mozDrawText){
-				ctx.fillText=function(txt,x,y){
+				ctx.fillText=function ob_createCanvas_fillText(txt,x,y){
 					ctx.save();
 					ctx.translate(x,y);
 					ctx.mozTextStyle=ctx.font;
@@ -109,7 +109,7 @@ if(!window.ob){
 				};
 			}
 			ctx._mtxt=ctx.measureText?ctx.measureText:ctx.mozMeasureText;
-			ctx.measureText=function(txt){
+			ctx.measureText=function ob_createCanvas_measureText(txt){
 				if(!ob._mspan){
 					var mspan=document.createElement("span");
 					mspan.style.position="absolute";
@@ -132,7 +132,7 @@ if(!window.ob){
 		}
 	};
 	window.OBAttr={
-		attr:function(name,val){
+		attr:function OBAttr_attr(name,val){
 			if(arguments.length==1){//if only one argument
 				if(this["getter_"+name]){
 					return this["getter_"+name]();
@@ -149,7 +149,7 @@ if(!window.ob){
 		}
 	};
 	window.OBPoint=Class.create(OBAttr,{
-		initialize:function(x,y){
+		initialize:function OBPoint_constructor(x,y){
 			if(x){
 				this.x=x;
 			}
@@ -159,20 +159,20 @@ if(!window.ob){
 		},
 		x:0,
 		y:0,
-		toString:function(){
+		toString:function OBPoint_toString(){
 			return this.inspect();
 		},
-		inspect:function(){
+		inspect:function OBPoint_inspect(){
 			return "#<OBPoint:["+this.attr('x')+","+this.attr('y')+"]>";
 		},
-		clone:function(){
+		clone:function OBPoint_clone(){
 			return new OBPoint(this.x,this.y);
 		}
 	});
 	window.OBSize=Class.create(OBAttr,{
 		width:0,
 		height:0,
-		initialize:function(w,h){
+		initialize:function OBSize_constrcutor(w,h){
 			if(w){
 				this.width=w;
 			}
@@ -180,32 +180,32 @@ if(!window.ob){
 				this.height=h;
 			}
 		},
-		toString:function(){
+		toString:function OBSize_toString(){
 			return this.inspect();
 		},
-		inspect:function(){
+		inspect:function OBSize_inspect(){
 			return "#<OBSize:["+this.attr('width')+","+this.attr('height')+"]>";
 		},
-		clone:function(){
+		clone:function OBSize_clone(){
 			return new OBSize(this.width,this.height);
 		},
-		setter_h:function(h){
+		setter_h:function OBSize_setter_h(h){
 			this.height=h;
 		},
-		getter_h:function(){
+		getter_h:function OBSize_getter_h(){
 			return this.height;
 		},
-		setter_w:function(h){
+		setter_w:function OBSize_setter_w(h){
 			this.width=h;
 		},
-		getter_w:function(){
+		getter_w:function OBSize_getter_w(){
 			return this.width;
 		}
 	});
 	window.OBRect=Class.create(OBAttr,{
 		origin:null,
 		size:null,
-		initialize:function(x,y,w,h){
+		initialize:function OBRect_constructor(x,y,w,h){
 			if(x===undefined ||  x===null){//assume no arguments
 				this.origin=new OBPoint(0,0);
 				this.size=new OBSize(0,0);
@@ -217,52 +217,52 @@ if(!window.ob){
 				this.size=new OBSize(parseFloat(w),parseFloat(h));
 			}
 		},
-		setter_x:function(v){
+		setter_x:function OBRect_setter_x(v){
 			this.origin.x=v;
 		},
-		getter_x:function(){
+		getter_x:function OBRect_getter_x(){
 			return this.origin.x;
 		},
-		setter_y:function(v){
+		setter_y:function OBRect_setter_y(v){
 			this.origin.y=v;
 		},
-		getter_y:function(){
+		getter_y:function OBRect_setter_y(){
 			return this.origin.y;
 		},
-		setter_width:function(v){
+		setter_width:function OBRect_setter_width(v){
 			this.size.width=v;
 		},
-		getter_width:function(){
+		getter_width:function OBRect_getter_width(){
 			return this.size.width;
 		},
-		setter_height:function(v){
+		setter_height:function OBRect_setter_height(v){
 			this.size.height=v;
 		},
-		getter_height:function(){
+		getter_height:function OBRect_getter_height(){
 			return this.size.height;
 		},
-		getter_w:function(){
+		getter_w:function OBRect_getter_w(){
 			return this.getter_width();
 		},
-		getter_h:function(){
+		getter_h:function OBRect_getter_h(){
 			return this.getter_height();
 		},
-		setter_w:function(v){
+		setter_w:function OBRect_setter_w(v){
 			this.setter_width(v);
 		},
-		setter_h:function(v){
+		setter_h:function OBRect_setter_h(v){
 			this.setter_height(v);
 		},
-		inspect:function(){
+		inspect:function OBRect_inspect(){
 			return this.toString();
 		},
-		toString:function(){
+		toString:function OBRect_toString(){
 			return "#<OBRect:["+this.origin.inspect()+","+this.size.inspect()+"]>";
 		},
-		toArray:function(){
+		toArray:function OBRect_toArray(){
 			return [this.attr('x'),this.attr('y'),this.attr('width'),this.attr('height')];
 		},
-		intersects:function(val){
+		intersects:function OBRect_intersects(val){
 			if(val instanceof OBPoint){
 				return val.attr('x')>=this.attr('x') && val.attr("x")<=this.attr('x')+this.attr("width") && val.attr('y')>=this.attr('y') && val.attr("y")<=this.attr('y')+this.attr("height");
 			}else if(val instanceof OBRect){
@@ -271,7 +271,7 @@ if(!window.ob){
 				return false;
 			}
 		},
-		clone:function(){
+		clone:function OBRect_clone(){
 			return new OBRect(this.origin.clone(),this.size.clone());
 		}
 	});
@@ -280,7 +280,7 @@ if(!window.ob){
 		green:0,
 		blue:0,
 		alpha:0,
-		initialize:function(r,g,b,a){
+		initialize:function OBColor_constructor(r,g,b,a){
 			if(Object.isArray(r)){
 				this.intiailize.apply(this,r);
 			}else{
@@ -294,28 +294,28 @@ if(!window.ob){
 				}
 			}
 		},
-		toString:function(){
+		toString:function OBColor_toString(){
 			return "rgba("+this.red+","+this.green+","+this.blue+","+this.alpha+")";
 		},
-		clone:function(){
+		clone:function OBColor_clone(){
 			return new OBColor(this.red,this.green,this.blue);
 		},
-		setter_r:function(v){
+		setter_r:function OBColor_setetr_r(v){
 			this.red=v;
 		},
-		getter_r:function(){
+		getter_r:function OBColor_getter_r(){
 			return this.red;
 		},
-		setter_g:function(v){
+		setter_g:function OBColor_setter_g(v){
 			this.green=v;
 		},
-		getter_g:function(){
+		getter_g:function OBColor_getter_g(){
 			return this.green;
 		},
-		setter_b:function(v){
+		setter_b:function OBColor_setter_b(v){
 			this.blue=v;
 		},
-		getter_b:function(){
+		getter_b:function OBColor_getter_b(){
 			return this.blue;
 		}
 	});
@@ -463,7 +463,7 @@ if(!window.ob){
 	OBColor.DarkSlateGray=new OBColor(47,79,79);
 	OBColor.Black=new OBColor(0,0,0);
 	window.OBResponder={
-		observe:function(name,handler){
+		observe:function OBResponder_observe(name,handler){
 			if(!this._evts){
 				this._evts={};
 			}
@@ -474,7 +474,7 @@ if(!window.ob){
 				this._evts[name].push(handler);
 			}
 		},
-		fire:function(name,evt){
+		fire:function OBResponder_fire(name,evt){
 			if(!this._evts){
 				this._evts={};
 			}
@@ -484,7 +484,7 @@ if(!window.ob){
 				});
 			}
 		},
-		stopObserving:function(name,handler){
+		stopObserving:function OBResponder_stopObserving(name,handler){
 			if(!this._evts){
 				this._evts={};
 			}
