@@ -501,6 +501,7 @@ if(!window.ob){
 		visible:true,
 		opacity:1.0,
 		rotation:0,//radians
+		_buffer:false,
 		initialize:function(parent,frame){
 			this.children=[];
 			this.parent=parent?parent:ob.body;//ob.body will be null until it is created therefore, when we make the ob.body view, it will be null
@@ -524,6 +525,9 @@ if(!window.ob){
 			this.updateBig();
 		},
 		updateBig:function(){
+			if(this._buffer){
+				return;
+			}
 			this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
 			this._ctx.drawImage(this._can,0,0);
 			this.children.each(function(chld){
@@ -537,6 +541,13 @@ if(!window.ob){
 			if(this.parent){
 				this.parent.updateBig();
 			}
+		},
+		buffer:function(){
+			this._buffer=true;
+		},
+		commit:function(){
+			this._buffer=false;
+			this.updateBig();
 		},
 		_drawIntoParent:function(){
 			var clip=this.attr('clip');
