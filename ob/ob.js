@@ -28,6 +28,8 @@ if(Prototype.Browser.IE){
 		script.setAttribute("src",base+"ob/excanvas/excanvas.compiled.js");
 		head.appendChild(script);
 	})();
+	alert("This web page does not work in Internet Explorer. You might want to try using Mozilla Firefox (http://www.firefox.com/) instead.");
+	throw new Error("Although this page has ExCanvas, ExCanvas (currently) does not support using canvas tags as quasy images.");
 }
 if(!window.ob){
 	Number.prototype.toRadians=function(){
