@@ -516,6 +516,9 @@ if(!window.ob){
 			this._can=arr[0];
 			this.ctx=arr[1];
 			this.setup();
+			if(this.parent){
+				this.parent.fire("added_child",this);
+			}
 			this.update();
 		},
 		setup:function(){},
@@ -716,6 +719,16 @@ if(!window.ob){
 		},
 		keydown:function(evt){},
 		keyup:function(evt){},
+		remove:function(){
+			if(this.parent){
+				var i=this.parent.children.indexOf(this);
+				if(i!=-1){
+					this.parent.children.splice(i,1);
+					this.fire("removed");
+					this.parent.fire("child_removed",this);
+				}
+			}
+		},
 		_handleEvt:function(name,e){
 			ob._over.push(this);
 			var evt=e;
