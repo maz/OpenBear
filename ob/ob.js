@@ -726,7 +726,7 @@ if(!window.ob){
 			var c=null;
 			this._children=[];
 			this.children.each(function(chld){
-				if(chld.attr('dispRect').intersects(evt.point)){
+				if(chld.attr('dispRect').intersects(evt.point) && chld.attr("visible")){
 					c=chld;
 					this._children.push(chld);
 				}
