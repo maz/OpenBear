@@ -842,6 +842,7 @@ if(!window.ob){
 	OBViewAnimation.FadeOut=function(view,options){
 		var opts={
 			callback:Prototype.emptyFunction,
+			smoothing:0,
 			duration:1.0//seconds
 		};
 		Object.extend(opts,options);
@@ -852,6 +853,9 @@ if(!window.ob){
 		var a=new OBViewAnimation(view);
 		a.attr("opacity",0.0);
 		a.duration=opts.duration;
+		if(opts.smoothing>0){
+			a.smoothing=opts.smoothing;
+		}
 		a.observe("finished",function(){
 			a.view.attr("visible",false);
 			opts.callback();
@@ -862,6 +866,7 @@ if(!window.ob){
 	OBViewAnimation.FadeIn=function(view,options){
 		var opts={
 			callback:Prototype.emptyFunction,
+			smoothing:0,
 			duration:1.0//seconds
 		};
 		Object.extend(opts,options);
@@ -872,6 +877,9 @@ if(!window.ob){
 		var a=new OBViewAnimation(view);
 		a.attr("opacity",1.0);
 		a.duration=opts.duration;
+		if(opts.smoothing>0){
+			a.smoothing=opts.smoothing;
+		}
 		a.observe("finished",function(){
 			a.view.attr("visible",true);
 			opts.callback();
