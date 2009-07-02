@@ -543,10 +543,8 @@ if(!window.ob){
 			if(this.parent && this.attr('visible')){
 				this.parent._ctx.save();
 				this.parent._ctx.rotate(this.rotation);
-				var x=this.parent._ctx.globalAlpha;
 				this.parent._ctx.globalAlpha=this.attr('opacity');
 				this.parent._ctx.drawImage(this._bigcan,clip.attr('x'),clip.attr('y'),clip.attr('width'),clip.attr('height'),this.attr('x'),this.attr('y'),clip.attr('width'),clip.attr('height'));
-				this.parent._ctx.globalAlpha=x;
 				this.parent._ctx.restore();
 			}
 		},
