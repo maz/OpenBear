@@ -812,6 +812,7 @@ if(!window.ob){
 			a.view.attr("visible",false);
 			opts.callback();
 		});
+		a.start();
 	};
 	
 	OBViewAnimation.FadeIn=function(view,options){
@@ -827,6 +828,7 @@ if(!window.ob){
 			a.view.attr("visible",true);
 			opts.callback();
 		});
+		a.start();
 	};
 	
 	document.observe("dom:loaded",function(){
