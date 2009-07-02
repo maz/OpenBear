@@ -842,6 +842,9 @@ if(!window.ob){
 					var i=0;
 					var buf={};
 					var z=setInterval(function(){
+						if(i>=dur){
+							clearInterval(buf.z);//because we call setInterval to get the value we need
+						}
 						othis.view.attr(key,othis.view.attr(key)+d);
 						i+=othis.smoothing;
 						if(i>=dur){
