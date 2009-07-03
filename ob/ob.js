@@ -114,6 +114,9 @@ if(!window.ob){
 					ctx.revert();
 				};
 			}
+			if(!ctx.arcTo){
+				ctx.arcTo=ctx.arc;
+			}
 			ctx._mtxt=ctx.measureText?ctx.measureText:ctx.mozMeasureText;
 			ctx.measureText=function ob_createCanvas_measureText(txt){
 				if(!ob._mspan){
