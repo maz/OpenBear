@@ -24,7 +24,7 @@ window.OBVideo=Class.create(OBAttr,OBResponder,{
 		this.elem.setAttribute("autobuffer",true);
 		this.loaded=false;
 		this.elem.onload=(function(){
-			this.size=new OBSize(parseInt(this.elem.width),parseInt(this.elem.height));
+			this.size=new OBSize(this.elem.visibleWidth,this.elem.visibleHeight);
 			this.fire("loaded");
 			this.loaded=true;
 		}).bind(this);
@@ -45,5 +45,17 @@ window.OBVideoView=Class.create(OBView,{
 		this.observe("removed",function(){
 			this.video.remove();
 		}.bind(this));
+		this.video.observe("loaded",this.update.bind(this));
+	},
+	redraw:function OBVideoView_redraw(){
+		if(this.video.loaded){
+			this.ctx.drawImage(this.video.elem,0,0,this.attr("width"),this.attr("height"));
+			
+		}else{
+			this.ctx.fillStyle=OBColor.Black.toString();
+			this.ctx.font="18pt Arial";
+			var s=this.ctx.measureText("LOADING...");
+			this.ctx.fillText("LOADING...",(this.attr("width")/2)-(s.attr("width")/2),(this.attr("height")/2)-(s.attr("height")/2));
+		}
 	}
 });
