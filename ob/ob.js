@@ -292,6 +292,8 @@ if(!window.ob){
 		initialize:function OBColor_constructor(r,g,b,a){
 			if(Object.isArray(r)){
 				this.intiailize.apply(this,r);
+			}else if(r instanceof OBColor){
+				return this.initialize(r.attr("r"),r.attr("g"),r.attr("b"),g);
 			}else{
 				this.red=r;
 				this.green=g;
