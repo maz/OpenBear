@@ -578,13 +578,16 @@ if(!window.ob){
 			var clip=this.attr('clip');
 			if(this.parent && this.attr('visible')){
 				this.parent._ctx.save();
-				//var x=this._rcenter.attr('x');//(this.attr('width')/2)+this.attr('x');
-				//var y=this._rcenter.attr('y');//(this.attr('height')/2)+this.attr('y');
 				this.parent._ctx.translate(this._rcenter.x,this._rcenter.y);
 				this.parent._ctx.rotate(this.attr("rotation"));
 				this.parent._ctx.translate(-1*this._rcenter.x,-1*this._rcenter.y);
 				this.parent._ctx.globalAlpha=this.attr('opacity');
 				this.parent._ctx.drawImage(this._bigcan,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.frame.origin.x,this.frame.origin.y,clip.size.width,clip.size.height);
+				this.parent._ctx.translate(this._rcenter.x,this._rcenter.y);//to speed things up
+				this.parent._ctx.rotate(this.attr("rotation"));
+				this.parent._ctx.translate(-1*this._rcenter.x,-1*this._rcenter.y);//to speed things up
+				this.parent._ctx.globalAlpha=this.attr('opacity');
+				this.parent._ctx.drawImage(this._bigcan,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.x,this.y,clip.size.width,clip.size.height);//to speed things up
 				this.parent._ctx.restore();
 			}
 		},
