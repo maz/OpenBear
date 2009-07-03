@@ -527,7 +527,9 @@ if(!window.ob){
 			arr=ob.createCanvas(this.frame.attr('size'));
 			this._can=arr[0];
 			this.ctx=arr[1];
-			this.setup();
+			arr=$A(arguments);
+			arr.splice(0,2);//remove parent,frame
+			this.setup.apply(this,arr);
 			if(this.parent){
 				this.parent.fire("added_child",this);
 			}
