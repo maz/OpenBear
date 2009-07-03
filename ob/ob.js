@@ -539,6 +539,9 @@ if(!window.ob){
 		},
 		setup:function OBView_setup(){},
 		update:function OBView_update(){
+			if(this._buffer){
+				return;
+			}
 			this.ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
 			this.redraw();
 			this.updateBig();
@@ -566,7 +569,7 @@ if(!window.ob){
 		},
 		commit:function OBView_commit(){
 			this._buffer=false;
-			this.updateBig();
+			this.update();
 		},
 		_drawIntoParent:function OBView__drawIntoParent(){
 			var clip=this.attr('clip');
@@ -844,7 +847,11 @@ if(!window.ob){
 				this.buffer.each(function(pair){
 					var key=pair.key;
 					var d=((pair.value-this.view.attr(key))/(dur/this.smoothing));
-					var i=0;
+					arr.push({
+						key:pair.key,
+						d:d
+					});
+					/*var i=0;
 					var buf={};
 					var z=setInterval(function(){
 						if(i>=dur){
@@ -857,13 +864,18 @@ if(!window.ob){
 						}
 					},this.smoothing);
 					arr.push(z);
-					buf.z=z;
+					buf.z=z;*/
 				},this);
+				var timer=setInterval(function(){
+					this.view.buffer();
+					arr.each(function(pair){
+						this.view.attr(pair.key,this.view.attr(pair.key)+pair.d);
+					},this);
+					this.view.commit();
+				}.bind(this),this.smoothing);
 				setTimeout(function(){
 					othis.duration=0;
-					arr.each(function(timer){
-						clearInterval(timer);
-					});
+					clearInterval(timer);
 					othis.start();//just to ensure that everything is properly set
 				},dur);
 			}
