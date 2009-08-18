@@ -1035,7 +1035,7 @@ if(!window.ob){
 			document.body.style.cursor=ob._over[ob._over.length-1].cursor;
 		}.bindAsEventListener(window));
 		
-		var scrollName=(document.addEventListener?"DOMMouseScroll":"mousewheel");
+		var scrollName="mousewheel";//(document.addEventListener?"DOMMouseScroll":"mousewheel");
 		// ==============================================================================================================================================
 		// = Thanks to http://www.switchonthecode.com/tutorials/javascript-tutorial-the-scroll-wheel for providing info on scroll wheels and javascript =
 		// ==============================================================================================================================================
