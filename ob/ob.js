@@ -331,6 +331,9 @@ if(!window.ob){
 		},
 		getter_b:function OBColor_getter_b(){
 			return this.blue;
+		},
+		inspect:function(){
+			return this.toString();
 		}
 	});
 	OBColor.IndianRed=new OBColor(205,92,92);
@@ -578,9 +581,11 @@ if(!window.ob){
 			var clip=this.attr('clip');
 			if(this.parent && this.attr('visible')){
 				this.parent._ctx.save();
-				this.parent._ctx.translate(this._rcenter.x,this._rcenter.y);
-				this.parent._ctx.rotate(this.attr("rotation"));
-				this.parent._ctx.translate(-1*this._rcenter.x,-1*this._rcenter.y);
+				if(this.attr("rotation")){
+					this.parent._ctx.translate(this._rcenter.x,this._rcenter.y);
+					this.parent._ctx.rotate(this.attr("rotation"));
+					this.parent._ctx.translate(-1*this._rcenter.x,-1*this._rcenter.y);
+				}
 				this.parent._ctx.globalAlpha=this.attr('opacity');
 				this.parent._ctx.drawImage(this._bigcan,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.frame.origin.x,this.frame.origin.y,clip.size.width,clip.size.height);
 				this.parent._ctx.restore();
@@ -744,6 +749,7 @@ if(!window.ob){
 		},
 		keydown:function OBView_keydown(evt){},
 		keyup:function OBView_keyup(evt){},
+		mousewheel:function OBView_mousewheel(evt){},
 		remove:function OBView_remove(){
 			if(this.parent){
 				var i=this.parent.children.indexOf(this);
@@ -1028,6 +1034,23 @@ if(!window.ob){
 			});
 			document.body.style.cursor=ob._over[ob._over.length-1].cursor;
 		}.bindAsEventListener(window));
+		
+		var scrollName=(document.addEventListener?"DOMMouseScroll":"mousewheel");
+		// ==============================================================================================================================================
+		// = Thanks to http://www.switchonthecode.com/tutorials/javascript-tutorial-the-scroll-wheel for providing info on scroll wheels and javascript =
+		// ==============================================================================================================================================
+		document.observe(scrollName,function OBEvntHandler_mousewheel(evt){
+			var normal=evt.detail?evt.detail*-1:evt.wheelDelta/40;
+			var raw=evt.detail?evt.detail:evt.wheelDelta;
+			
+			if(OBView.focused){
+				OBView.focused.mousewheel({
+					normal:normal,
+					raw:raw
+				});
+			}
+		}.bindAsEventListener(window));
+		
 		document.body.oncontextmenu=function OBEvntHandler_ctxmenu(evt){
 			evt=evt?evt:window.event;
 			if(evt.preventDefault){
