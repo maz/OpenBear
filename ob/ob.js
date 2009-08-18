@@ -744,7 +744,7 @@ if(!window.ob){
 			if(evt.keyCode==Event.KEY_TAB && this.nextKeyView){
 				this.nextKeyView.focus();
 			}else{
-				this.keydown(evt);
+				return this.keydown(evt);
 			}
 		},
 		keydown:function OBView_keydown(evt){},
@@ -835,7 +835,12 @@ if(!window.ob){
 				if(Object.isNumber(value)){
 					this.buffer.set(name,value);
 				}else if(window.console){
-					console.warn("OBViewAnimation can only animate number properties, unlike the value that you have provided for "+name);
+					console.warn("OBViewAnimation can only animate numerical properties, unlike the value that you have provided for "+name);
+				}else{
+					var nom=name;
+					setTimeout(function OBViewAnimation_attr_errorThrower(){
+						throw new Error("OBViewAnimation can only animate numerical properties, unlike the value that you have provided for "+nom);
+					},0);
 				}
 			}
 		},
@@ -966,16 +971,18 @@ if(!window.ob){
 		});
 		ob._tbox.observe("keydown",function OBEvntHandler_keydown(evt){
 			evt=Event.extend(evt);
-			if(OBView.focused){
-				OBView.focused._keydown(evt);
-			}
-			ob.ctrl=evt.ctrlKey;
 			var can=true;
 			if((navigator.platform.indexOf("Mac")!=-1)){
 				can=evt.metaKey;
 			}else{
 				can=evt.ctrlKey;
 			}
+			if(OBView.focused){
+				if(OBView.focused._keydown(evt)==false){//we don't want undefined triggering allows
+					can=false;
+				}
+			}
+			ob.ctrl=evt.ctrlKey;
 			if(!can){
 				evt.stop();
 			}
