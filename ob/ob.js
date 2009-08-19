@@ -958,6 +958,16 @@ if(!window.ob){
 	
 	window.OBCurrentTheme=window.OBCurrentTheme||"Default";
 	
+	Array.prototype.complement=function OpenBear_Array_Complement(arr){
+		var a=[];
+		this.each(function OpenBear_Array_Complement_sub1(elem){
+			if(arr.indexOf(elem)!=-1){
+				a.push(elem);
+			}
+		});
+		return a;
+	};
+	
 	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
 		document.body.innerHTML="";
 		document.body.style.overflow="hidden";
@@ -1045,8 +1055,7 @@ if(!window.ob){
 		}.bindAsEventListener(window));
 		document.observe("mousemove",function OBEvntHandler_mousemove(evt){
 			evt=Event.extend(evt);
-			var old=ob._over;
-			old=old?old:[];
+			var old=$A(ob._over);
 			ob._over=[];
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
@@ -1056,6 +1065,21 @@ if(!window.ob){
 				left:left
 			});
 			document.body.style.cursor=ob._over[ob._over.length-1].cursor;
+			//TODO: implement accurate mouseover, mouseout
+			/*
+			var a=$A(old);
+			a=a.complement(ob._over);
+			a.each(function OBEvntHandler_mousemove_mouseout(view){
+				view.mouseout();
+			});
+			//console.info("out",a);
+			a=$A(ob._over);
+			a=a.complement(old);
+			a.each(function OBEvntHandler_mousemove_mouseover(v){
+				v.mouseover();
+			});
+			//console.info("over",a);
+			*/
 		}.bindAsEventListener(window));
 		
 		var scrollName="mousewheel";//(document.addEventListener?"DOMMouseScroll":"mousewheel");

@@ -33,6 +33,7 @@ window.OBButton=Class.create(OBView,{
 		this.ctx.fillText(this.label,(this.attr("width")/2)-(this.txtSize.attr("width")/2),this.txtSize.attr("height"));
 	},
 	mousedown:function OBButton_mousedown(evt){
+		this.down=true;
 		this.mode=[OBThemeLoader.ButtonBezelHighlightedLeft,OBThemeLoader.ButtonBezelHighlightedCenter,OBThemeLoader.ButtonBezelHighlightedRight];
 		this.update();
 	},
@@ -40,6 +41,15 @@ window.OBButton=Class.create(OBView,{
 		this.mode=[OBThemeLoader.ButtonBezelLeft,OBThemeLoader.ButtonBezelCenter,OBThemeLoader.ButtonBezelRight];
 		this.fire("click");
 		this.update();
+		this.down=false;
+	},
+	mouseover:function OBButton_mouseover(){
+		if(this.down){
+			this.mode=[OBThemeLoader.ButtonBezelHighlightedLeft,OBThemeLoader.ButtonBezelHighlightedCenter,OBThemeLoader.ButtonBezelHighlightedRight];
+		}
+	},
+	mouseout:function OBButon_mouseout(){
+		this.mode=[OBThemeLoader.ButtonBezelLeft,OBThemeLoader.ButtonBezelCenter,OBThemeLoader.ButtonBezelRight];
 	},
 	sizeToFit:function OBButton_sizeToFit(){
 		this.attr("size",this.osize);
