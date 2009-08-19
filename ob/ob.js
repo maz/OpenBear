@@ -59,13 +59,14 @@ if(!window.ob){
 			var arr=pkg.split('.');
 			var file=arr.pop();
 			var op=Ajax.getTransport();
-			op.open('get',ob.moduleUrl(arr.join("."),file),false);
+			op.open('get',ob.moduleUrl(arr.join("."),file+".js"),false);
 			op.send(null);
 			if(op.status==404){
 				throw new Error("The package, \""+pkg+",\" could not be found by ob.load()");
 			}else{
 				var x=new Function(op.responseText);
 				x.apply(window,[]);
+				ob._loadedPkgs.push(pkg);
 			}
 		},
 		/** @id ob_moduleUrl */
@@ -111,19 +112,19 @@ if(!window.ob){
 					ctx.translate(x,y);
 					ctx.mozTextStyle=ctx.font;
 					ctx.mozDrawText(txt);
-					ctx.revert();
+					ctx.restore();
 				};
 			}
 			if(!ctx.arcTo){
 				ctx.arcTo=ctx.arc;
 			}
-			ctx.drawSlicedImage=function ob_createCanvas_drawSlicedImage(slices,x,y,w,h){
+			ctx.drawSlicedImage=function ob_createCanvas_drawSlicedImage(slices,x,y,wid){
 				if(slices.length==3){
 					ctx.save();
 						ctx.translate(x,y);
 						ctx.drawImage(slices[0],0,0);
-						ctx.drawImage(slices[1],slices[0].width,0,w-(slices[0].width+slices[2].width),slices[1].height);
-						ctx.drawImage(slices[2],w-slices[2].width,0);
+						ctx.drawImage(slices[1],slices[0].width,0,wid-(slices[0].width+slices[2].width),slices[1].height);
+						ctx.drawImage(slices[2],wid-slices[2].width,0);
 					ctx.restore();
 				}
 			};
@@ -140,12 +141,12 @@ if(!window.ob){
 					ob._mspan=mspan;
 				}
 				ob._mspan.style.font=ctx.font;
-				var w=ctx._mtxt(txt);
+				/*var w=ctx._mtxt(txt);
 				if(!Object.isNumber(w)){
 					w=w.width;
-				}
+				}*/
 				ob._mspan.innerHTML=txt.escapeHTML();
-				return new OBSize(w,ob._mspan.offsetHeight);
+				return new OBSize(ob._mspan.offsetWidth,ob._mspan.offsetHeight);
 			};
 			return [elem,ctx];
 		}
@@ -547,11 +548,12 @@ if(!window.ob){
 			this.ctx=arr[1];
 			arr=$A(arguments);
 			arr.splice(0,2);//remove parent,frame
+			this.buffer();
 			this.setup.apply(this,arr);
 			if(this.parent){
 				this.parent.fire("added_child",this);
 			}
-			this.update();
+			this.commit();
 		},
 		setup:function OBView_setup(){},
 		update:function OBView_update(){
@@ -1094,7 +1096,11 @@ if(!window.ob){
 					document.fire("theme:loaded");
 				}
 			};
+			img.onerror=function OBThemeLoader_image_onerror(){
+				throw new Error("Error loading image "+this.src);
+			};
 			img.src=ob.moduleUrl("ob.themes."+OBCurrentTheme,file);
+			OBThemeLoader[x]=img;
 		}
 		if(!totalImgs){
 			document.fire("theme:loaded");
