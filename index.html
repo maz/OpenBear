@@ -5,6 +5,8 @@
 		<script src="ob/prototype.js" type="text/javascript" charset="utf-8"></script>
 		<script src="ob/ob.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
+			ob.load("ob.gui.Button");
+			
 			window.WeirdView=Class.create(OBView,{
 				redraw:function(){
 					this.ctx.fillStyle="black";
@@ -60,6 +62,11 @@
 			document.observe("theme:loaded",function(){
 				window.z=new WeirdView(null,new OBRect(10,10,300,300));
 				window.click=new Clicker(window.z,new OBRect(10,10,200,200));
+				window.b=new OBButton(null,new OBRect(500,500,0,0),"Hello");
+				b.observe("click",function(){
+					alert(b.attr("label"));
+					b.attr("label",b.attr("label")+" Joeseph!");
+				});
 			});
 		</script>
 	</head>
