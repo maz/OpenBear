@@ -117,6 +117,16 @@ if(!window.ob){
 			if(!ctx.arcTo){
 				ctx.arcTo=ctx.arc;
 			}
+			ctx.drawSlicedImage=function ob_createCanvas_drawSlicedImage(slices,x,y,w,h){
+				if(slices.length==3){
+					ctx.save();
+						ctx.translate(x,y);
+						ctx.drawImage(slices[0],0,0);
+						ctx.drawImage(slices[1],slices[0].width,0,w-(slices[0].width+slices[2].width),slices[1].height);
+						ctx.drawImage(slices[2],w-slices[2].width,0);
+					ctx.restore();
+				}
+			};
 			ctx._mtxt=ctx.measureText?ctx.measureText:ctx.mozMeasureText;
 			ctx.measureText=function ob_createCanvas_measureText(txt){
 				if(!ob._mspan){
@@ -942,6 +952,10 @@ if(!window.ob){
 		a.start();
 	};
 	
+	window.OBThemeLoader={};
+	
+	window.OBCurrentTheme=window.OBCurrentTheme||"Default";
+	
 	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
 		document.body.innerHTML="";
 		document.body.style.overflow="hidden";
@@ -1065,5 +1079,25 @@ if(!window.ob){
 			}
 			return false;
 		};
+		
+		var totalImgs=0;
+		var loadedImgs=0;
+		for(x in OBThemeLoader){
+			totalImgs++;
+		}
+		for(x in OBThemeLoader){
+			var file=OBThemeLoader[x];
+			var img=new Image();
+			img.onload=function OBThemeLoader_image_onload(){
+				loadedImgs++;
+				if(loadedImgs==totalImgs){
+					document.fire("theme:loaded");
+				}
+			};
+			img.src=ob.moduleUrl("ob.themes."+OBCurrentTheme,file);
+		}
+		if(!totalImgs){
+			document.fire("theme:loaded");
+		}
 	});
 }
