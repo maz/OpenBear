@@ -34,6 +34,14 @@ window.OBMenuView=Class.create(OBView,{
 			});
 			y+=h;
 		}.bind(this));
+		
+		this.start=0;
+		this.end=this.items.length;
+		//FIXME: Menu Scrolling
+		if(h*this.items.length+2>this.attr("height")){
+			
+		}
+		
 		this.acceptsFocus=false;
 	},
 	applyFontParams:function OBMenuView_applyFontParams(){
@@ -44,7 +52,7 @@ window.OBMenuView=Class.create(OBView,{
 		this.ctx.fillRect(0,0,this.attr("width"),this.attr("height"));
 		this.applyFontParams();
 		var y=2;
-		for(var i=0;i<this.items.length;i++){
+		for(var i=this.start;i<this.end;i++){
 			var itm=this.items[i];
 			if(i==this.selected){
 				this.ctx.fillStyle="white";
