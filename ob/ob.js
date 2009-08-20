@@ -149,7 +149,8 @@ if(!window.ob){
 				return new OBSize(ob._mspan.offsetWidth,ob._mspan.offsetHeight);
 			};
 			return [elem,ctx];
-		}
+		},
+		mouseHandlers:[]
 	};
 	/** @id OBAttr */
 	window.OBAttr={
@@ -773,13 +774,17 @@ if(!window.ob){
 				}
 			}
 		},
+		adjustParentPoint:function OBView_adjustParentPoint(point){
+			var clip=this.attr('clip');
+			point=point.clone();
+			point.attr('x',(evt.point.attr('x')-this.attr('x'))+clip.attr('x'));
+			point.attr('y',(evt.point.attr('y')-this.attr('y'))+clip.attr('y'));
+			return point;
+		},
 		_handleEvt:function OBView__handleEvt(name,e){
 			ob._over.push(this);
 			var evt=e;
-			var clip=this.attr('clip');
-			evt.point=evt.point.clone();
-			evt.point.attr('x',(evt.point.attr('x')-this.attr('x'))+clip.attr('x'));
-			evt.point.attr('y',(evt.point.attr('y')-this.attr('y'))+clip.attr('y'));
+			evt.point=this.adjustParentPoint(evt.point);
 			var c=null;
 			this._children=[];
 			this.children.each(function(chld){
@@ -980,6 +985,7 @@ if(!window.ob){
 		ob.body._bigcan.style.zIndex=50;
 		ob.body.acceptsFocus=false;
 		document.body.appendChild(ob.body._bigcan);
+		ob.mouseHandlers.push(ob.body._handleEvt);
 		document.observe('resize',function OBEvntHandler_Resize(){
 			var d=document.viewport.getDemensions();
 			ob.body.attr('size',new OBSize(d.width,d.height));
@@ -1025,7 +1031,7 @@ if(!window.ob){
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
 			ob._onRun=true;
-			ob.body._handleEvt('_mousedown',{
+			ob.mouseHandlers[ob.mouseHandlers.length-1]('_mousedown',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
 				left:left
@@ -1037,7 +1043,7 @@ if(!window.ob){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
-			ob.body._handleEvt('dblclick',{
+			ob.mouseHandlers[ob.mouseHandlers.length-1]('dblclick',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
 				left:left
@@ -1047,7 +1053,7 @@ if(!window.ob){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
-			ob.body._handleEvt('mouseup',{
+			ob.mouseHandlers[ob.mouseHandlers.length-1]('mouseup',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
 				left:left
@@ -1059,7 +1065,7 @@ if(!window.ob){
 			ob._over=[];
 			var left=evt.isLeftClick();
 			var right=(!left || (navigator.platform.indexOf("Mac")!=-1 && ob.ctrl));
-			ob.body._handleEvt('_mousemove',{
+			ob.mouseHandlers[ob.mouseHandlers.length-1]('_mousemove',{
 				point:new OBPoint(evt.pointerX(),evt.pointerY()),
 				right:right,
 				left:left
