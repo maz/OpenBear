@@ -1,4 +1,6 @@
 OBThemeLoader.Selection="selection.png";
+OBThemeLoader.ArrowUp="ArrowUp.png";
+OBThemeLoader.ArrowDown="ArrowDown.png";
 
 window.OBMenuView=Class.create(OBView,{
 	setup:function OBMenuView_setup(items,menu){
@@ -10,14 +12,24 @@ window.OBMenuView=Class.create(OBView,{
 		items.each(function(itm){
 			h=Math.max(h,this.ctx.measureText(itm).attr("height"));
 		}.bind(this));
-		h+=2;
+		h+=4;
 		this.z=h;
 		var y=2;
 		items.each(function(itm){
-			console.info(y);
+			var label=itm;
+			var s=this.ctx.measureText(label);
+			if(s.attr("width")>this.attr("width")-4){
+				label+="...";
+				s=this.ctx.measureText(label);
+				while(s.attr("width")>this.attr("width")-4){
+					label=label.substr(0,label.length-4)+"..."
+					s=this.ctx.measureText(label);
+				}
+			}
 			this.items.push({
-				label:itm,
-				size:this.ctx.measureText(itm),
+				label:label,
+				data:itm,
+				size:s,
 				rect:new OBRect(0,y,this.attr("width"),h-2)
 			});
 			y+=h;
@@ -42,7 +54,7 @@ window.OBMenuView=Class.create(OBView,{
 			}
 			var old=y;
 			this.ctx.fillText(itm.label,2,y+itm.size.attr("height"));
-			y+=this.diff+2;
+			y+=this.z;
 		}
 	},
 	mousemove:function OBMenuView_mousemove(evt){
@@ -59,10 +71,12 @@ window.OBMenuView=Class.create(OBView,{
 		var p=evt.point;
 		for(var i=0;i<this.items.length;i++){
 			if(this.items[i].rect.intersects(p)){
-				this.menu.fire("selected",this.items[i].label);
-				setTimeout(this.menu.hide.bind(this.menu),0);
+				this.menu.hide();
+				this.menu.fire("selected",this.items[i].data);
+				return;
 			}
 		}
+		this.menu.hide();
 	}
 });
 

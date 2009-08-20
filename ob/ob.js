@@ -973,10 +973,14 @@ if(!window.ob){
 		return a;
 	};
 	
+	document.observe("theme:loaded", function OBEvntHandler_HideLoadingBox(){
+		document.body.removeChild($("LoadingBox"));
+	});
+	
 	//FIXME: When (in safari at least) you click the search box, you can't click back into the web page
 	
 	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
-		document.body.innerHTML="";
+		document.body.innerHTML="<div id=\"LoadingBox\" style=\"text-align:center;\"><img src=\""+ob.moduleUrl("ob.themes."+OBCurrentTheme,"loading.gif")+"\"/></div>";
 		document.body.style.overflow="hidden";
 		var demin=document.viewport.getDimensions();
 		ob.body=new OBView(null,new OBRect(0,0,demin.width,demin.height));
