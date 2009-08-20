@@ -65,8 +65,17 @@
 				window.click=new Clicker(window.z,new OBRect(10,10,200,200));
 				window.b=new OBButton(null,new OBRect(500,500,0,0),"Hello");
 				b.observe("click",function(){
-					alert(b.attr("label"));
-					b.attr("label",b.attr("label")+" Joeseph!");
+					var m=new OBMenu([
+						"Joe",
+						"Bob",
+						"Fred",
+						"John",
+						"Richard"
+					]);
+					m.observe("selected",function(x){
+						alert(x);
+					});
+					m.show(new OBRect(500,300-b.attr("height"),100,200));
 				});
 			});
 		</script>

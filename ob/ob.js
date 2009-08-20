@@ -310,9 +310,9 @@ if(!window.ob){
 			}else if(r instanceof OBColor){
 				return this.initialize(r.attr("r"),r.attr("g"),r.attr("b"),g);
 			}else{
-				this.red=r;
-				this.green=g;
-				this.blue=b;
+				this.red=(r<1 && r!=0)?r*255:r;
+				this.green=(g<1 && g!=0)?g*255:g;
+				this.blue=(b<1 && b!=0)?b*255:b;
 				if(Object.isNumber(a)){
 					this.alpha=a;
 				}else{
@@ -777,8 +777,8 @@ if(!window.ob){
 		adjustParentPoint:function OBView_adjustParentPoint(point){
 			var clip=this.attr('clip');
 			point=point.clone();
-			point.attr('x',(evt.point.attr('x')-this.attr('x'))+clip.attr('x'));
-			point.attr('y',(evt.point.attr('y')-this.attr('y'))+clip.attr('y'));
+			point.attr('x',(point.attr('x')-this.attr('x'))+clip.attr('x'));
+			point.attr('y',(point.attr('y')-this.attr('y'))+clip.attr('y'));
 			return point;
 		},
 		_handleEvt:function OBView__handleEvt(name,e){
@@ -973,6 +973,8 @@ if(!window.ob){
 		return a;
 	};
 	
+	//FIXME: When (in safari at least) you click the search box, you can't click back into the web page
+	
 	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
 		document.body.innerHTML="";
 		document.body.style.overflow="hidden";
@@ -985,11 +987,19 @@ if(!window.ob){
 		ob.body._bigcan.style.zIndex=50;
 		ob.body.acceptsFocus=false;
 		document.body.appendChild(ob.body._bigcan);
-		ob.mouseHandlers.push(ob.body._handleEvt);
+		ob.mouseHandlers.push(ob.body._handleEvt.bind(ob.body));
 		document.observe('resize',function OBEvntHandler_Resize(){
-			var d=document.viewport.getDemensions();
+			var d=document.viewport.getDimensions();
 			ob.body.attr('size',new OBSize(d.width,d.height));
 		});
+		document.body.observe('resize',function OBEvntHandler_Resize(){
+			var d=document.viewport.getDimensions();
+			ob.body.attr('size',new OBSize(d.width,d.height));
+		});
+		window.onresize=function OBEvntHandler_Resize(){
+			var d=document.viewport.getDimensions();
+			ob.body.attr('size',new OBSize(d.width,d.height));
+		};
 		ob._tbox=Element.extend(document.createElement("input"));
 		ob._tbox.type="text";
 		ob._tbox.style.position="absolute";
