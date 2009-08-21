@@ -66,6 +66,7 @@
 			document.observe("theme:loaded",function(){
 				window.z=new WeirdView(null,new OBRect(10,10,300,300));
 				window.click=new Clicker(window.z,new OBRect(10,10,200,200));
+				window.tf=new OBTextField(null,new OBRect(300,500,100,24));
 				window.b=new OBButton(null,new OBRect(500,500,0,0),"green");
 				b.observe("click",function(){
 					var m=new OBMenu([
