@@ -43,6 +43,7 @@ window.OBTextField=Class.create(OBView,{
 		this.text="";
 		this.selection=$R(0,0);
 		this.blink=false;
+		this.multiline=false;
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
@@ -96,7 +97,7 @@ window.OBTextField=Class.create(OBView,{
 	keydown:function OBTextField_keydown(evt){
 		//this._updateSelection();
 		//this.update();
-		return evt.keyCode!=Event.KEY_RETURN;
+		return this.multiline?true:evt.keyCode!=Event.KEY_RETURN;
 	},
 	keyup:function OBTextField_keyup(){
 		if(ob._tbox.value!=this.text){
