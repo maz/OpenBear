@@ -1,0 +1,52 @@
+OBThemeLoader.TextfieldBezelSquare0="textfield/textfield-bezel-square-0.png";
+OBThemeLoader.TextfieldBezelSquare1="textfield/textfield-bezel-square-1.png";
+OBThemeLoader.TextfieldBezelSquare2="textfield/textfield-bezel-square-2.png";
+OBThemeLoader.TextfieldBezelSquare3="textfield/textfield-bezel-square-3.png";
+OBThemeLoader.TextfieldBezelSquare4="textfield/textfield-bezel-square-4.png";
+OBThemeLoader.TextfieldBezelSquare5="textfield/textfield-bezel-square-5.png";
+OBThemeLoader.TextfieldBezelSquare6="textfield/textfield-bezel-square-6.png";
+OBThemeLoader.TextfieldBezelSquare7="textfield/textfield-bezel-square-7.png";
+OBThemeLoader.TextfieldBezelSquare8="textfield/textfield-bezel-square-8.png";
+OBThemeLoader.TextfieldBezelSquareFocused0="textfield/textfield-bezel-square-focused-0.png";
+OBThemeLoader.TextfieldBezelSquareFocused1="textfield/textfield-bezel-square-focused-1.png";
+OBThemeLoader.TextfieldBezelSquareFocused2="textfield/textfield-bezel-square-focused-2.png";
+OBThemeLoader.TextfieldBezelSquareFocused3="textfield/textfield-bezel-square-focused-3.png";
+OBThemeLoader.TextfieldBezelSquareFocused4="textfield/textfield-bezel-square-focused-4.png";
+OBThemeLoader.TextfieldBezelSquareFocused5="textfield/textfield-bezel-square-focused-5.png";
+OBThemeLoader.TextfieldBezelSquareFocused6="textfield/textfield-bezel-square-focused-6.png";
+OBThemeLoader.TextfieldBezelSquareFocused7="textfield/textfield-bezel-square-focused-7.png";
+OBThemeLoader.TextfieldBezelSquareFocused8="textfield/textfield-bezel-square-focused-8.png";
+
+window.OBTextField=Class.create(OBView,{
+	setup:function(){
+		this.parts=OBTextField.Regular;
+	},
+	redraw:function(){
+		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
+	}
+});
+
+document.observe("theme:loaded",function OBTextFieldThemeLoaded(){
+	OBTextField.Regular=[
+		OBThemeLoader.TextfieldBezelSquare0,
+		OBThemeLoader.TextfieldBezelSquare1,
+		OBThemeLoader.TextfieldBezelSquare2,
+		OBThemeLoader.TextfieldBezelSquare3,
+		OBThemeLoader.TextfieldBezelSquare4,
+		OBThemeLoader.TextfieldBezelSquare5,
+		OBThemeLoader.TextfieldBezelSquare6,
+		OBThemeLoader.TextfieldBezelSquare7,
+		OBThemeLoader.TextfieldBezelSquare8,
+	];
+	OBTextField.Focused=[
+		OBThemeLoader.TextfieldBezelSquareFocused0,
+		OBThemeLoader.TextfieldBezelSquareFocused1,
+		OBThemeLoader.TextfieldBezelSquareFocused2,
+		OBThemeLoader.TextfieldBezelSquareFocused3,
+		OBThemeLoader.TextfieldBezelSquareFocused4,
+		OBThemeLoader.TextfieldBezelSquareFocused5,
+		OBThemeLoader.TextfieldBezelSquareFocused6,
+		OBThemeLoader.TextfieldBezelSquareFocused7,
+		OBThemeLoader.TextfieldBezelSquareFocused8,
+	];
+});
