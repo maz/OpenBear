@@ -1031,8 +1031,10 @@ if(!window.ob){
 		ob._tbox.style.position="absolute";
 		ob._tbox.style.top="-100px";
 		ob._tbox.style.left="-100px";
-		ob._tbox.style.width="10px";
-		ob._tbox.style.height="10px";
+		ob._tbox.style.width="300px";
+		ob._tbox.style.height="300px";
+		ob._tbox.style.opacity="0";
+		ob._tbox.style.filter="alpha(opacity=0)";
 		ob._tbox.style.zIndex=1;
 		document.body.appendChild(ob._tbox);
 		ob._tbox.focus();
