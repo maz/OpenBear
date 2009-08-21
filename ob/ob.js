@@ -1048,8 +1048,11 @@ if(!window.ob){
 				can=evt.ctrlKey;
 			}
 			if(OBView.focused){
-				if(OBView.focused._keydown(evt)==false){//we don't want undefined triggering allows
+				var val=OBView.focused._keydown(evt);
+				if(val==false){//we don't want undefined triggering allows
 					can=false;
+				}else if(val==true){
+					can=true;
 				}
 			}
 			ob.ctrl=evt.ctrlKey;
