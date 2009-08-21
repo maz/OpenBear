@@ -44,6 +44,7 @@ window.OBTextField=Class.create(OBView,{
 		this.selection=$R(0,0);
 		this.blink=false;
 		this.multiline=false;
+		this.attr("cursor", OBView.Cursors.Text);
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
@@ -57,6 +58,7 @@ window.OBTextField=Class.create(OBView,{
 				this.ctx.fillRect(2+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,2,this.attr("height"));
 			}
 		}else{
+			//FIXME: this will likely, under multiline, yeild a bad effect.
 			var p=[
 				this.text.substr(0,this.selection.start),
 				this.text.substr(this.selection.start,this.selection.end-this.selection.start),
@@ -93,6 +95,8 @@ window.OBTextField=Class.create(OBView,{
 	},
 	lostFocus:function OBTextField_lostFocus(){
 		clearInterval(this.timer);
+		this.blink=false;
+		this.update();
 	},
 	keydown:function OBTextField_keydown(evt){
 		//this._updateSelection();
