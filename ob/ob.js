@@ -118,13 +118,26 @@ if(!window.ob){
 			if(!ctx.arcTo){
 				ctx.arcTo=ctx.arc;
 			}
-			ctx.drawSlicedImage=function ob_createCanvas_drawSlicedImage(slices,x,y,wid){
+			ctx.drawSlicedImage=function ob_createCanvas_drawSlicedImage(slices,x,y,wid,hei){
 				if(slices.length==3){
 					ctx.save();
 						ctx.translate(x,y);
 						ctx.drawImage(slices[0],0,0);
 						ctx.drawImage(slices[1],slices[0].width,0,wid-(slices[0].width+slices[2].width),slices[1].height);
 						ctx.drawImage(slices[2],wid-slices[2].width,0);
+					ctx.restore();
+				}else if(slices.length==9){
+					ctx.save();
+						ctx.translate(x,y);
+						ctx.drawImage(slices[0],0,0);
+						ctx.drawImage(slices[1],slices[0].width,0,wid-(slices[0].width+slices[2].width),slices[1].height);
+						ctx.drawImage(slices[2],wid-slices[2].width,0);
+						ctx.drawImage(slices[3],0,slices[0].height,slices[3].width,hei-(slices[0].height+slices[6].height));
+						ctx.drawImage(slices[4],slices[3].width,slices[1].height,wid-(slices[3].width+slices[5].width),hei-(slices[1].height+slices[7].height));
+						ctx.drawImage(slices[5],wid-slices[5].width,slices[2].height,slices[5].width,hei-(slices[2].height+slices[8].height));
+						ctx.drawImage(slices[6],0,hei-slices[6].height);
+						ctx.drawImage(slices[7],slices[6].width,hei-slices[7].height,wid-(slices[6].width+slices[8].width),slices[7].height);
+						ctx.drawImage(slices[8],wid-slices[8].width,hei-slices[8].height);
 					ctx.restore();
 				}
 			};
@@ -1004,11 +1017,12 @@ if(!window.ob){
 			var d=document.viewport.getDimensions();
 			ob.body.attr('size',new OBSize(d.width,d.height));
 		};
-		ob._tbox=Element.extend(document.createElement("input"));
-		ob._tbox.type="text";
+		ob._tbox=Element.extend(document.createElement("textarea"));
 		ob._tbox.style.position="absolute";
 		ob._tbox.style.top="-100px";
 		ob._tbox.style.left="-100px";
+		ob._tbox.style.width="10px";
+		ob._tbox.style.height="10px";
 		ob._tbox.style.zIndex=1;
 		document.body.appendChild(ob._tbox);
 		ob._tbox.focus();
