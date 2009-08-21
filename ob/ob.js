@@ -154,12 +154,12 @@ if(!window.ob){
 					ob._mspan=mspan;
 				}
 				ob._mspan.style.font=ctx.font;
-				/*var w=ctx._mtxt(txt);
+				var w=ctx._mtxt(txt);
 				if(!Object.isNumber(w)){
 					w=w.width;
-				}*/
-				ob._mspan.innerHTML=txt.escapeHTML();
-				return new OBSize(ob._mspan.offsetWidth,ob._mspan.offsetHeight);
+				}
+				ob._mspan.innerHTML=txt.escapeHTML;
+				return new OBSize(w,ob._mspan.offsetHeight);
 			};
 			return [elem,ctx];
 		},
