@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html>
+	<head>
+		<title>OpenBear Debugger</title>
+		<script src="prototype.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript" charset="utf-8">
+			window.init=function init(win){
+				window.win=win;
+				update();
+			};
+			var currentNode=null;
+			var tree=null;
+			function recurse(v){
+				var view=v;
+				
+			}
+			window.update=function update(){
+				tree=win.ob.body;
+				currentNode=Element.extend(document.createElement("li"));
+				currentNode.innerHTML="/";
+				recurse(win.ob.body);
+				setTimeout(update,250);
+			};
+		</script>
+	</head>
+	<body onunload="window.win.OBDebug.closed();">
+		<div style="float:left;width:150px">
+			<ul id="tree_root">
+				
+			</ul>
+		</div>
+	</body>
+</html>

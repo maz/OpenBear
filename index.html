@@ -7,6 +7,7 @@
 		<script type="text/javascript" charset="utf-8">
 			ob.load("ob.gui.Button");
 			ob.load("ob.gui.Menu");
+			//ob.load("ob.Debug");
 			
 			window.WeirdView=Class.create(OBView,{
 				redraw:function(){
@@ -26,11 +27,12 @@
 				redraw:function(){
 					this.ctx.strokeStyle=OBColor.Yellow.toString();
 					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
-					this.ctx.fillStyle=OBColor.Green.toString();
+					this.ctx.fillStyle=this.color;
 					this.points.each(function(point){
 						this.ctx.fillRect(point.attr('x'),point.attr("y"),5,5);
 					},this);
 				},
+				color:"green",
 				mousedown:function(evt){
 					this.points.push(evt.point);
 					this.update();
@@ -63,20 +65,22 @@
 			document.observe("theme:loaded",function(){
 				window.z=new WeirdView(null,new OBRect(10,10,300,300));
 				window.click=new Clicker(window.z,new OBRect(10,10,200,200));
-				window.b=new OBButton(null,new OBRect(500,500,0,0),"Hello");
+				window.b=new OBButton(null,new OBRect(500,500,0,0),"green");
 				b.observe("click",function(){
 					var m=new OBMenu([
-						"Joe",
-						"Bob",
-						"Fred",
-						"John",
-						"Richard",
-						"A Really long and tedious name"
+						"green",
+						"blue",
+						"purple",
+						"yellow",
+						"white"
 					]);
 					m.observe("selected",function(x){
-						alert(x);
+						b.attr("label",x);
+						click.color=x;
+						click.update();
+						b.sizeToFit();
 					});
-					m.show(new OBRect(500,300-b.attr("height"),100,200));
+					m.show(new OBRect(500,b.attr("y")-200,100,200));
 				});
 			});
 		</script>
