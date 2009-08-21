@@ -95,11 +95,12 @@ if(!window.ob){
 		body:null,
 		Body:null,
 		_tbox:null,
-		_createTbox:function(type){
+		_createTbox:function(type,s){
 			if(ob._tbox){
 				ob._tbox.parentNode.removeChild(ob._tbox);
 				ob._tbox=null;
 			}
+			var stopEvt=!s;
 			ob._tbox=Element.extend(document.createElement(type));
 			if(type=="input"){
 				ob._tbox.type="text";
@@ -132,7 +133,7 @@ if(!window.ob){
 					}
 				}
 				ob.ctrl=evt.ctrlKey;
-				if(!can){
+				if(stopEvt && !can){
 					evt.stop();
 				}
 			}.bindAsEventListener(window));
