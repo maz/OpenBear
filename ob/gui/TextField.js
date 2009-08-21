@@ -35,11 +35,19 @@ OBThemeLoader.TextfieldBezelSquareFocused7="textfield/textfield-bezel-square-foc
 OBThemeLoader.TextfieldBezelSquareFocused8="textfield/textfield-bezel-square-focused-8.png";
 
 window.OBTextField=Class.create(OBView,{
-	setup:function(){
+	setup:function OBTextField_setup(){
 		this.parts=OBTextField.Regular;
+		this.observe("got_focus",this.gotFocus.bind(this));
+		this.observe("lost_focus",this.lostFocus.bind(this));
 	},
-	redraw:function(){
+	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
+	},
+	lostFocus:function OBTextField_lostFocus(){
+		
+	},
+	gotFocus:function OBTextField_gotFocus(){
+		
 	}
 });
 

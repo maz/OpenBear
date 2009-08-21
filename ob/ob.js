@@ -95,56 +95,6 @@ if(!window.ob){
 		body:null,
 		Body:null,
 		_tbox:null,
-		_createTbox:function(type,s){
-			if(ob._tbox){
-				ob._tbox.parentNode.removeChild(ob._tbox);
-				ob._tbox=null;
-			}
-			var stopEvt=!s;
-			ob._tbox=Element.extend(document.createElement(type));
-			if(type=="input"){
-				ob._tbox.type="text";
-			}
-			ob._tbox.style.position="absolute";
-			ob._tbox.style.top="-100px";
-			ob._tbox.style.left="-100px";
-			ob._tbox.style.width="10px";
-			if(type=="textarea"){
-				ob._tbox.style.height="10px";
-			}
-			ob._tbox.style.visibility="hidden";
-			ob._tbox.style.zIndex=1;
-			document.body.appendChild(ob._tbox);
-			ob._tbox.focus();
-			ob._tbox.observe("blur",function OBEvntHandler_blur(){
-				ob._tbox.focus();
-			});
-			ob._tbox.observe("keydown",function OBEvntHandler_keydown(evt){
-				evt=Event.extend(evt);
-				var can=true;
-				if((navigator.platform.indexOf("Mac")!=-1)){
-					can=evt.metaKey;
-				}else{
-					can=evt.ctrlKey;
-				}
-				if(OBView.focused){
-					if(OBView.focused._keydown(evt)==false){//we don't want undefined triggering allows
-						can=false;
-					}
-				}
-				ob.ctrl=evt.ctrlKey;
-				if(stopEvt && !can){
-					evt.stop();
-				}
-			}.bindAsEventListener(window));
-			ob._tbox.observe("keyup",function OBEvntHandler_keyup(evt){
-				evt=Event.extend(evt);
-				if(OBView.focused){
-					OBView.focused.keyup(evt);
-				}
-				ob.ctrl=evt.ctrlKey;
-			}.bindAsEventListener(window));
-		},
 		_ctrl:false,
 		_over:[],
 		/** @id ob_createCanvas*/
@@ -844,6 +794,16 @@ if(!window.ob){
 			point.attr('y',(point.attr('y')-this.attr('y'))+clip.attr('y'));
 			return point;
 		},
+		getGlobalOrigin:function OBView_getGlobalOrigin(){
+			var point=new OBPoint(0,0);
+			var obj=this;
+			while(obj && obj.parent){
+				point.attr("x",point.attr("x")+(obj.attr("x")-obj.attr("clip").attr("x")));
+				point.attr("y",point.attr("y")+(obj.attr("y")-obj.attr("clip").attr("y")));
+				obj=obj.parent;
+			}
+			return point;
+		},
 		_handleEvt:function OBView__handleEvt(name,e){
 			ob._over.push(this);
 			var evt=e;
@@ -1067,7 +1027,43 @@ if(!window.ob){
 			var d=document.viewport.getDimensions();
 			ob.body.attr('size',new OBSize(d.width,d.height));
 		};
-		ob._createTbox("textarea");
+		ob._tbox=Element.extend(document.createElement("textarea"));
+		ob._tbox.style.position="absolute";
+		ob._tbox.style.top="-100px";
+		ob._tbox.style.left="-100px";
+		ob._tbox.style.width="10px";
+		ob._tbox.style.height="10px";
+		ob._tbox.style.zIndex=1;
+		document.body.appendChild(ob._tbox);
+		ob._tbox.focus();
+		ob._tbox.observe("blur",function OBEvntHandler_blur(){
+			ob._tbox.focus();
+		});
+		ob._tbox.observe("keydown",function OBEvntHandler_keydown(evt){
+			evt=Event.extend(evt);
+			var can=true;
+			if((navigator.platform.indexOf("Mac")!=-1)){
+				can=evt.metaKey;
+			}else{
+				can=evt.ctrlKey;
+			}
+			if(OBView.focused){
+				if(OBView.focused._keydown(evt)==false){//we don't want undefined triggering allows
+					can=false;
+				}
+			}
+			ob.ctrl=evt.ctrlKey;
+			if(!can){
+				evt.stop();
+			}
+		}.bindAsEventListener(window));
+		ob._tbox.observe("keyup",function OBEvntHandler_keyup(evt){
+			evt=Event.extend(evt);
+			if(OBView.focused){
+				OBView.focused.keyup(evt);
+			}
+			ob.ctrl=evt.ctrlKey;
+		}.bindAsEventListener(window));
 		document.observe("mousedown",function OBEvntHandler_mousedown(evt){
 			evt=Event.extend(evt);
 			var left=evt.isLeftClick();
