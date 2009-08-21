@@ -38,16 +38,43 @@ window.OBTextField=Class.create(OBView,{
 	setup:function OBTextField_setup(){
 		this.parts=OBTextField.Regular;
 		this.observe("got_focus",this.gotFocus.bind(this));
-		this.observe("lost_focus",this.lostFocus.bind(this));
+		this.observe("changed",this.update.bind(this));
+		this.text="";
+		this.selection=$R(0,0);
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
 	},
-	lostFocus:function OBTextField_lostFocus(){
-		
-	},
 	gotFocus:function OBTextField_gotFocus(){
-		
+		ob._tbox.value=this.text;
+		this._select();
+	},
+	keydown:function OBTextField_keydown(evt){
+		return evt.keyCode!=Event.KEY_RETURN;
+	},
+	keyup:function OBTextField_keyup(){
+		if(ob._tbox.value!=this.text){
+			this.text=ob.tbox.value;
+			this.fire("changed");
+		}
+	},
+	setter_text:function OBTextField_setter_text(txt){
+		this.text=txt;
+		if(this.attr("focused")){
+			ob._tbox.value=txt;
+		}
+	},
+	_select:function OBTextField__select(){
+		var start=this.selection.start;
+		var end=this.selection.end;
+		if(ob._tbox.createTextRange){
+			var r=ob._tbox.createTextRange();
+			r.moveStart("character",start);
+			r.moveEnd("character",end);
+			r.select();
+		}else if(ob._tbox.setSelectionRange){
+			ob._tbox.setSelectionRange(start,end-start);
+		}
 	}
 });
 
