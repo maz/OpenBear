@@ -24,7 +24,7 @@ OBThemeLoader.TextfieldBezelSquare5="textfield/textfield-bezel-square-5.png";
 OBThemeLoader.TextfieldBezelSquare6="textfield/textfield-bezel-square-6.png";
 OBThemeLoader.TextfieldBezelSquare7="textfield/textfield-bezel-square-7.png";
 OBThemeLoader.TextfieldBezelSquare8="textfield/textfield-bezel-square-8.png";
-OBThemeLoader.TextfieldBezelSquareFocused0="textfield/textfield-bezel-square-focused-0.png";
+/*OBThemeLoader.TextfieldBezelSquareFocused0="textfield/textfield-bezel-square-focused-0.png";
 OBThemeLoader.TextfieldBezelSquareFocused1="textfield/textfield-bezel-square-focused-1.png";
 OBThemeLoader.TextfieldBezelSquareFocused2="textfield/textfield-bezel-square-focused-2.png";
 OBThemeLoader.TextfieldBezelSquareFocused3="textfield/textfield-bezel-square-focused-3.png";
@@ -32,7 +32,7 @@ OBThemeLoader.TextfieldBezelSquareFocused4="textfield/textfield-bezel-square-foc
 OBThemeLoader.TextfieldBezelSquareFocused5="textfield/textfield-bezel-square-focused-5.png";
 OBThemeLoader.TextfieldBezelSquareFocused6="textfield/textfield-bezel-square-focused-6.png";
 OBThemeLoader.TextfieldBezelSquareFocused7="textfield/textfield-bezel-square-focused-7.png";
-OBThemeLoader.TextfieldBezelSquareFocused8="textfield/textfield-bezel-square-focused-8.png";
+OBThemeLoader.TextfieldBezelSquareFocused8="textfield/textfield-bezel-square-focused-8.png";*/
 OBThemeLoader.Selection="selection.png";
 
 window.OBTextField=Class.create(OBView,{
@@ -48,7 +48,7 @@ window.OBTextField=Class.create(OBView,{
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
-		this.ctx.font="10pt Arial";
+		this.ctx.font=OBTextField.font;
 		if(this.selection.end==this.selection.start){
 			this.ctx.fillStyle="black";
 			var m=this.ctx.measureText(this.text);
@@ -106,7 +106,10 @@ window.OBTextField=Class.create(OBView,{
 	keyup:function OBTextField_keyup(){
 		if(ob._tbox.value!=this.text){
 			this.text=ob._tbox.value;
-			this.fire("changed");
+			this._updateSizes();
+			setTimeout(function OBTextField_keyup_sub(){
+				this.fire("changed");
+			}.bind(this),0);
 		}
 		this._updateSelection();
 		this.update();
@@ -116,8 +119,19 @@ window.OBTextField=Class.create(OBView,{
 		var end=ob._tbox.selectionEnd;
 		this.selection=$R(start,end);
 	},
+	_updateSizes:function OBTextField__updateSizes(){
+		this.ctx.font=OBTextField.font;
+		var ch=null;
+		for(var i=0;i<this.text.length;i++){
+			ch=this.text[i];
+			if(!OBTextField.CharacterSizeHash[ch]){
+				OBTextField.CharacterSizeHash[ch]=this.ctx.measureTextWidth(ch);
+			}
+		}
+	},
 	setter_text:function OBTextField_setter_text(txt){
 		this.text=txt;
+		this._updateSizes();
 		this.attr("selection",$R(0,0));
 		if(this.attr("focused")){
 			ob._tbox.value=txt;
@@ -143,9 +157,27 @@ window.OBTextField=Class.create(OBView,{
 		}
 	},
 	mousedown:function OBTextField_mousedown(evt){
-		
+		var px=evt.point.attr("x");
+		var x=2;
+		if(px<=2){
+			this.attr("selection",$R(0,0));
+			return;
+		}
+		for(var i=0;i<this.text.length;i++){
+			var ch=this.text[i];
+			var size=OBTextField.CharacterSizeHash[ch];
+			if(px>=x && px<=x+size){
+				i++;
+				this.attr("selection",$R(i,i));
+				return;
+			}
+			x+=size;
+		}
 	}
 });
+
+OBTextField.CharacterSizeHash={};
+OBTextField.font="10pt Arial";
 
 document.observe("theme:loaded",function OBTextFieldThemeLoaded(){
 	OBTextField.Regular=[
@@ -159,7 +191,7 @@ document.observe("theme:loaded",function OBTextFieldThemeLoaded(){
 		OBThemeLoader.TextfieldBezelSquare7,
 		OBThemeLoader.TextfieldBezelSquare8,
 	];
-	OBTextField.Focused=[
+	/*OBTextField.Focused=[
 		OBThemeLoader.TextfieldBezelSquareFocused0,
 		OBThemeLoader.TextfieldBezelSquareFocused1,
 		OBThemeLoader.TextfieldBezelSquareFocused2,
@@ -169,5 +201,5 @@ document.observe("theme:loaded",function OBTextFieldThemeLoaded(){
 		OBThemeLoader.TextfieldBezelSquareFocused6,
 		OBThemeLoader.TextfieldBezelSquareFocused7,
 		OBThemeLoader.TextfieldBezelSquareFocused8,
-	];
+	];*/
 });
