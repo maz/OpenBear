@@ -552,6 +552,7 @@ if(!window.ob){
 		rotation:0,//radians
 		_buffer:false,
 		initialize:function OBView_constructor(parent,frame){
+			this.autoresize=0;
 			this.children=[];
 			this.parent=parent?parent:ob.body;//ob.body will be null until it is created therefore, when we make the ob.body view, it will be null
 			if(this.parent){
@@ -661,17 +662,68 @@ if(!window.ob){
 			this.fire("origin_changed");
 		},
 		setter_size:function OBView_setter_size(v){
+			var diff=this.attr("size").clone();
 			v=v.clone();
 			v.attr('width',Math.max(1,Math.round(v.attr('width'))));
 			v.attr('height',Math.max(1,Math.round(v.attr('height'))));
+			diff.attr("width",v.attr("width")-diff.attr("width"));
+			diff.attr("height",v.attr("height")-diff.attr("height"));
 			this._rcenter=new OBPoint((this.attr('width')/2)+this.attr('x'),(this.attr('height')/2)+this.attr('y'));
 			this.attr('frame').attr('size',v);
 			this._bigcan.width=this.attr('width');
 			this._bigcan.height=this.attr('height');
 			this._can.width=this.attr('width');
 			this._can.height=this.attr('height');
+			for(var i=0;i<this.children.length;i++){
+				this.children[i]._applyAutoresize(diff);
+			}
 			this.fire("size_changed");
 			this.update();
+		},
+		// ==========================================================================================================
+		// = Thanks to Cappuccino (http://www.cappuccino.org/) for providing info that I based this function off of =
+		// ==========================================================================================================
+		_applyAutoresize:function OBView__applyAutoresize(delta){
+			var a=this.attr("autoresize");
+			var nsize=this.attr("size");
+			var norigin=this.attr("origin");
+			if(a & OBView.Autoresize.Width){
+				if(nsize==this.attr("size")){
+					nsize=nsize.clone();
+				}
+				nsize.width+=delta.width;
+			}
+			if(a & OBView.Autoresize.Height){
+				if(nsize==this.attr("size")){
+					nsize=nsize.clone();
+				}
+				nsize.height+=delta.height;
+			}
+			if(a & OBView.Autoresize.LockTopLeft){
+				//Do Nothing
+			}else if(a & OBView.Autoresize.LockTopRight){
+				if(norigin==this.attr("origin")){
+					norigin=norigin.clone();
+				}
+				norigin.x=this.attr("origin").x-nsize.width;
+			}else if(a & OBView.Autoresize.LockBottomLeft){
+				if(norigin==this.attr("origin")){
+					norigin=norigin.clone();
+				}
+				norigin.y=this.attr("origin").y-nsize.height;
+			}else if(a & OBView.Autoresize.LockBottomRight){
+				if(norigin==this.attr("origin")){
+					norigin=norigin.clone();
+				}
+				norigin.y=this.attr("origin").y-nsize.height;
+				norigin.x=this.attr("origin").x-nsize.width;
+			}
+			if(norigin!=this.attr("origin")){
+				this.attr("origin",norigin);
+			}
+			if(nsize!=this.attr("size")){
+				this.attr("size",nsize);
+			}
 		},
 		getter_x:function OBView_getter_x(){
 			return this.attr('origin').attr('x');
@@ -839,6 +891,15 @@ if(!window.ob){
 	OBView.focused=null;
 	OBView.FocusColor=OBColor.Orange;
 	OBView.FocusWidth=5;
+	
+	OBView.Autoresize={
+		LockTopLeft:0,
+		LockTopRight:1,
+		LockBottomLeft:2,
+		LockBottomRight:4,
+		Width:8,
+		Height:16
+	};
 	
 	OBView.Cursors={
 		"Resize":{
