@@ -59,7 +59,7 @@ window.OBTextField=Class.create(OBView,{
 				this.ctx.fillRect(2+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,2,this.attr("height"));
 			}
 		}else{
-			//FIXME: this will likely, under multiline, yeild a bad effect.
+			//FIXME: this will likely, under multiline, yield a bad effect.
 			var p=[
 				this.text.substr(0,this.selection.start),
 				this.text.substr(this.selection.start,this.selection.end-this.selection.start),
