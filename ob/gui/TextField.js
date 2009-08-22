@@ -56,7 +56,7 @@ window.OBTextField=Class.create(OBView,{
 			this.ctx.fillText(this.text,2,m.attr("height"));
 			if(this.blink){
 				this.ctx.fillStyle="black";
-				this.ctx.fillRect(2+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,2,this.attr("height"));
+				this.ctx.fillRect(2+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
 			}
 		}else{
 			//FIXME: this will likely, under multiline, yield a bad effect.
