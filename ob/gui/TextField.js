@@ -45,6 +45,7 @@ window.OBTextField=Class.create(OBView,{
 		this.blink=false;
 		this.multiline=false;
 		this.attr("cursor", OBView.Cursors.Text);
+		this._dstart=null;
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
@@ -139,6 +140,9 @@ window.OBTextField=Class.create(OBView,{
 	},
 	setter_selection:function OBTextField_setter_selection(sel){
 		this.selection=sel;
+		if(sel.start==sel.end){
+			this._dstart=sel.start;
+		}
 		if(this.attr("focused")){
 			this._select();
 		}
@@ -171,11 +175,37 @@ window.OBTextField=Class.create(OBView,{
 			var size=OBTextField.CharacterSizeHash[ch];
 			if(px>=x && px<=x+size){
 				i++;
+				this._dstart=i;
 				this.attr("selection",$R(i,i));
 				return;
 			}
 			x+=size;
 		}
+		this.attr("selection",$R(this.text.length,this.text.length));
+	},
+	mousedrag:function OBTextField_mousedrag(evt){
+		var px=evt.point.attr("x");
+		var x=2;
+		if(px<=2){
+			var i=0;
+			var s=this._dstart<i?this._dstart:i;
+			var e=this._dstart<i?i:this._dstart;
+			this.attr("selection",$R(s,e));
+			return;
+		}
+		for(var i=0;i<this.text.length;i++){
+			var ch=this.text[i];
+			var size=OBTextField.CharacterSizeHash[ch];
+			if(px>=x && px<=x+size){
+				i++;
+				var s=this._dstart<i?this._dstart:i;
+				var e=this._dstart<i?i:this._dstart;
+				this.attr("selection",$R(s,e));
+				return;
+			}
+			x+=size;
+		}
+		this.attr("selection",$R(this._dstart,this.text.length));
 	}
 });
 
