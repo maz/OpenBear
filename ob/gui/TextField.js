@@ -152,6 +152,9 @@ window.OBTextField=Class.create(OBView,{
 			r.moveStart("character",start);
 			r.moveEnd("character",end);
 			r.select();
+		}else if(Object.isNumber(ob._tbox.selectionStart)){
+			ob._tbox.selectionStart=start;
+			ob._tbox.selectionEnd=end;
 		}else if(ob._tbox.setSelectionRange){
 			ob._tbox.setSelectionRange(start,end-start);
 		}
