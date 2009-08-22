@@ -102,7 +102,15 @@ window.OBTextField=Class.create(OBView,{
 	keydown:function OBTextField_keydown(evt){
 		//this._updateSelection();
 		//this.update();
-		return this.multiline?true:evt.keyCode!=Event.KEY_RETURN;
+		//return this.multiline?true:evt.keyCode!=Event.KEY_RETURN;
+		if(this.multiline){
+			return true;
+		}else if(evt.keyCode==Event.KEY_RETURN){
+			this.fire("trigger");
+			return false;
+		}else{
+			return true;
+		}
 	},
 	keyup:function OBTextField_keyup(){
 		if(ob._tbox.value!=this.text){
