@@ -687,41 +687,44 @@ if(!window.ob){
 			var a=this.attr("autoresize");
 			var nsize=this.attr("size");
 			var norigin=this.attr("origin");
+			var s=this.attr("size");
+			var o=this.attr("origin");
 			if(a & OBView.Autoresize.Width){
-				if(nsize==this.attr("size")){
+				if(nsize==s){
 					nsize=nsize.clone();
 				}
 				nsize.width+=delta.width;
 			}
 			if(a & OBView.Autoresize.Height){
-				if(nsize==this.attr("size")){
+				if(nsize==s){
 					nsize=nsize.clone();
 				}
 				nsize.height+=delta.height;
 			}
+			var d=new OBSize(a&OBView.Autoresize.Width?0:delta.width,a&OBView.Autoresize.Height?0:delta.height);
 			if(a & OBView.Autoresize.LockTopLeft){
 				//Do Nothing
 			}else if(a & OBView.Autoresize.LockTopRight){
-				if(norigin==this.attr("origin")){
+				if(norigin==o){
 					norigin=norigin.clone();
 				}
-				norigin.x=this.attr("origin").x-nsize.width;
+				norigin.x-=d.width;
 			}else if(a & OBView.Autoresize.LockBottomLeft){
-				if(norigin==this.attr("origin")){
+				if(norigin==o){
 					norigin=norigin.clone();
 				}
-				norigin.y=this.attr("origin").y-nsize.height;
+				norigin.y-=d.height;
 			}else if(a & OBView.Autoresize.LockBottomRight){
-				if(norigin==this.attr("origin")){
+				if(norigin==o){
 					norigin=norigin.clone();
 				}
-				norigin.y=this.attr("origin").y-nsize.height;
-				norigin.x=this.attr("origin").x-nsize.width;
+				norigin.x-=d.width;
+				norigin.y-=d.height;
 			}
-			if(norigin!=this.attr("origin")){
+			if(norigin!=o){
 				this.attr("origin",norigin);
 			}
-			if(nsize!=this.attr("size")){
+			if(nsize!=s){
 				this.attr("size",nsize);
 			}
 		},
