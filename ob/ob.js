@@ -708,18 +708,18 @@ if(!window.ob){
 				if(norigin==o){
 					norigin=norigin.clone();
 				}
-				norigin.x-=d.width;
+				norigin.x+=d.width;
 			}else if(a & OBView.Autoresize.LockBottomLeft){
 				if(norigin==o){
 					norigin=norigin.clone();
 				}
-				norigin.y-=d.height;
+				norigin.y+=d.height;
 			}else if(a & OBView.Autoresize.LockBottomRight){
 				if(norigin==o){
 					norigin=norigin.clone();
 				}
-				norigin.x-=d.width;
-				norigin.y-=d.height;
+				norigin.x+=d.width;
+				norigin.y+=d.height;
 			}
 			if(norigin!=o){
 				this.attr("origin",norigin);
