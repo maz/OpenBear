@@ -34,6 +34,7 @@ OBThemeLoader.TextfieldBezelSquareFocused6="textfield/textfield-bezel-square-foc
 OBThemeLoader.TextfieldBezelSquareFocused7="textfield/textfield-bezel-square-focused-7.png";
 OBThemeLoader.TextfieldBezelSquareFocused8="textfield/textfield-bezel-square-focused-8.png";*/
 OBThemeLoader.Selection="selection.png";
+OBThemeLoader.Search="search.png";
 
 window.OBTextField=Class.create(OBView,{
 	setup:function OBTextField_setup(){
@@ -219,6 +220,17 @@ window.OBTextField=Class.create(OBView,{
 	setter_diff:function OBTextField_setter_diff(d){
 		this.diff=d;
 		this.update();
+	}
+});
+
+window.OBSearchField=Class.create(OBTextField,{
+	setup:function($super){
+		$super();
+		this.diff=OBThemeLoader.Search.width+2;
+	},
+	redraw:function($super){
+		$super();
+		this.ctx.drawImage(OBThemeLoader.Search,0,0);
 	}
 });
 
