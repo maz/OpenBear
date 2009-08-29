@@ -46,6 +46,7 @@ window.OBTextField=Class.create(OBView,{
 		this.multiline=false;
 		this.attr("cursor", OBView.Cursors.Text);
 		this._dstart=null;
+		this.diff=2;
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
@@ -53,10 +54,10 @@ window.OBTextField=Class.create(OBView,{
 		if(this.selection.end==this.selection.start){
 			this.ctx.fillStyle="black";
 			var m=this.ctx.measureText(this.text);
-			this.ctx.fillText(this.text,2,m.attr("height"));
+			this.ctx.fillText(this.text,this.diff,m.attr("height"));
 			if(this.blink){
 				this.ctx.fillStyle="black";
-				this.ctx.fillRect(2+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
+				this.ctx.fillRect(this.diff+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
 			}
 		}else{
 			//FIXME: this will likely, under multiline, yield a bad effect.
@@ -72,14 +73,14 @@ window.OBTextField=Class.create(OBView,{
 			];
 			if(p[0].length!=0){
 				this.ctx.fillStyle="black";
-				this.ctx.fillText(p[0],2,m[0].attr("height"));
+				this.ctx.fillText(p[0],this.diff,m[0].attr("height"));
 			}
-			this.ctx.drawImage(OBThemeLoader.Selection,2+m[0].attr("width"),0,m[1].attr("width"),this.attr("height"));
+			this.ctx.drawImage(OBThemeLoader.Selection,this.diff+m[0].attr("width"),0,m[1].attr("width"),this.attr("height"));
 			this.ctx.fillStyle="white";
-			this.ctx.fillText(p[1],2+m[0].attr("width"),m[1].attr("height"));
+			this.ctx.fillText(p[1],this.diff+m[0].attr("width"),m[1].attr("height"));
 			if(p[1].length!=0){
 				this.ctx.fillStyle="black";
-				this.ctx.fillText(p[2],m[1].attr("width")+m[0].attr("width"),m[1].attr("height"));
+				this.ctx.fillText(p[2],m[1].attr("width")+m[0].attr("width")+this.diff,m[1].attr("height"));
 			}
 		}
 	},
@@ -173,8 +174,8 @@ window.OBTextField=Class.create(OBView,{
 	},
 	mousedown:function OBTextField_mousedown(evt){
 		var px=evt.point.attr("x");
-		var x=2;
-		if(px<=2){
+		var x=this.diff;
+		if(px<=this.diff){
 			this.attr("selection",$R(0,0));
 			return;
 		}
@@ -193,8 +194,8 @@ window.OBTextField=Class.create(OBView,{
 	},
 	mousedrag:function OBTextField_mousedrag(evt){
 		var px=evt.point.attr("x");
-		var x=2;
-		if(px<=2){
+		var x=this.diff;
+		if(px<=this.diff){
 			var i=0;
 			var s=this._dstart<i?this._dstart:i;
 			var e=this._dstart<i?i:this._dstart;
@@ -214,6 +215,10 @@ window.OBTextField=Class.create(OBView,{
 			x+=size;
 		}
 		this.attr("selection",$R(this._dstart,this.text.length));
+	},
+	setter_diff:function OBTextField_setter_diff(d){
+		this.diff=d;
+		this.update();
 	}
 });
 
