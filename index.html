@@ -67,7 +67,7 @@
 				window.z=new WeirdView(null,new OBRect(10,10,300,300));
 				window.click=new Clicker(window.z,new OBRect(90,90,200,200));
 				click.attr("autoresize",OBView.Autoresize.Width|OBView.Autoresize.Height|OBView.Autoresize.LockBottomRight);
-				window.tf=new OBTextField(null,new OBRect(300,320,500,24));
+				window.tf=new OBSearchField(null,new OBRect(300,320,500,24));
 				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Clear");
 				cb.observe("click",function(){
 					click.points=[];

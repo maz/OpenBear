@@ -226,7 +226,7 @@ window.OBTextField=Class.create(OBView,{
 window.OBSearchField=Class.create(OBTextField,{
 	setup:function($super){
 		$super();
-		this.diff=OBThemeLoader.Search.width+2;
+		this.diff=OBThemeLoader.Search.width;
 	},
 	redraw:function($super){
 		$super();
