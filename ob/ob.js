@@ -911,8 +911,11 @@ if(!window.ob){
 		Height:16
 	};
 	
-	OBView.print=function OBView_print(arr,title){
+	OBView.print=function OBView_print(arr,title,cb){
 		var t=title;
+		var callb=cb;
+		var buffer=document.title;
+		document.title=t;
 		var i=0;
 		var can=new Array(arr.length);
 		for(i=0;i<arr.length;i++){
@@ -927,16 +930,21 @@ if(!window.ob){
 		frame.style.width="10px";
 		frame.style.height="10px";
 		document.body.appendChild(frame);
-		iframe.onload=function OBView_print_sub1(){
+		frame.onload=function OBView_print_sub1(){
 			var win=ob.getFrameWindow(frame);
+			win.document.title=t;
 			for(var i=0;i<can.length-1;i++){
 				can[i].style.pageBreakAfter="always";
 				win.document.body.appendChild(can[i]);
 			}
-			win.document.body.appendChild(can.views[can.length-1]);
+			win.document.body.appendChild(can[can.length-1]);
 			win.print();
 			setTimeout(function OBView_print_sub2(){
 				document.body.removeChild(frame);
+				document.title=buffer;
+				if(callb){
+					callb();
+				}
 			},100);
 		};
 		frame.src=ob.moduleUrl("ob","printing.html");
