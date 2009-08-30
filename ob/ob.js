@@ -69,6 +69,12 @@ if(!window.ob){
 				ob._loadedPkgs.push(pkg);
 			}
 		},
+		// ====================================================================================================
+		// = Thanks to Objetive-J/Cappuccino (www.cappuccino.org) for providing a basis of the below function =
+		// ====================================================================================================
+		getFrameWindow:function ob_getFrameWindow(f){
+			return (f.contentDocument && f.contentDocument.defaultView) || f.contentWindow;
+		},
 		/** @id ob_moduleUrl */
 		moduleUrl:function ob_moduleUrl(pkg, file){
 			var arr=pkg.split(".");
@@ -845,6 +851,7 @@ if(!window.ob){
 					this.fire("removed");
 					this.parent.fire("child_removed",this);
 				}
+				this.parent=null;
 			}
 		},
 		adjustParentPoint:function OBView_adjustParentPoint(point){
@@ -902,6 +909,37 @@ if(!window.ob){
 		LockBottomRight:4,
 		Width:8,
 		Height:16
+	};
+	
+	OBView.print=function OBView_print(arr,title){
+		var t=title;
+		var i=0;
+		var can=new Array(arr.length);
+		for(i=0;i<arr.length;i++){
+			arr[i].remove();
+			can[i]=arr[i]._bigcan;
+			can[i].style.display="block";
+		}
+		var frame=Element.extend(document.createElement("iframe"));
+		frame.style.position="absolute";
+		frame.style.top="-100px";
+		frame.style.left="-100px";
+		frame.style.width="10px";
+		frame.style.height="10px";
+		document.body.appendChild(frame);
+		iframe.onload=function OBView_print_sub1(){
+			var win=ob.getFrameWindow(frame);
+			for(var i=0;i<can.length-1;i++){
+				can[i].style.pageBreakAfter="always";
+				win.document.body.appendChild(can[i]);
+			}
+			win.document.body.appendChild(can.views[can.length-1]);
+			win.print();
+			setTimeout(function OBView_print_sub2(){
+				document.body.removeChild(frame);
+			},100);
+		};
+		frame.src=ob.moduleUrl("ob","printing.html");
 	};
 	
 	OBView.Cursors={
