@@ -26,9 +26,15 @@ window.OBMenuView=Class.create(OBView,{
 		this.selected=-1;
 		this.applyFontParams();
 		var h=0;
+		var w=0;
 		items.each(function(itm){
-			h=Math.max(h,this.ctx.measureText(itm).attr("height"));
+			var m=this.ctx.measureText(itm);
+			h=Math.max(h,m.attr("height"));
+			w=Math.max(w,m.attr("width"));
 		}.bind(this));
+		if(!this.attr("width")){
+			this.attr("width",w+4);
+		}
 		h+=4;
 		this.z=h;
 		var y=2;

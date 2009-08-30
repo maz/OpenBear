@@ -68,10 +68,44 @@
 				window.click=new Clicker(window.z,new OBRect(90,90,200,200));
 				click.attr("autoresize",OBView.Autoresize.Width|OBView.Autoresize.Height|OBView.Autoresize.LockBottomRight);
 				window.tf=new OBSearchField(null,new OBRect(300,320,500,24));
-				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Clear");
+				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Actions");
 				cb.observe("click",function(){
-					click.points=[];
-					click.update();
+					var m=new OBMenu([
+						"Clear",
+						"Print Selected Color",
+						"Print All Colors"
+					]);
+					m.observe("selected",function(x){
+						if(x=="Print Selected Color"){
+							var c=new Clicker(null,click.attr("frame"));
+							c.color=click.color;
+							c.points=click.points;
+							c.update();
+							OBView.print([c],"One Color");
+						}else if(x=="Print All Colors"){
+							var arr=[];
+							var colors=[
+								"green",
+								"blue",
+								"purple",
+								"yellow",
+								"orange",
+								"black"
+							];
+							for(var i=0;i<colors.length;i++){
+								var c=new Clicker(null,click.attr("frame"));
+								c.color=colors[i];
+								c.points=click.points;
+								c.update();
+								arr.push(c);
+							}
+							OBView.print(arr,"All Colors");
+						}else if(x=="Clear"){
+							click.points=[];
+							click.update();
+						}
+					});
+					m.show(new OBRect(cb.attr("x"),cb.attr("y")-200,0,200));
 				});
 				window.b=new OBButton(null,new OBRect(500,500,0,0),"green");
 				b.observe("click",function(){
