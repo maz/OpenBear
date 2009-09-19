@@ -44,7 +44,6 @@ window.OBTextField=Class.create(OBView,{
 		this.text="";
 		this.selection=$R(0,0);
 		this.blink=false;
-		this.multiline=false;
 		this.attr("cursor", OBView.Cursors.Text);
 		this._dstart=null;
 		this.diff=2;
@@ -61,7 +60,6 @@ window.OBTextField=Class.create(OBView,{
 				this.ctx.fillRect(this.diff+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
 			}
 		}else{
-			//FIXME: this will likely, under multiline, yield a bad effect.
 			var p=[
 				this.text.substr(0,this.selection.start),
 				this.text.substr(this.selection.start,this.selection.end-this.selection.start),
@@ -104,10 +102,7 @@ window.OBTextField=Class.create(OBView,{
 	keydown:function OBTextField_keydown(evt){
 		//this._updateSelection();
 		//this.update();
-		//return this.multiline?true:evt.keyCode!=Event.KEY_RETURN;
-		if(this.multiline){
-			return true;
-		}else if(evt.keyCode==Event.KEY_RETURN){
+		if(evt.keyCode==Event.KEY_RETURN){
 			this.fire("trigger");
 			return false;
 		}else{
