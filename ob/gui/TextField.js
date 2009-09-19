@@ -46,6 +46,7 @@ window.OBTextField=Class.create(OBView,{
 		this.blink=false;
 		this.attr("cursor", OBView.Cursors.Text);
 		this._dstart=null;
+		this._start=0;
 		this.diff=2;
 	},
 	redraw:function OBTextField_redraw(){
@@ -53,16 +54,17 @@ window.OBTextField=Class.create(OBView,{
 		this.ctx.font=OBTextField.font;
 		if(this.selection.end==this.selection.start){
 			this.ctx.fillStyle="black";
-			var m=this.ctx.measureText(this.text);
-			this.ctx.fillText(this.text,this.diff,m.attr("height"));
+			var txt=this.text.substring(this._start);
+			var m=this.ctx.measureText(txt);
+			this.ctx.fillText(txt,this.diff,m.attr("height"));
 			if(this.blink){
 				this.ctx.fillStyle="black";
-				this.ctx.fillRect(this.diff+this.ctx.measureText(this.text.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
+				this.ctx.fillRect(this.diff+this.ctx.measureText(txt.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
 			}
 		}else{
 			var p=[
-				this.text.substr(0,this.selection.start),
-				this.text.substr(this.selection.start,this.selection.end-this.selection.start),
+				this.text.substring(this._start,Math.max(this.selection.start,this._start)),
+				this.text.substring(Math.max(this.selection.start,this._start),this.selection.end),
 				this.text.substring(this.selection.end)
 			];
 			var m=[
@@ -106,6 +108,8 @@ window.OBTextField=Class.create(OBView,{
 			this.fire("trigger");
 			return false;
 		}else{
+			this._updateSelection();
+			this.update();
 			return true;
 		}
 	},
@@ -175,7 +179,7 @@ window.OBTextField=Class.create(OBView,{
 			this.attr("selection",$R(0,0));
 			return;
 		}
-		for(var i=0;i<this.text.length;i++){
+		for(var i=this._start;i<this.text.length;i++){
 			var ch=this.text[i];
 			var size=OBTextField.CharacterSizeHash[ch];
 			if(px>=x && px<=x+size){
@@ -198,7 +202,7 @@ window.OBTextField=Class.create(OBView,{
 			this.attr("selection",$R(s,e));
 			return;
 		}
-		for(var i=0;i<this.text.length;i++){
+		for(var i=this._start;i<this.text.length;i++){
 			var ch=this.text[i];
 			var size=OBTextField.CharacterSizeHash[ch];
 			if(px>=x && px<=x+size){
