@@ -84,7 +84,7 @@ window.OBMenuView=Class.create(OBView,{
 				this.ctx.fillStyle="black";
 			}
 			var old=y;
-			this.ctx.fillText(itm.label,2,y+itm.size.attr("height"));
+			this.ctx.fillText(itm.label,2,y+itm.size.attr("height")+2);
 			y+=this.z;
 		}
 	},
