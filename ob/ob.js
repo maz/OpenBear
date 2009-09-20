@@ -1277,18 +1277,37 @@ if(!window.ob){
 		}
 		for(x in OBThemeLoader){
 			var file=OBThemeLoader[x];
-			var img=new Image();
-			img.onload=function OBThemeLoader_image_onload(){
-				loadedImgs++;
-				if(loadedImgs==totalImgs){
-					document.fire("theme:loaded");
-				}
-			};
-			img.onerror=function OBThemeLoader_image_onerror(){
-				throw new Error("Error loading image "+this.src);
-			};
-			img.src=ob.moduleUrl("ob.themes."+OBCurrentTheme,file);
-			OBThemeLoader[x]=img;
+			if(file.indexOf(".json")==file.length-5){
+				var op=new Ajax.Request(ob.moduleUrl("ob.themes."+OBCurrentTheme,file),{
+					method:"get",
+					evalJS:false,
+					onFailure:function OBThemeLoader_json_failure(){
+						throw new Error("Error loading json file "+file);
+					},
+					onSuccess:function OBThemeLoader_json_success(trans){
+						var data=trans.responseText.evalJSON(true);
+						OBThemeLoader[this.key]=data;
+						loadedImgs++;
+						if(loadedImgs==totalImgs){
+							document.fire("theme:loaded");
+						}
+					}
+				});
+				op.key=x;
+			}else{
+				var img=new Image();
+				img.onload=function OBThemeLoader_image_onload(){
+					loadedImgs++;
+					if(loadedImgs==totalImgs){
+						document.fire("theme:loaded");
+					}
+				};
+				img.onerror=function OBThemeLoader_image_onerror(){
+					throw new Error("Error loading image "+this.src);
+				};
+				img.src=ob.moduleUrl("ob.themes."+OBCurrentTheme,file);
+				OBThemeLoader[x]=img;
+			}
 		}
 		if(!totalImgs){
 			document.fire("theme:loaded");

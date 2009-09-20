@@ -22,6 +22,8 @@ OBThemeLoader.ButtonBezelHighlightedRight="button/button-bezel-highlighted-right
 OBThemeLoader.ButtonBezelLeft="button/button-bezel-left.png";
 OBThemeLoader.ButtonBezelHighlightedLeft="button/button-bezel-highlighted-left.png";
 
+OBThemeLoader.ButtonInfo="button.json";
+
 window.OBButton=Class.create(OBView,{
 	setup:function OBButton_setup(label){
 		this.attr("label",label||"Untitled");
@@ -30,8 +32,7 @@ window.OBButton=Class.create(OBView,{
 	},
 	setter_label:function OBButton_setter_label(l){
 		this.label=l;
-		this.ctx.fillStyle="black";
-		this.ctx.font="12pt Arial";
+		this._applyStyle();
 		var s=this.ctx.measureText(l);
 		this.txtSize=s;
 		this.osize=new OBSize(s.attr("width")+8,Math.max(s.attr("height"),24));
@@ -45,8 +46,7 @@ window.OBButton=Class.create(OBView,{
 		var s=this.attr("size");
 		this.ctx.drawSlicedImage(this.mode,0,0,s.attr("width"));
 		//this.ctx.drawImage(OBThemeLoader.ButtonBezelLeft,0,0);
-		this.ctx.fillStyle="black";
-		this.ctx.font="12pt Arial";
+		this._applyStyle();
 		this.ctx.fillText(this.label,(this.attr("width")/2)-(this.txtSize.attr("width")/2),this.txtSize.attr("height"));
 	},
 	mousedown:function OBButton_mousedown(evt){
@@ -70,5 +70,9 @@ window.OBButton=Class.create(OBView,{
 	},
 	sizeToFit:function OBButton_sizeToFit(){
 		this.attr("size",this.osize);
+	},
+	_applyStyle:function OBButton__applyStyle(){
+		this.ctx.fillStyle="black";
+		this.ctx.font="12pt Arial";
 	}
 });
