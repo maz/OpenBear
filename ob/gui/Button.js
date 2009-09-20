@@ -72,7 +72,7 @@ window.OBButton=Class.create(OBView,{
 		this.attr("size",this.osize);
 	},
 	_applyStyle:function OBButton__applyStyle(){
-		this.ctx.fillStyle="black";
-		this.ctx.font="12pt Arial";
+		this.ctx.fillStyle=OBThemeLoader.ButtonInfo.color;
+		this.ctx.font=OBThemeLoader.ButtonInfo.font;
 	}
 });

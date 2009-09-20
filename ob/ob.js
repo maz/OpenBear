@@ -1283,17 +1283,17 @@ if(!window.ob){
 					evalJS:false,
 					onFailure:function OBThemeLoader_json_failure(){
 						throw new Error("Error loading json file "+file);
-					},
-					onSuccess:function OBThemeLoader_json_success(trans){
-						var data=trans.responseText.evalJSON(true);
-						OBThemeLoader[this.key]=data;
-						loadedImgs++;
-						if(loadedImgs==totalImgs){
-							document.fire("theme:loaded");
-						}
 					}
 				});
 				op.key=x;
+				op.options.onSuccess=function OBThemeLoader_json_success(trans){
+					var data=trans.responseText.evalJSON(true);
+					OBThemeLoader[this.key]=data;
+					loadedImgs++;
+					if(loadedImgs==totalImgs){
+						document.fire("theme:loaded");
+					}
+				}.bind(op);
 			}else{
 				var img=new Image();
 				img.onload=function OBThemeLoader_image_onload(){
