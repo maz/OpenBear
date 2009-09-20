@@ -128,6 +128,7 @@ window.OBTextField=Class.create(OBView,{
 		var start=ob._tbox.selectionStart;
 		var end=ob._tbox.selectionEnd;
 		this.selection=$R(start,end);
+		this._updateStart();
 	},
 	_updateSizes:function OBTextField__updateSizes(){
 		this.ctx.font=OBTextField.font;
@@ -155,7 +156,11 @@ window.OBTextField=Class.create(OBView,{
 		if(this.attr("focused")){
 			this._select();
 		}
+		this._updateStart();
 		this.update();
+	},
+	_updateStart:function OBTextField__updateStart(){
+		
 	},
 	_select:function OBTextField__select(){
 		var start=this.selection.start;

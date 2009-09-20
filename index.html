@@ -68,6 +68,9 @@
 				window.click=new Clicker(window.z,new OBRect(90,90,200,200));
 				click.attr("autoresize",OBView.Autoresize.Width|OBView.Autoresize.Height|OBView.Autoresize.LockBottomRight);
 				window.tf=new OBSearchField(null,new OBRect(300,320,500,24));
+				tf.observe("trigger",function(){
+					alert("Hello "+tf.attr("text"));
+				});
 				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Actions");
 				cb.observe("click",function(){
 					var m=new OBMenu([
