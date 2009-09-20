@@ -18,6 +18,7 @@ This file is part of OpenBear.
 OBThemeLoader.Selection="selection.png";
 OBThemeLoader.ArrowUp="ArrowUp.png";
 OBThemeLoader.ArrowDown="ArrowDown.png";
+OBThemeLoader.MenuInfo="menu.json";
 
 window.OBMenuView=Class.create(OBView,{
 	setup:function OBMenuView_setup(items,menu){
@@ -68,20 +69,20 @@ window.OBMenuView=Class.create(OBView,{
 		this.acceptsFocus=false;
 	},
 	applyFontParams:function OBMenuView_applyFontParams(){
-		this.ctx.font="12pt Arial";
+		this.ctx.font=OBThemeLoader.MenuInfo.font;
 	},
 	redraw:function OBMenuView_redraw(){
-		this.ctx.fillStyle=new OBColor(200,200,200).toString();
+		this.ctx.fillStyle=OBThemeLoader.MenuInfo.backgroundColor;
 		this.ctx.fillRect(0,0,this.attr("width"),this.attr("height"));
 		this.applyFontParams();
 		var y=2;
 		for(var i=this.start;i<this.end;i++){
 			var itm=this.items[i];
 			if(i==this.selected){
-				this.ctx.fillStyle="white";
+				this.ctx.fillStyle=OBThemeLoader.MenuInfo.selectedColor;
 				this.ctx.drawImage(OBThemeLoader.Selection,0,y,this.attr("width"),this.z);
 			}else{
-				this.ctx.fillStyle="black";
+				this.ctx.fillStyle=OBThemeLoader.MenuInfo.regularColor;
 			}
 			var old=y;
 			this.ctx.fillText(itm.label,2,y+itm.size.attr("height")+2);
