@@ -35,6 +35,7 @@ OBThemeLoader.TextfieldBezelSquareFocused7="textfield/textfield-bezel-square-foc
 OBThemeLoader.TextfieldBezelSquareFocused8="textfield/textfield-bezel-square-focused-8.png";*/
 OBThemeLoader.Selection="selection.png";
 OBThemeLoader.Search="search.png";
+OBThemeLoader.TextFieldInfo="textfield.json";
 
 window.OBTextField=Class.create(OBView,{
 	setup:function OBTextField_setup(){
@@ -51,14 +52,14 @@ window.OBTextField=Class.create(OBView,{
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
-		this.ctx.font=OBTextField.font;
+		this.ctx.font=OBThemeLoader.TextFieldInfo.font;
 		if(this.selection.end==this.selection.start){
-			this.ctx.fillStyle="black";
+			this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.regularColor;
 			var txt=this.text.substring(this._start);
 			var m=this.ctx.measureText(txt);
 			this.ctx.fillText(txt,this.diff,m.attr("height"));
 			if(this.blink){
-				this.ctx.fillStyle="black";
+				this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.blinkerColor;
 				this.ctx.fillRect(this.diff+this.ctx.measureText(txt.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
 			}
 		}else{
@@ -73,14 +74,14 @@ window.OBTextField=Class.create(OBView,{
 				this.ctx.measureText(p[2]),
 			];
 			if(p[0].length!=0){
-				this.ctx.fillStyle="black";
+				this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.regularColor;
 				this.ctx.fillText(p[0],this.diff,m[0].attr("height"));
 			}
 			this.ctx.drawImage(OBThemeLoader.Selection,this.diff+m[0].attr("width"),0,m[1].attr("width"),this.attr("height"));
-			this.ctx.fillStyle="white";
+			this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.selectedColor;
 			this.ctx.fillText(p[1],this.diff+m[0].attr("width"),m[1].attr("height"));
 			if(p[1].length!=0){
-				this.ctx.fillStyle="black";
+				this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.regularColor;
 				this.ctx.fillText(p[2],m[1].attr("width")+m[0].attr("width")+this.diff,m[1].attr("height"));
 			}
 		}
@@ -228,18 +229,17 @@ window.OBTextField=Class.create(OBView,{
 });
 
 window.OBSearchField=Class.create(OBTextField,{
-	setup:function($super){
+	setup:function OBSearchField_setup($super){
 		$super();
 		this.diff=OBThemeLoader.Search.width;
 	},
-	redraw:function($super){
+	redraw:function OBSearchField_redraw($super){
 		$super();
 		this.ctx.drawImage(OBThemeLoader.Search,0,0);
 	}
 });
 
 OBTextField.CharacterSizeHash={};
-OBTextField.font="10pt Arial";
 
 document.observe("theme:loaded",function OBTextFieldThemeLoaded(){
 	OBTextField.Regular=[
