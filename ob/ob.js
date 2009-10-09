@@ -1281,6 +1281,7 @@ if(!window.ob){
 		for(x in OBThemeLoader){
 			totalImgs++;
 		}
+		window._OBThemeLoader=Object.toJSON(OBThemeLoader).evalJSON(false);
 		for(x in OBThemeLoader){
 			var file=OBThemeLoader[x];
 			if(file.indexOf(".json")==file.length-5){
