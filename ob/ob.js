@@ -600,9 +600,9 @@ if(!window.ob){
 				chld._drawIntoParent();
 			});
 			if(this.attr('focused')){
-				this._ctx.strokeStyle=OBView.FocusColor.toString();
-				this._ctx.lineWidth=OBView.FocusWidth;
-				this._ctx.strokeRect.apply(this._ctx,this.attr('clip').toArray());
+				this.ctx.save();
+				this.drawFocusRing();
+				this.ctx.restore();
 			}
 			if(this.parent){
 				this.parent.updateBig();
@@ -614,6 +614,11 @@ if(!window.ob){
 		commit:function OBView_commit(){
 			this._buffer=false;
 			this.update();
+		},
+		drawFocusRing:function OBView_drawFocusRing(){
+			this._ctx.strokeStyle=OBView.FocusColor.toString();
+			this._ctx.lineWidth=OBView.FocusWidth;
+			this._ctx.strokeRect.apply(this._ctx,this.attr('clip').toArray());
 		},
 		_drawIntoParent:function OBView__drawIntoParent(){
 			var clip=this.attr('clip');
@@ -783,7 +788,7 @@ if(!window.ob){
 				this.blur();
 			}
 		},
-		focus:function(){
+		focus:function OBView_focus(){
 			if(this.attr('focused') && this.acceptsFocus){
 				return;
 			}
@@ -1127,7 +1132,8 @@ if(!window.ob){
 		ob.body._bigcan.style.top="0px";
 		ob.body._bigcan.style.left="0px";
 		ob.body._bigcan.style.zIndex=50;
-		ob.body.acceptsFocus=false;
+		ob.body.drawFocusRing=Prototype.emptyFunction;
+		ob.body.focus();
 		document.body.appendChild(ob.body._bigcan);
 		ob.mouseHandlers.push(ob.body._handleEvt.bind(ob.body));
 		document.observe('resize',function OBEvntHandler_Resize(){
