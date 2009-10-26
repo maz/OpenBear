@@ -161,7 +161,11 @@ if(!window.ob){
 				}
 				ob._mspan.style.font=ctx.font;
 				var w=ctx.measureTextWidth(txt);
-				ob._mspan.innerHTML=txt.escapeHTML();
+				if(ob._mspan.firstChild){
+					ob._mspan.firstChild.data=txt;
+				}else{
+					ob._mspan.appendChild(document.createTextNode(txt));
+				}
 				return new OBSize(w,ob._mspan.offsetHeight);
 			};
 			ctx.measureTextWidth=function ob_createCanvas_measureTextWidth(txt){
