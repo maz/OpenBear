@@ -52,6 +52,8 @@ window.OBTextField=Class.create(OBView,{
 		this.mtxt=new OBSize(0,0);
 		this.observe("changed",this.updateTextSize.bind(this));
 		this.selpxpos=0;
+		this._p=null;
+		this._m=null;
 	},
 	updateTextSize:function OBTextField_updateTextSize(){
 		this.mtxt=this.ctx.measureText(this.text);
@@ -69,16 +71,8 @@ window.OBTextField=Class.create(OBView,{
 				this.ctx.fillRect(this.diff+this.selpxpos,0,1,this.attr("height"));
 			}
 		}else{
-			var p=[
-				this.text.substring(this._start,Math.max(this.selection.start,this._start)),
-				this.text.substring(Math.max(this.selection.start,this._start),this.selection.end),
-				this.text.substring(this.selection.end)
-			];
-			var m=[
-				this.ctx.measureText(p[0]),
-				this.ctx.measureText(p[1]),
-				this.ctx.measureText(p[2]),
-			];
+			var p=this._p;
+			var m=this._m;
 			if(p[0].length!=0){
 				this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.regularColor;
 				this.ctx.fillText(p[0],this.diff,m[0].attr("height"));
@@ -140,7 +134,12 @@ window.OBTextField=Class.create(OBView,{
 	_updateSizes:function OBTextField__updateSizes(){
 		this.ctx.font=OBTextField.font;
 		var ch=null;
-		for(var i=0;i<this.text.length;i++){
+		var r=$R(this.selection.start,this.selection.end);
+		r.start--;
+		r.start=Math.max(0,r.start);
+		r.end++;
+		r.end=Math.min(this.text.length,r.end);
+		for(var i=r.start;i<r.end;i++){
 			ch=this.text[i];
 			if(!OBTextField.CharacterSizeHash[ch]){
 				OBTextField.CharacterSizeHash[ch]=this.ctx.measureTextWidth(ch);
@@ -167,13 +166,24 @@ window.OBTextField=Class.create(OBView,{
 		this.update();
 	},
 	_updateStart:function OBTextField__updateStart(){
-		
+		this.ctx.font=OBThemeLoader.TextFieldInfo.font;
 		var ch_idx=0;
 		if(this.selection.start==this.selection.end){
 			ch_idx=Math.max(this.selection.start-1,0);
 			this.selpxpos=this.ctx.measureTextWidth(this.text.substr(0,this.selection.start));
 		}else{
-			
+			var p=[
+				this.text.substring(this._start,Math.max(this.selection.start,this._start)),
+				this.text.substring(Math.max(this.selection.start,this._start),this.selection.end),
+				this.text.substring(this.selection.end)
+			];
+			var m=[
+				this.ctx.measureText(p[0]),
+				this.ctx.measureText(p[1]),
+				this.ctx.measureText(p[2]),
+			];
+			this._p=p;
+			this._m=m;
 		}
 		var txt=this.text.substring(Math.min(this._start,ch_idx),Math.max(this._start,ch_idx));
 		this.ctx.font=OBThemeLoader.TextFieldInfo.font;
