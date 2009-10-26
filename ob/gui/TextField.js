@@ -49,6 +49,11 @@ window.OBTextField=Class.create(OBView,{
 		this._dstart=null;
 		this._start=0;
 		this.diff=2;
+		this.mtxt=new OBSize(0,0);
+		this.observe("changed",this.updateTextSize.bind(this));
+	},
+	updateTextSize:function OBTextField_updateTextSize(){
+		this.mtxt=this.ctx.measureText(this.text);
 	},
 	redraw:function OBTextField_redraw(){
 		this.ctx.drawSlicedImage(this.parts,0,0,this.attr("width"),this.attr("height"));
@@ -56,7 +61,7 @@ window.OBTextField=Class.create(OBView,{
 		if(this.selection.end==this.selection.start){
 			this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.regularColor;
 			var txt=this.text.substring(this._start);
-			var m=this.ctx.measureText(txt);
+			var m=this.mtxt;
 			this.ctx.fillText(txt,this.diff,m.attr("height"));
 			if(this.blink){
 				this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.blinkerColor;
