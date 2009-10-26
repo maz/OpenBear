@@ -51,6 +51,7 @@ window.OBTextField=Class.create(OBView,{
 		this.diff=2;
 		this.mtxt=new OBSize(0,0);
 		this.observe("changed",this.updateTextSize.bind(this));
+		this.selpxpos=0;
 	},
 	updateTextSize:function OBTextField_updateTextSize(){
 		this.mtxt=this.ctx.measureText(this.text);
@@ -65,7 +66,7 @@ window.OBTextField=Class.create(OBView,{
 			this.ctx.fillText(txt,this.diff,m.attr("height"));
 			if(this.blink){
 				this.ctx.fillStyle=OBThemeLoader.TextFieldInfo.blinkerColor;
-				this.ctx.fillRect(this.diff+this.ctx.measureText(txt.substr(0,this.selection.start)).attr("width"),0,1,this.attr("height"));
+				this.ctx.fillRect(this.diff+this.selpxpos,0,1,this.attr("height"));
 			}
 		}else{
 			var p=[
@@ -166,9 +167,11 @@ window.OBTextField=Class.create(OBView,{
 		this.update();
 	},
 	_updateStart:function OBTextField__updateStart(){
+		
 		var ch_idx=0;
 		if(this.selection.start==this.selection.end){
 			ch_idx=Math.max(this.selection.start-1,0);
+			this.selpxpos=this.ctx.measureTextWidth(this.text.substr(0,this.selection.start));
 		}else{
 			
 		}
