@@ -65,8 +65,6 @@ window.OBMenuView=Class.create(OBView,{
 		if(h*this.items.length+2>this.attr("height")){
 			
 		}
-		
-		this.acceptsFocus=false;
 	},
 	applyFontParams:function OBMenuView_applyFontParams(){
 		this.ctx.font=OBThemeLoader.MenuInfo.font;
@@ -109,7 +107,26 @@ window.OBMenuView=Class.create(OBView,{
 			}
 		}
 		this.menu.hide();
-	}
+	},
+	keydown:function OBMenuView_keydown(evt){
+		if(evt.keyCode==Event.KEY_DOWN){
+			this.selected++;
+			if(this.selected>=this.items.length){
+				this.selected=this.items.length-1;
+			}
+			this.update();
+		}else if(evt.keyCode==Event.KEY_UP){
+			this.selected--;
+			if(this.selected<0){
+				this.selected=0;
+			}
+			this.update();
+		}else if(evt.keyCode==Event.KEY_RETURN && this.selected>-1 && this.selected<this.items.length){
+			this.menu.hide();
+			this.menu.fire("selected",this.items[this.selected].data);
+		}
+	},
+	drawFocusRing:Prototype.emptyFunction
 });
 
 window.OBMenu=Class.create(OBAttr,OBResponder,{
@@ -120,6 +137,8 @@ window.OBMenu=Class.create(OBAttr,OBResponder,{
 		if(!this.view){
 			this.view=new OBMenuView(null,frame,this.items,this);
 			ob.mouseHandlers.push(this.handleEvent.bind(this));
+			this.buffer=OBView.focused;
+			this.view.focus();
 		}
 	},
 	hide:function(){
@@ -127,6 +146,7 @@ window.OBMenu=Class.create(OBAttr,OBResponder,{
 		this.view.remove();
 		this.view=null;//dealloc
 		this.next=false;
+		this.buffer.focus();
 	},
 	handleEvent:function(name, e){
 		ob._over.push({cursor:"default"});
