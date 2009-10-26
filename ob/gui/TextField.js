@@ -161,7 +161,18 @@ window.OBTextField=Class.create(OBView,{
 		this.update();
 	},
 	_updateStart:function OBTextField__updateStart(){
-		
+		var ch_idx=0;
+		if(this.selection.start==this.selection.end){
+			ch_idx=Math.max(this.selection.start-1,0);
+		}else{
+			
+		}
+		var txt=this.text.substring(Math.min(this._start,ch_idx),Math.max(this._start,ch_idx));
+		this.ctx.font=OBThemeLoader.TextFieldInfo.font;
+		var w=this.ctx.measureTextWidth(txt);
+		if(w>(this.attr("width")-(2+this.diff))){
+			this._start=ch_idx;
+		}
 	},
 	_select:function OBTextField__select(){
 		var start=this.selection.start;
