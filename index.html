@@ -8,6 +8,7 @@
 			ob.load("ob.gui.Button");
 			ob.load("ob.gui.Menu");
 			ob.load("ob.gui.TextField");
+			ob.load("ob.ImageView");
 			//ob.load("ob.Debug");
 			
 			window.WeirdView=Class.create(OBView,{
@@ -35,8 +36,47 @@
 				},
 				color:"green",
 				mousedown:function(evt){
-					this.points.push(evt.point);
-					this.update();
+					if(evt.right){
+						var m=new OBMenu([
+							"Clear",
+							"Print Selected Color",
+							"Print All Colors"
+						]);
+						m.observe("selected",function(x){
+							if(x=="Print Selected Color"){
+								var c=new Clicker(null,click.attr("frame"));
+								c.color=click.color;
+								c.points=click.points;
+								c.update();
+								OBView.print([c],"One Color");
+							}else if(x=="Print All Colors"){
+								var arr=[];
+								var colors=[
+									"green",
+									"blue",
+									"purple",
+									"yellow",
+									"orange",
+									"black"
+								];
+								for(var i=0;i<colors.length;i++){
+									var c=new Clicker(null,click.attr("frame"));
+									c.color=colors[i];
+									c.points=click.points;
+									c.update();
+									arr.push(c);
+								}
+								OBView.print(arr,"All Colors");
+							}else if(x=="Clear"){
+								click.points=[];
+								click.update();
+							}
+						});
+						m.show(new OBRect(evt.point.x,evt.point.y,100,200));
+					}else{
+						this.points.push(evt.point);
+						this.update();
+					}
 				},
 				mousedrag:function(evt){
 					this.mousedown(evt);
@@ -71,6 +111,12 @@
 				tf.observe("trigger",function(){
 					alert("Hello "+tf.attr("text"));
 				});
+				window.img=new OBImageView(null, new OBRect(300,400,100,100));
+				window.Tux=new Image();
+				Tux.onload=function(){
+					img.attr("image",Tux);
+				};
+				Tux.src="http://commons.wikimedia.org/w/thumb.php?f=Tux.svg&width=200px";
 				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Actions");
 				cb.observe("click",function(){
 					var m=new OBMenu([
