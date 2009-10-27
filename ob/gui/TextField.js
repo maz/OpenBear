@@ -184,6 +184,7 @@ window.OBTextField=Class.create(OBView,{
 			];
 			this._p=p;
 			this._m=m;
+			ch_idx=this.selection.end;
 		}
 		var txt=this.text.substring(Math.min(this._start,ch_idx),Math.max(this._start,ch_idx));
 		this.ctx.font=OBThemeLoader.TextFieldInfo.font;
