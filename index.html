@@ -9,6 +9,7 @@
 			ob.load("ob.gui.Menu");
 			ob.load("ob.gui.TextField");
 			ob.load("ob.ImageView");
+			ob.load("ob.gui.ScrollBar");
 			//ob.load("ob.Debug");
 			
 			window.WeirdView=Class.create(OBView,{
@@ -117,6 +118,7 @@
 					img.attr("image",Tux);
 				};
 				Tux.src="http://commons.wikimedia.org/w/thumb.php?f=Tux.svg&width=200px";
+				window.scrollbar=new OBScrollBar(null, new OBRect(500,400,30,200),OBScrollBar.Vertical);
 				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Actions");
 				cb.observe("click",function(){
 					var m=new OBMenu([
