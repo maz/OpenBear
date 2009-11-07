@@ -61,6 +61,7 @@ window.OBScrollBar=Class.create(OBView,{
 			},this.buttonScrollInterval);
 		}else if(this.rightRect.intersects(evt.point)){
 			this.selected=2;
+			var self=this;
 			this.timer=window.setInterval(function OBScrollBar_mousedown_right(){
 				self.attr("value",self.attr("value")-self.buttonScrollDelta);
 			},this.buttonScrollInterval);
