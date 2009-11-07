@@ -23,10 +23,10 @@ window.OBScrollBar=Class.create(OBView,{
 	buttonScrollDelta:2,
 	setup:function OBScrollBar_setup(max,value){
 		if(max){
-			this.attr("max",max);
+			this.attr("max",max||10);
 		}
 		if(value){
-			this.attr("value",value);
+			this.attr("value",value||0);
 		}
 		var s=this.attr("size").clone();
 		s.height=17;
@@ -80,6 +80,7 @@ window.OBScrollBar=Class.create(OBView,{
 	setter_value:function OBScrollBar_setter_value(val){
 		val=Math.max(Math.min(this.max,val),0);
 		if(val!=this.value){
+			this.value=val;
 			this.fire("changed");
 			this.update();
 		}
