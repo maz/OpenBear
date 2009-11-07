@@ -19,8 +19,7 @@ window.OBScrollBar=Class.create(OBView,{
 	max:10,
 	value:0,
 	selected:-1,
-	setup:function OBScrollBar_setup(orientation, max,value){
-		this.orientation=!!orientation;
+	setup:function OBScrollBar_setup(max,value){
 		if(max){
 			this.attr("max",max);
 		}
@@ -28,8 +27,13 @@ window.OBScrollBar=Class.create(OBView,{
 			this.attr("value",value);
 		}
 		var s=this.attr("size").clone();
-		s[this.orientation?"width":"height"]=30;
+		s.height=17;
+		this.observe("size_changed",this._size_changed.bind(this));
 		this.attr("size",s);
+	},
+	_size_changed:function OBScrollBar__size_changed(){
+		this.leftRect=new OBRect(0,0,OBThemeLoader.ScrollerLeftArrow.width,17);
+		this.rightRect=new OBRect(this.attr("width")-OBThemeLoader.ScrollerRightArrow.width,0,OBThemeLoader.ScrollerRightArrow.width,17);
 	},
 	setter_max:function OBScrollBar_setter_max(max){
 		this.max=max;
@@ -40,22 +44,25 @@ window.OBScrollBar=Class.create(OBView,{
 		this.update();
 	},
 	redraw:function OBScrollBar_redraw(){
-		if(this.orientation){//vertical
-			this.ctx.save();
-			this.ctx.translate(this._rcenter.y,this._rcenter.x);
-			this.ctx.rotate(-1.57079633);//90 degrees
-			this.ctx.translate(-1*this._rcenter.y,-1*this._rcenter.x);
-		}
 		this.ctx.drawSlicedImage([
 			this.selected==0?OBThemeLoader.ScrollerLeftArrowHighlighted:OBThemeLoader.ScrollerLeftArrow,
 			OBThemeLoader.ScrollerHorizontalTrack,
-			this.selcted==2?OBThemeLoader.ScrollerRightArrowHighlighted:OBThemeLoader.ScrollerRightArrow
+			this.selected==2?OBThemeLoader.ScrollerRightArrowHighlighted:OBThemeLoader.ScrollerRightArrow
 		],0,0,this.attr("size")[this.orientation?"height":"width"]);
-		if(this.orientation){
-			this.ctx.restore();
+	},
+	mousedown:function OBScrollBar_mousedown(evt){
+		if(this.leftRect.intersects(evt.point)){
+			this.selected=0;
+		}else if(this.rightRect.intersects(evt.point)){
+			this.selected=2;
+		}else{
+			this.selected=-1;
 		}
-	}
+		this.update();
+	},
+	mouseup:function OBScrollBar_mouseup(evt){
+		this.selected=-1;
+		this.update();
+	},
+	acceptsFocus:false
 });
-
-OBScrollBar.Vertical=true
-OBScrollBar.Horizontal=false;
