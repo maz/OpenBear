@@ -19,6 +19,8 @@ window.OBScrollBar=Class.create(OBView,{
 	max:10,
 	value:0,
 	selected:-1,
+	buttonScrollInterval:250,
+	buttonScrollDelta:2,
 	setup:function OBScrollBar_setup(max,value){
 		if(max){
 			this.attr("max",max);
@@ -48,13 +50,20 @@ window.OBScrollBar=Class.create(OBView,{
 			this.selected==0?OBThemeLoader.ScrollerLeftArrowHighlighted:OBThemeLoader.ScrollerLeftArrow,
 			OBThemeLoader.ScrollerHorizontalTrack,
 			this.selected==2?OBThemeLoader.ScrollerRightArrowHighlighted:OBThemeLoader.ScrollerRightArrow
-		],0,0,this.attr("size")[this.orientation?"height":"width"]);
+		],0,0,this.attr("width"));
 	},
 	mousedown:function OBScrollBar_mousedown(evt){
 		if(this.leftRect.intersects(evt.point)){
 			this.selected=0;
+			var self=this;
+			this.timer=window.setInterval(function OBScrollBar_mousedown_left(){
+				self.attr("value",self.attr("value")+self.buttonScrollDelta);
+			},this.buttonScrollInterval);
 		}else if(this.rightRect.intersects(evt.point)){
 			this.selected=2;
+			this.timer=window.setInterval(function OBScrollBar_mousedown_right(){
+				self.attr("value",self.attr("value")-self.buttonScrollDelta);
+			},this.buttonScrollInterval);
 		}else{
 			this.selected=-1;
 		}
@@ -62,7 +71,17 @@ window.OBScrollBar=Class.create(OBView,{
 	},
 	mouseup:function OBScrollBar_mouseup(evt){
 		this.selected=-1;
+		if(this.timer){
+			window.clearInterval(this.timer);
+		}
 		this.update();
+	},
+	setter_value:function OBScrollBar_setter_value(val){
+		val=Math.max(Math.min(this.max,val),0);
+		if(val!=this.value){
+			this.fire("changed");
+			this.update();
+		}
 	},
 	acceptsFocus:false
 });
