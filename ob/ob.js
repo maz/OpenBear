@@ -258,7 +258,7 @@ if(!window.ob){
 		origin:null,
 		size:null,
 		initialize:function OBRect_constructor(x,y,w,h){
-			if(x===undefined ||  x===null){//assume no arguments
+			if(x===undefined || x===null){//assume no arguments
 				this.origin=new OBPoint(0,0);
 				this.size=new OBSize(0,0);
 			}else if(x instanceof OBPoint){
@@ -987,33 +987,33 @@ if(!window.ob){
 window.I18n={
 	language:"en",
 	load:function I18n_load(bundle){
-	    var op=Ajax.getTransport();
-	    var parts=bundle.split(".");
-	    parts.push("i18n");
-	    parts.push(I18n.language);
-	    var name=parts.pop();
-	    var url=ob.moduleUrl(parts.join("."),name+".json");
-	    I18n._mods.push(bundle);
-	    op.open('get',url,false);
-	    op.send(null);
-	    if(!I18n._hash[I18n.language]){
-	        I18n._hash[I18n.language]={};
-	    }
-	    Object.extend(I18n._hash[I18n.language],op.responseText.evalJSON(true)||{});
+		var op=Ajax.getTransport();
+		var parts=bundle.split(".");
+		parts.push("i18n");
+		parts.push(I18n.language);
+		var name=parts.pop();
+		var url=ob.moduleUrl(parts.join("."),name+".json");
+		I18n._mods.push(bundle);
+		op.open('get',url,false);
+		op.send(null);
+		if(!I18n._hash[I18n.language]){
+			I18n._hash[I18n.language]={};
+		}
+		Object.extend(I18n._hash[I18n.language],op.responseText.evalJSON(true)||{});
 	},
 	_hash:{},
 	get:function I18n_get(name){
-	    return I18n._hash[I18n.language][name];
+		return I18n._hash[I18n.language][name];
 	},
 	getLanguage:function I18n_getLanguage(){
-	    return I18n.language;
+		return I18n.language;
 	},
 	setLanguage:function I18n_setLanguage(lang){
-	    I18n.language=lang;
-	    I18n.each(function I18n_setLanguage_sub(x){
-	        I18n.load(x);
-	    });
-	    this.fire("language_changed");
+		I18n.language=lang;
+		I18n.each(function I18n_setLanguage_sub(x){
+			I18n.load(x);
+		});
+		this.fire("language_changed");
 	},
 	_mods:[]
 };
