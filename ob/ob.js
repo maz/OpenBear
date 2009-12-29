@@ -695,6 +695,9 @@ if(!window.ob){
 			this.fire("size_changed");
 			this.update();
 		},
+		toDataURL:function OBView_toDataURL(){
+			return this._bigcan.toDataURL.apply(this._bigcan,$A(arguments));
+		},
 		// ==========================================================================================================
 		// = Thanks to Cappuccino (http://www.cappuccino.org/) for providing info that I based this function off of =
 		// ==========================================================================================================

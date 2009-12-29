@@ -124,6 +124,8 @@ window.OBMenuView=Class.create(OBView,{
 		}else if(evt.keyCode==Event.KEY_RETURN && this.selected>-1 && this.selected<this.items.length){
 			this.menu.hide();
 			this.menu.fire("selected",this.items[this.selected].data);
+		}else if(evt.keyCode==Event.KEY_ESC){
+			this.menu.hide();
 		}
 	},
 	drawFocusRing:Prototype.emptyFunction
