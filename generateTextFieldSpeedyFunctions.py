@@ -5,6 +5,6 @@ def thingy(i):
 	if i!=len(arr)-1:
 		flag="setTimeout(%s,100);\n"%thingy(i+1)
 	
-	return "function ch_measurer_%d(){ob.body.ctx.font=OBThemeLoader.TextFieldInfo.font;\nif(!OBTextField.CharacterSizeHash[%s]){OBTextField.CharacterSizeHash[%s]=ob.body.measureText(%s);\n}%s}"%(i,cjson.encode(arr[i]),cjson.encode(arr[i]),cjson.encode(arr[i]),flag)
+	return "function ch_measurer_%d(){ob.body.ctx.font=OBThemeLoader.TextFieldInfo.font;\nif(!OBTextField.CharacterSizeHash[%s]){OBTextField.CharacterSizeHash[%s]=ob.body.ctx.measureTextWidth(%s);\n}%s}"%(i,cjson.encode(arr[i]),cjson.encode(arr[i]),cjson.encode(arr[i]),flag)
 
 print thingy(0)
