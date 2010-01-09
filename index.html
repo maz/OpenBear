@@ -73,7 +73,7 @@
 								click.update();
 							}
 						});
-						m.show(new OBRect(evt.point.x,evt.point.y,100,200));
+						this.m=m;
 					}else{
 						this.points.push(evt.point);
 						this.update();
@@ -87,6 +87,14 @@
 				},
 				dblclick:function(evt){
 					alert(evt.point);
+				},
+				mouseup:function(evt){
+					if(this.m){
+						var o=evt.point.clone();
+						o.add(this.getGlobalOrigin());
+						this.m.show(new OBRect(o,new OBSize(100,200)));
+						this.m=null;
+					}
 				}//,
 				//mouseover:function(){console.info("mouseover");},
 				//mouseout:function(){console.info("mouseout");}
