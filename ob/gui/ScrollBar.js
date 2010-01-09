@@ -59,7 +59,7 @@ window.OBScrollBar=Class.create(OBView,{
 				OBThemeLoader.ScrollerHorizontalKnobLeft,
 				OBThemeLoader.ScrollerHorizontalKnobCenter,
 				OBThemeLoader.ScrollerHorizontalKnobRight
-			],(this.unit*this.attr('value'))+OBThemeLoader.ScrollBarInfo.KnobOffset,OBThemeLoader.ScrollBarInfo.KnobY,Math.max(this.unit,18));
+			],((this.unit*this.value)-(Math.max(this.unit,18)/2))+OBThemeLoader.ScrollerLeftArrow.width,OBThemeLoader.ScrollBarInfo.KnobY,Math.max(this.unit,18));
 		}
 	},
 	mousedown:function OBScrollBar_mousedown(evt){
