@@ -219,6 +219,22 @@ if(!window.ob){
 		},
 		clone:function OBPoint_clone(){
 			return new OBPoint(this.x,this.y);
+		},
+		add:function OBPoint_add(p){
+			this.x+=p.x;
+			this.y+=p.y;
+		},
+		subtract:function OBPoint_subtract(p){
+			this.x-=p.x;
+			this.y-=p.y;
+		},
+		multiply:function OBPoint_multiply(p){
+			this.x*=p.x;
+			this.y*=p.y;
+		},
+		divide:function OBPoint_divide(p){
+			this.x/=p.x;
+			this.y/=p.y;
 		}
 	});
 	window.OBSize=Class.create(OBAttr,{
@@ -252,6 +268,22 @@ if(!window.ob){
 		},
 		getter_w:function OBSize_getter_w(){
 			return this.width;
+		},
+		add:function OBSize_add(s){
+			this.width+=s.width;
+			this.height+=s.height;
+		},
+		subtract:function OBSize_subtract(s){
+			this.width-=s.width;
+			this.height-=s.height;
+		},
+		multislheight:function OBSize_multislheight(s){
+			this.width*=s.width;
+			this.height*=s.height;
+		},
+		divide:function OBSize_divide(s){
+			this.width/=s.width;
+			this.height/=s.height;
 		}
 	});
 	window.OBRect=Class.create(OBAttr,{
@@ -268,6 +300,22 @@ if(!window.ob){
 				this.origin=new OBPoint(parseFloat(x),parseFloat(y));
 				this.size=new OBSize(parseFloat(w),parseFloat(h));
 			}
+		},
+		add:function OBRect_add(r){
+			this.origin.add(r.origin);
+			this.size.add(r.size);
+		},
+		subtract:function OBRect_subtract(r){
+			this.origin.subtract(r.origin);
+			this.size.subtract(r.size);
+		},
+		multiply:function OBRect_multiply(r){
+			this.origin.multiply(r.origin);
+			this.size.multiply(r.size);
+		},
+		divide:function OBRect_divide(r){
+			this.origin.divide(r.origin);
+			this.size.divide(r.size);
 		},
 		setter_x:function OBRect_setter_x(v){
 			this.origin.x=v;
