@@ -833,6 +833,7 @@ if(!window.ob){
 		redraw:function OBView_redraw(){},
 		acceptsFocus:true,
 		nextKeyView:null,
+		acceptsEvents:true,
 		getter_focused:function OBView_getter_focused(){
 			return OBView.focused==this;
 		},
@@ -934,24 +935,26 @@ if(!window.ob){
 		_handleEvt:function OBView__handleEvt(name,e){
 			ob._over.push(this);
 			var evt=e;
-			evt.point=this.adjustParentPoint(evt.point);
-			var c=null;
-			this._children=[];
-			this.children.each(function(chld){
-				if(chld.attr('dispRect').intersects(evt.point) && chld.attr("visible")){
-					c=chld;
-					this._children.push(chld);
+			if(this.acceptsEvents){
+				evt.point=this.adjustParentPoint(evt.point);
+				var c=null;
+				this._children=[];
+				this.children.each(function(chld){
+					if(chld.attr('dispRect').intersects(evt.point) && chld.attr("visible")){
+						c=chld;
+						this._children.push(chld);
+					}
+				},this);
+				if(name=='_mousedown'){
+					this._md=true;
+				}else if(name=='mouseup'){
+					this._md=false;
 				}
-			},this);
-			if(name=='_mousedown'){
-				this._md=true;
-			}else if(name=='mouseup'){
-				this._md=false;
-			}
-			if((c && !c._handleEvt(name,evt)) || !c){
-				return this[name](evt);
-			}else{
-				return true;
+				if((c && !c._handleEvt(name,evt)) || !c){
+					return this[name](evt);
+				}else{
+					return true;
+				}
 			}
 		},
 		cursor:"default",
