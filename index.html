@@ -10,6 +10,7 @@
 			ob.load("ob.gui.TextField");
 			ob.load("ob.ImageView");
 			ob.load("ob.gui.ScrollBar");
+			ob.load("ob.gui.Copier");
 			//ob.load("ob.Debug");
 			
 			window.WeirdView=Class.create(OBView,{
@@ -41,10 +42,13 @@
 						var m=new OBMenu([
 							"Clear",
 							"Print Selected Color",
-							"Print All Colors"
+							"Print All Colors",
+							"Copy Data URL"
 						]);
 						m.observe("selected",function(x){
-							if(x=="Print Selected Color"){
+							if(x=="Copy Data URL"){
+								OBCopy(click.toDataURL());
+							}else if(x=="Print Selected Color"){
 								var c=new Clicker(null,click.attr("frame"));
 								c.color=click.color;
 								c.points=click.points;
@@ -92,7 +96,7 @@
 					if(this.m){
 						var o=evt.point.clone();
 						o.add(this.getGlobalOrigin());
-						this.m.show(new OBRect(o,new OBSize(100,200)));
+						this.m.show(new OBRect(o,new OBSize(200,300)));
 						this.m=null;
 					}
 				}//,
