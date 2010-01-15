@@ -26,11 +26,15 @@ window.OBCopierView=Class.create(OBView,{
 		this.ctx.fillRect(0,0,this.attr('width'),this.attr('height'));
 		this.ctx.fillStyle=OBThemeLoader.CopierInfo.foreground;
 		this.ctx.font=OBThemeLoader.CopierInfo.instructionsFont;
-		var size=this.ctx.measureText(this.message);
-		this.ctx.fillText(this.message,(this.attr('width')/2)-(size.attr('width')/2),(this.attr('height')/2)-(size.attr('height')/2));
+		var size=this.ctx.measureText(I18n.message);
+		this.ctx.fillText(I18n.message,(this.attr('width')/2)-(size.attr('width')/2),(this.attr('height')/2)-(size.attr('height')/2));
 	},
-	drawFocusRing:Prototype.emptyFunction,
-	message:"Please Press "+((navigator.platform.indexOf("Mac")==-1)?"Ctrl-C":"Command-C")+" to Copy"
+	drawFocusRing:Prototype.emptyFunction
+});
+
+I18n.message=tr("Please Press")+" "+((navigator.platform.indexOf("Mac")==-1)?"Ctrl-C":"Command-C")+" "+tr("to Copy");
+document.observe("i18n:lang_change",function OBCopierView_i18nSwitcher(){
+	I18n.message=tr("Please Press")+" "+((navigator.platform.indexOf("Mac")==-1)?"Ctrl-C":"Command-C")+" "+tr("to Copy");
 });
 
 window.OBCopy=function OBCopy(txt){

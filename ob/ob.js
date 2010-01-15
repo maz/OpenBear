@@ -1041,11 +1041,12 @@ if(!window.ob){
 window.I18n={
 	language:"en",
 	load:function I18n_load(bundle){
+		if(I18n._mods.indexOf(bundle)!=-1)
+			return;
 		var op=Ajax.getTransport();
 		var parts=bundle.split(".");
-		parts.push("i18n");
-		parts.push(I18n.language);
 		var name=parts.pop();
+		parts.push(I18n.language);
 		var url=ob.moduleUrl(parts.join("."),name+".json");
 		I18n._mods.push(bundle);
 		op.open('get',url,false);
@@ -1055,24 +1056,28 @@ window.I18n={
 		}
 		Object.extend(I18n._hash[I18n.language],op.responseText.evalJSON(true)||{});
 	},
-	_hash:{},
+	_hash:{en:{}},
 	get:function I18n_get(name){
-		return I18n._hash[I18n.language][name];
+		return Object.isUndefined(I18n._hash[I18n.language][name])?name:I18n._hash[I18n.language][name];
 	},
 	getLanguage:function I18n_getLanguage(){
 		return I18n.language;
 	},
 	setLanguage:function I18n_setLanguage(lang){
-		I18n.language=lang;
-		I18n.each(function I18n_setLanguage_sub(x){
-			I18n.load(x);
-		});
-		this.fire("language_changed");
+		if(lang!="" && lang){
+			I18n.language=lang;
+			if(!I18n._hash[lang]){
+				I18n._hash[lang]={};
+			}
+			I18n._mods.each(function I18n_setLanguage_sub(x){
+				I18n.load(x);
+			});
+			document.fire("i18n:lang_change");
+		}
 	},
 	_mods:[]
 };
-
-Object.extend(I18n, OBResponder);
+	window.tr=I18n.get;
 	
 	window.OBViewAnimation=Class.create(OBResponder,{
 		buffer:null,

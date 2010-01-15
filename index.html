@@ -5,6 +5,8 @@
 		<script src="ob/prototype.js" type="text/javascript" charset="utf-8"></script>
 		<script src="ob/ob.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript" charset="utf-8">
+			I18n.setLanguage(window.location.search.substring(1));
+			I18n.load("test.test");
 			ob.load("ob.gui.Button");
 			ob.load("ob.gui.Menu");
 			ob.load("ob.gui.TextField");
@@ -40,21 +42,21 @@
 				mousedown:function(evt){
 					if(evt.right){
 						var m=new OBMenu([
-							"Clear",
-							"Print Selected Color",
-							"Print All Colors",
-							"Copy Data URL"
+							tr("Clear"),
+							tr("Print Selected Color"),
+							tr("Print All Colors"),
+							tr("Copy Data URL")
 						]);
 						m.observe("selected",function(x){
-							if(x=="Copy Data URL"){
+							if(x==tr("Copy Data URL")){
 								OBCopy(click.toDataURL());
-							}else if(x=="Print Selected Color"){
+							}else if(x==tr("Print Selected Color")){
 								var c=new Clicker(null,click.attr("frame"));
 								c.color=click.color;
 								c.points=click.points;
 								c.update();
-								OBView.print([c],"One Color");
-							}else if(x=="Print All Colors"){
+								OBView.print([c],tr("One Color"));
+							}else if(x==tr("Print All Colors")){
 								var arr=[];
 								var colors=[
 									"green",
@@ -131,21 +133,21 @@
 				};
 				Tux.src="http://commons.wikimedia.org/w/thumb.php?f=Tux.svg&width=200px";
 				window.scrollbar=new OBScrollBar(null, new OBRect(600,400,200,17),10);
-				window.cb=new OBButton(null, new OBRect(10,400,0,0),"Actions");
+				window.cb=new OBButton(null, new OBRect(10,400,0,0),I18n.get("Actions"));
 				cb.observe("click",function(){
 					var m=new OBMenu([
-						"Clear",
-						"Print Selected Color",
-						"Print All Colors"
+						tr("Clear"),
+						tr("Print Selected Color"),
+						tr("Print All Colors")
 					]);
 					m.observe("selected",function(x){
-						if(x=="Print Selected Color"){
+						if(x==tr("Print Selected Color")){
 							var c=new Clicker(null,click.attr("frame"));
 							c.color=click.color;
 							c.points=click.points;
 							c.update();
 							OBView.print([c],"One Color");
-						}else if(x=="Print All Colors"){
+						}else if(x==tr("Print All Colors")){
 							var arr=[];
 							var colors=[
 								"green",
@@ -162,7 +164,7 @@
 								c.update();
 								arr.push(c);
 							}
-							OBView.print(arr,"All Colors");
+							OBView.print(arr,tr("All Colors"));
 						}else if(x=="Clear"){
 							click.points=[];
 							click.update();
@@ -170,18 +172,24 @@
 					});
 					m.show(new OBRect(cb.attr("x"),cb.attr("y")-200,0,200));
 				});
-				window.b=new OBButton(null,new OBRect(500,500,0,0),"green");
+				window.b=new OBButton(null,new OBRect(500,500,0,0),tr("green"));
 				b.observe("click",function(){
+					var hash={};
+					hash[tr("green")]="green";
+					hash[tr("blue")]="blue";
+					hash[tr("purple")]="purple";
+					hash[tr("yellow")]="yellow";
+					hash[tr("white")]="white";
 					var m=new OBMenu([
-						"green",
-						"blue",
-						"purple",
-						"yellow",
-						"white"
+						tr("green"),
+						tr("blue"),
+						tr("purple"),
+						tr("yellow"),
+						tr("white")
 					]);
 					m.observe("selected",function(x){
 						b.attr("label",x);
-						click.color=x;
+						click.color=hash[x];
 						click.update();
 						b.sizeToFit();
 					});
