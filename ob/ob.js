@@ -1102,6 +1102,7 @@ window.I18n={
 						throw new Error("OBViewAnimation can only animate numerical properties, unlike the value that you have provided for "+nom);
 					},0);
 				}
+				return this;
 			}
 		},
 		start:function OBViewAnimation_start(){
