@@ -196,6 +196,7 @@ if(!window.ob){
 				}else{
 					this[name]=val;
 				}
+				return this;
 			}
 		}
 	};
