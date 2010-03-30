@@ -20,7 +20,7 @@ ob.load("ob.gui.ScrollBar");
 ob.load("ob.TextView");
 
 window.OBTableColumn=Class.create(OBAttr,{
-	initialize:function(identifier,name,editable,cell){
+	initialize:function OBTableColumn_constructor(identifier,name,width,editable,cell){
 		this.identifier=identifier;
 		this.name=name?name:identififer;
 		this.editable=!!editable;
@@ -29,17 +29,47 @@ window.OBTableColumn=Class.create(OBAttr,{
 		}else{
 			this.cell=OBTableColumn.BasicTextCell;
 		}
+		this._cells=[];
+		this.width=width?width:0;
+	},
+	draw:function OBTableColumn_draw(table,verticalDelta,x,y,rows){
+		table.buffer();
+		var i=0;
+		for(i=0;i<rows.length;i++){
+			var row=rows[i];
+			if(!this._cells[i]){
+				this._cells[i]=this.cell(table,0,0,5,5);
+			}
+			this._cells[i].buffer();
+			this._cells[i].attr("x",x).attr("y",y).attr("width",this.width).attr("height",table.rowHeight).setData(row);
+			this._cells[i].commit();
+			y+=verticalDelta;
+		}
+		table.commit();
 	}
 });
 
-OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(x,y,w,h){
-	return new OBTextView(x,y,w,h);
+OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
+	var cell=new OBTextView(v,x,y,w,h);
+	cell.setData=function OBTableColumn_BasicTextCell_setData(z){
+		cell.attr("text",z);
+	};
+	return cell;
 };
 
 window.OBTable=Class.create(OBView,{
-	data:null,
+	data:null,//[{with <columnIdentifier>:<value>}]
 	setup:function OBTable_setup(columns){
 		this.columns=columns;
-		
+	},
+	rowHeight:25,
+	update:function OBTable_update(){
+		if(this._buffer){
+			return;
+		}
+		this.columns.each(function OBTable_update_sub(col){
+			
+		},this);
+		this.updateBig();
 	}
 });
