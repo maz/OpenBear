@@ -647,11 +647,13 @@ if(!window.ob){
 			if(this._buffer){
 				return;
 			}
-			this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
-			this._ctx.drawImage(this._can,0,0);
-			this.children.each(function(chld){
-				chld._drawIntoParent();
-			});
+			if(this.children.length){
+				this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
+				this._ctx.drawImage(this._can,0,0);
+				this.children.each(function(chld){
+					chld._drawIntoParent();
+				});
+			}
 			if(this.attr('focused')){
 				this.ctx.save();
 				this.drawFocusRing();
@@ -683,7 +685,7 @@ if(!window.ob){
 					this.parent._ctx.translate(-1*this._rcenter.x,-1*this._rcenter.y);
 				}
 				this.parent._ctx.globalAlpha=this.attr('opacity');
-				this.parent._ctx.drawImage(this._bigcan,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.frame.origin.x,this.frame.origin.y,clip.size.width,clip.size.height);
+				this.parent._ctx.drawImage(this.children.length?this._bigcan:this._can,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.frame.origin.x,this.frame.origin.y,clip.size.width,clip.size.height);
 				this.parent._ctx.restore();
 			}
 		},
