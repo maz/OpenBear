@@ -67,6 +67,8 @@ window.OBScrollBar=Class.create(OBView,{
 	redraw:function OBScrollBar_redraw(){
 		this.ctx.drawImage(OBThemeLoader.ScrollerHorizontalTrack,0,0,this.attr('width'),OBThemeLoader.ScrollerHorizontalTrack.height);
 		if(this.max){
+			this.knobWidth=Math.max(this.unit,18);
+			this.knobX=((this.unit*this.value)-(this.knobWidth*(this.value/this.max)))+OBThemeLoader.ScrollerLeftArrow.width;
 			this.ctx.drawSlicedImage([
 				this.selected==0?OBThemeLoader.ScrollerLeftArrowHighlighted:OBThemeLoader.ScrollerLeftArrow,
 				OBThemeLoader.ScrollerHorizontalTrack,
@@ -76,7 +78,7 @@ window.OBScrollBar=Class.create(OBView,{
 				OBThemeLoader.ScrollerHorizontalKnobLeft,
 				OBThemeLoader.ScrollerHorizontalKnobCenter,
 				OBThemeLoader.ScrollerHorizontalKnobRight
-			],((this.unit*this.value)-(Math.max(this.unit,18)*(this.value/this.max)))+OBThemeLoader.ScrollerLeftArrow.width,OBThemeLoader.ScrollBarInfo.KnobY,Math.max(this.unit,18));
+			],this.knobX,OBThemeLoader.ScrollBarInfo.KnobY,this.knobWidth);
 		}
 	},
 	mousedown:function OBScrollBar_mousedown(evt){
@@ -94,10 +96,24 @@ window.OBScrollBar=Class.create(OBView,{
 			this.timer=window.setInterval(function OBScrollBar_mousedown_right(){
 				self.attr("value",self.attr("value")+self.buttonScrollDelta);
 			},this.buttonScrollInterval);
+		}else if(evt.point.x<=(this.knobX+this.knobWidth) && evt.point.x>=this.knobX){
+			this.selected=1;
+			this._setValueToPoint(evt.point.x);
 		}else{
 			this.selected=-1;
+			this._setValueToPoint(evt.point.x);
 		}
 		this.update();
+	},
+	_setValueToPoint:function OBScrollBar__setValueToPoint(x){
+		var z=Math.round((x-OBThemeLoader.ScrollerLeftArrow.width)/this.unit);
+		if(!isNaN(z))
+			this.attr("value",z);
+	},
+	mousedrag:function OBScrollBar_mousedrag(evt){
+		if(this.selected==1 && !this.leftRect.intersects(evt.point) && !this.rightRect.intersects(evt.point)){
+			this._setValueToPoint(evt.point.x);
+		}
 	},
 	mouseup:function OBScrollBar_mouseup(evt){
 		this.selected=-1;
