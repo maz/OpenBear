@@ -218,6 +218,10 @@ if(!window.ob){
 		inspect:function OBPoint_inspect(){
 			return "#<OBPoint:["+this.attr('x')+","+this.attr('y')+"]>";
 		},
+		rotate:function OBPoint_rotate(rad){
+			this.x=(this.x*Math.cos(rad))-(this.y*Math.sin(rad));
+			this.y=(this.x*Math.sin(rad))+(this.y*Math.cos(rad));
+		},
 		clone:function OBPoint_clone(){
 			return new OBPoint(this.x,this.y);
 		},
@@ -363,9 +367,13 @@ if(!window.ob){
 		toArray:function OBRect_toArray(){
 			return [this.attr('x'),this.attr('y'),this.attr('width'),this.attr('height')];
 		},
-		intersects:function OBRect_intersects(val){
+		intersects:function OBRect_intersects(val,radians){
 			if(val instanceof OBPoint){
-				return val.attr('x')>=this.attr('x') && val.attr("x")<=this.attr('x')+this.attr("width") && val.attr('y')>=this.attr('y') && val.attr("y")<=this.attr('y')+this.attr("height");
+				if(radians){
+					
+				}else{
+					return val.attr('x')>=this.attr('x') && val.attr("x")<=this.attr('x')+this.attr("width") && val.attr('y')>=this.attr('y') && val.attr("y")<=this.attr('y')+this.attr("height");
+				}
 			}else if(val instanceof OBRect){
 				throw new Error("OBRect.intersects(OBRect) is not implemented");
 			}else{
@@ -647,17 +655,13 @@ if(!window.ob){
 			if(this._buffer){
 				return;
 			}
-			if(this.children.length){
-				this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
-				this._ctx.drawImage(this._can,0,0);
-				this.children.each(function(chld){
-					chld._drawIntoParent();
-				});
-			}
+			this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
+			this._ctx.drawImage(this._can,0,0);
+			this.children.each(function(chld){
+				chld._drawIntoParent();
+			});
 			if(this.attr('focused')){
-				this.ctx.save();
 				this.drawFocusRing();
-				this.ctx.restore();
 			}
 			if(this.parent){
 				this.parent.updateBig();
@@ -681,11 +685,11 @@ if(!window.ob){
 				this.parent._ctx.save();
 				if(this.attr("rotation")){
 					this.parent._ctx.translate(this._rcenter.x,this._rcenter.y);
-					this.parent._ctx.rotate(this.attr("rotation"));
+					this.parent._ctx.rotate(this.rotation);
 					this.parent._ctx.translate(-1*this._rcenter.x,-1*this._rcenter.y);
 				}
 				this.parent._ctx.globalAlpha=this.attr('opacity');
-				this.parent._ctx.drawImage(this.children.length?this._bigcan:this._can,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.frame.origin.x,this.frame.origin.y,clip.size.width,clip.size.height);
+				this.parent._ctx.drawImage(this._bigcan,clip.origin.x,clip.origin.y,clip.size.width,clip.size.height,this.frame.origin.x,this.frame.origin.y,clip.size.width,clip.size.height);
 				this.parent._ctx.restore();
 			}
 		},
@@ -923,6 +927,9 @@ if(!window.ob){
 			point=point.clone();
 			point.attr('x',(point.attr('x')-this.attr('x'))+clip.attr('x'));
 			point.attr('y',(point.attr('y')-this.attr('y'))+clip.attr('y'));
+			if(this.rotation){
+				point.rotate(this.rotation);
+			}
 			return point;
 		},
 		getGlobalOrigin:function OBView_getGlobalOrigin(){
@@ -943,7 +950,7 @@ if(!window.ob){
 				var c=null;
 				this._children=[];
 				this.children.each(function(chld){
-					if(chld.attr('dispRect').intersects(evt.point) && chld.attr("visible")){
+					if(chld.attr('dispRect').intersects(evt.point,chld.rotation) && chld.attr("visible")){
 						c=chld;
 						this._children.push(chld);
 					}
