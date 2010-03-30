@@ -38,7 +38,7 @@ window.OBScrollBar=Class.create(OBView,{
 	value:0,
 	selected:-1,
 	buttonScrollInterval:250,
-	buttonScrollDelta:2,
+	buttonScrollDelta:1,
 	setup:function OBScrollBar_setup(max,value){
 		if(max){
 			this.attr("max",max||10);
@@ -76,7 +76,7 @@ window.OBScrollBar=Class.create(OBView,{
 				OBThemeLoader.ScrollerHorizontalKnobLeft,
 				OBThemeLoader.ScrollerHorizontalKnobCenter,
 				OBThemeLoader.ScrollerHorizontalKnobRight
-			],((this.unit*this.value)-(Math.max(this.unit,18)/2))+OBThemeLoader.ScrollerLeftArrow.width,OBThemeLoader.ScrollBarInfo.KnobY,Math.max(this.unit,18));
+			],((this.unit*this.value)-(Math.max(this.unit,18)*(this.value/this.max)))+OBThemeLoader.ScrollerLeftArrow.width,OBThemeLoader.ScrollBarInfo.KnobY,Math.max(this.unit,18));
 		}
 	},
 	mousedown:function OBScrollBar_mousedown(evt){
