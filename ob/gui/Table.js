@@ -50,7 +50,7 @@ window.OBTableColumn=Class.create(OBAttr,{
 });
 
 OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
-	var cell=new OBTextView(v,x,y,w,h);
+	var cell=new OBTextView(v,new OBRect(x,y,w,h));
 	cell.setData=function OBTableColumn_BasicTextCell_setData(z){
 		cell.attr("text",z);
 	};
@@ -58,9 +58,16 @@ OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
 };
 
 window.OBTable=Class.create(OBView,{
+	acceptsFocus:false,
 	data:null,//[{with <columnIdentifier>:<value>}]
 	setup:function OBTable_setup(columns){
 		this.columns=columns;
+		this.vbar=new OBScrollBar(this,new OBRect(0,0,this.attr("height")-34/*(17*2)*/,17));
+		this.vbar.attr("center",new OBPoint(this.attr("width")-8.5,this.attr("center").y-17));
+		this.vbar.attr("autoresize",OBView.Autoresize.Width);
+		this.vbar.attr("rotation",(90).toRadians());
+		this.hbar=new OBScrollBar(this,new OBRect(0,this.attr("height")-17,this.attr("width"),17));
+		this.hbar.attr("autoresize",OBView.Autoresize.Width);
 	},
 	rowHeight:25,
 	update:function OBTable_update(){
