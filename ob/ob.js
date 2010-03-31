@@ -47,13 +47,7 @@ if(!window.ob){
 		/** @id ob_load */
 		load:function ob_load(p){
 			var pkg=p;
-			ob._loadedPkgs.each(function(elem){
-				if(elem==pkg){
-					pkg=null;
-					throw $break;
-				}
-			});
-			if(!pkg){
+			if(ob._loadedPkgs.indexOf(pkg)!=-1){
 				return;
 			}
 			var arr=pkg.split('.');
@@ -218,9 +212,11 @@ if(!window.ob){
 		inspect:function OBPoint_inspect(){
 			return "#<OBPoint:["+this.attr('x')+","+this.attr('y')+"]>";
 		},
-		rotate:function OBPoint_rotate(rad){
+		rotate:function OBPoint_rotate(rad,around){
+			this.subtract(around);
 			this.x=(this.x*Math.cos(rad))-(this.y*Math.sin(rad));
 			this.y=(this.x*Math.sin(rad))+(this.y*Math.cos(rad));
+			this.add(around);
 		},
 		clone:function OBPoint_clone(){
 			return new OBPoint(this.x,this.y);
@@ -718,10 +714,10 @@ if(!window.ob){
 			this.updateBig();
 		},
 		getter_origin:function OBView_getter_origin(){
-			return this.attr('frame').attr('origin');
+			return this.frame.origin;
 		},
 		getter_size:function OBView_getter_size(){
-			return this.attr('frame').attr('size');
+			return this.frame.size;
 		},
 		setter_origin:function OBView_setter_origin(v){
 			this.attr('frame').attr('origin',v);
@@ -825,6 +821,16 @@ if(!window.ob){
 		setter_height:function sOBView_etter_height(v){
 			this.attr('size',new OBSize(this.attr('width'),v));
 		},
+		getter_center:function OBView_getter_center(){
+			var c=this._rcenter.clone();
+			c.add(this.attr("origin"));
+			return c;
+		},
+		setter_center:function OBView_setter_center(c){
+			c=c.clone();
+			c.subtract(new OBPoint(this.attr("width")/2,this.attr("height")/2));
+			this.attr("origin",c);
+		},
 		getter_w:function OBView_getter_w(){
 			return this.getter_width();
 		},
@@ -922,13 +928,20 @@ if(!window.ob){
 				this.parent=null;
 			}
 		},
+		setter_parent:function OBView_setter_parent(par){
+			this.remove();
+			this.parent=par;
+			this.parent.children.push(this);
+			this.parent.fire("added_child",this);
+			this.parent.updateBig();
+		},
 		adjustParentPoint:function OBView_adjustParentPoint(point){
 			var clip=this.attr('clip');
 			point=point.clone();
 			point.attr('x',(point.attr('x')-this.attr('x'))+clip.attr('x'));
 			point.attr('y',(point.attr('y')-this.attr('y'))+clip.attr('y'));
 			if(this.rotation){
-				point.rotate(this.rotation);
+				point.rotate(this.rotation,this._rcenter);
 			}
 			return point;
 		},
@@ -1388,6 +1401,7 @@ window.I18n={
 		
 		var totalImgs=0;
 		var loadedImgs=0;
+		var x=null;
 		for(x in OBThemeLoader){
 			totalImgs++;
 		}
