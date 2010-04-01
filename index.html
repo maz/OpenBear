@@ -13,6 +13,7 @@
 			ob.load("ob.ImageView");
 			ob.load("ob.gui.ScrollBar");
 			ob.load("ob.gui.Copier");
+			ob.load("ob.gui.Table");
 			//ob.load("ob.Debug");
 			
 			window.WeirdView=Class.create(OBView,{
@@ -126,6 +127,7 @@
 				tf.observe("trigger",function(){
 					alert("Hello "+tf.attr("text"));
 				});
+				window.table=new OBTable(null,new OBRect(400,10,300,300),[]);
 				window.img=new OBImageView(null, new OBRect(300,400,100,100));
 				window.Tux=new Image();
 				Tux.onload=function(){
