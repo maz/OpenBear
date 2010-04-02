@@ -20,12 +20,12 @@ window.OBTextView=Class.create(OBView,{
 	setup:function OBTextView_setup(txt){
 		this.attr("text",txt?txt:"");
 		this.font="12pt Arial";
-		this.color=OBColor.black;
+		this.color=OBColor.Black;
 	},
 	redraw:function OBTextView_redraw(){
 		this.ctx.font=this.font;
 		this.ctx.fillStyle=this.color.toString();
-		this.ctx.drawText(this.text,0,this.txtSize.height);
+		this.ctx.fillText(this.text,0,this.txtSize.height);
 	},
 	setter_text:function OBTextView_setter_text(txt){
 		this.text=txt;

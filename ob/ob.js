@@ -640,15 +640,17 @@ if(!window.ob){
 		},
 		setup:function OBView_setup(){},
 		update:function OBView_update(){
-			if(this._buffer){
+			if(this._buffer||this._updating){
 				return;
 			}
+			this._updating=true;//prevent infinite loops
 			this.ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
 			this.redraw();
+			this._updating=false;
 			this.updateBig();
 		},
 		updateBig:function OBView_updateBig(){
-			if(this._buffer){
+			if(this._buffer||this._updating){
 				return;
 			}
 			this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
@@ -666,9 +668,10 @@ if(!window.ob){
 		buffer:function OBView_buffer(){
 			this._buffer=true;
 		},
-		commit:function OBView_commit(){
+		commit:function OBView_commit(flag){
 			this._buffer=false;
-			this.update();
+			if(!flag)
+				this.update();
 		},
 		drawFocusRing:function OBView_drawFocusRing(){
 			this._ctx.strokeStyle=OBView.FocusColor.toString();

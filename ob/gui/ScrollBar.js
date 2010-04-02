@@ -58,6 +58,7 @@ window.OBScrollBar=Class.create(OBView,{
 	},
 	setter_max:function OBScrollBar_setter_max(max){
 		this.max=max;
+		this.value=Math.min(this.value,this.max);
 		this._recalcUnit();
 		this.update();
 	},
