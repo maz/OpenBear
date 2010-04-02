@@ -89,6 +89,7 @@ OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
 window.OBTable=Class.create(OBView,{
 	acceptsFocus:false,
 	data:null,//[{with <columnIdentifier>:<value>}]
+	showHeader:true,
 	setup:function OBTable_setup(columns){
 		this.data=[];
 		this.rowHeight=OBThemeLoader.TableInfo.RowHeight;
@@ -103,8 +104,22 @@ window.OBTable=Class.create(OBView,{
 		this.hbar.attr("autoresize",OBView.Autoresize.Width);
 		this.vbar.attr("max",0);
 		this.hbar.attr("max",0);
+		var w=this.attr("width")-17;
+		var i;
+		var x=this.columns.length;
+		for(i=0;i<this.columns.length;i++){
+			if(this.columns[i].width){
+				w-=this.columns[i].width;
+				x--;
+			}
+		}
+		x=w/x;
+		for(i=0;i<this.columns.length;i++){
+			if(!this.columns[i].width){
+				this.columns[i].width=x;
+			}
+		}
 	},
-	speedUnit:2,
 	selectedRow:-1,
 	setter_rowHeight:function OBTable_setter_rowHeight(rh){
 		this.rowHeight=rh;
@@ -112,14 +127,14 @@ window.OBTable=Class.create(OBView,{
 	},
 	redraw:function OBTable_redraw(){
 		var dlrh=this.data.length*this.rowHeight;
-		var aheight=this.attr("height")-(OBThemeLoader.TableHeader.height+17);//availableHeight
+		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
 		var maxDisp=Math.floor(aheight/this.rowHeight);
-		this.vbar.attr("max",((dlrh>aheight)?(dlrh-maxDisp):0)/this.speedUnit);
-		var row=Math.floor((this.vbar.attr("value")*this.speedUnit)/this.rowHeight);
+		this.vbar.attr("max",((dlrh>aheight)?(dlrh-maxDisp):0));
+		var row=Math.floor(this.vbar.attr("value")/this.rowHeight);
 		var x=0;
 		var rowSelection=this.data.slice(row,row+maxDisp);
 		var vd=this.rowHeight+OBThemeLoader.TableInfo.HSeperator.size;
-		var y=OBThemeLoader.TableHeader.height;
+		var y=(this.showHeader?OBThemeLoader.TableHeader.height:0);
 		var i=0;
 		var smr=Math.max(this.selected-row,-1);
 		for(i=0;i<maxDisp;i++){
@@ -128,12 +143,12 @@ window.OBTable=Class.create(OBView,{
 			y+=vd;
 		}
 		this.columns.each(function OBTable_redraw_sub(col){
-			col.draw(this,vd,x,OBThemeLoader.TableHeader.height,rowSelection,smr);
+			col.draw(this,vd,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),rowSelection,smr);
 			x+=col.width;
-			DrawStyledLine(this.ctx,x,OBThemeLoader.TableHeader.height,aheight,true,OBThemeLoader.TableInfo.VSeperator);
+			DrawStyledLine(this.ctx,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),aheight,true,OBThemeLoader.TableInfo.VSeperator);
 			x+=OBThemeLoader.TableInfo.VSeperator.size;
 		},this);
-		y=OBThemeLoader.TableHeader.height;
+		y=(this.showHeader?OBThemeLoader.TableHeader.height:0);
 		for(i=0;i<rowSelection.length;i++){
 			DrawStyledLine(this.ctx,0,y,this.attr("width"),false,OBThemeLoader.TableInfo.HSeperator);
 			y+=vd;
@@ -150,8 +165,7 @@ window.OBTable=Class.create(OBView,{
 		this.update();
 	},
 	mousedown:function OBTable_mousedown(evt){
-		var x=this.rowFromPoint(evt.point);
-		this.attr('selected',Object.isNumber(x)?x:-1);
+		this.attr('selected',this.rowFromPoint(evt.point));
 	},
 	setter_selected:function OBTable_selected(x){
 		if(this.selected!=x){
@@ -160,12 +174,18 @@ window.OBTable=Class.create(OBView,{
 		}
 	},
 	rowFromPoint:function OBTable_rowFromPoint(p){
-		var aheight=this.attr("height")-(OBThemeLoader.TableHeader.height+17);//availableHeight
+		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
 		var maxDisp=Math.floor(aheight/this.rowHeight);
-		if(p.y<=OBThemeLoader.TableHeader.height||p.y>=Math.min(maxDisp*this.rowHeight,aheight)){
-			return null;
+		p=p.clone();
+		if(p.y<=(this.showHeader?OBThemeLoader.TableHeader.height:0)||p.y>=Math.min(Math.min(maxDisp*this.rowHeight,aheight),this.data.length*this.rowHeight)){
+			return -1;
 		}
-		p.y-=OBThemeLoader.TableHeader.height;
-		return Math.floor(p.y/this.rowHeight);
+		p.y-=(this.showHeader?OBThemeLoader.TableHeader.height:0);
+		for(var i=0;i<maxDisp;i++){
+			if(p.y<=((i+1)*this.rowHeight)){
+				return i+Math.floor(this.vbar.attr("value")/this.rowHeight);
+			}
+		}
+		return -1;
 	}
 });

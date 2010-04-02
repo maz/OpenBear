@@ -127,7 +127,7 @@
 				tf.observe("trigger",function(){
 					alert("Hello "+tf.attr("text"));
 				});
-				window.table=new OBTable(null,new OBRect(400,10,300,300),[new OBTableColumn("name","Name",100),new OBTableColumn("age","Age",50)]);
+				window.table=new OBTable(null,new OBRect(400,10,300,300),[new OBTableColumn("name","Name"),new OBTableColumn("age","Age",50)]);
 				table.data.push({name:"Joe",age:18});
 				table.data.push({name:"Bob",age:58});
 				table.update();
