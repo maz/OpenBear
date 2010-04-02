@@ -387,9 +387,13 @@ if(!window.ob){
 		alpha:0,
 		initialize:function OBColor_constructor(r,g,b,a){
 			if(Object.isArray(r)){
-				this.intiailize.apply(this,r);
+				this.initialize.apply(this,r);
 			}else if(r instanceof OBColor){
 				return this.initialize(r.attr("r"),r.attr("g"),r.attr("b"),g);
+			}else if(Object.isString(r)){
+				r=r.replace("rgba(","").replace("rgb(","").replace(")","");
+				var arr=r.split(",");
+				this.initialize.apply(this,arr.map(parseInt));
 			}else{
 				this.red=(r<1 && r!=0)?r*255:r;
 				this.green=(g<1 && g!=0)?g*255:g;
