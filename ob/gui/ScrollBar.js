@@ -42,8 +42,8 @@ window.OBScrollBar=Class.create(OBView,{
 	vertical:false,
 	setup:function OBScrollBar_setup(max,value,vertical){
 		this.vertical=!!vertical;
-		if(max){
-			this.attr("max",max||10);
+		if(Object.isNumber(max)){
+			this.attr("max",max);
 		}
 		if(value){
 			this.attr("value",value||0);
