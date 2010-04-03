@@ -81,7 +81,7 @@ OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
 		cell.attr("text",z);
 	};
 	cell.setSelected=function OBTableColumn_BasicTextCell_setSelected(flag){
-		cell.attr('color',flag?OBColor.White:OBColor.Black);
+		cell.attr('color',flag?new OBColor(OBThemeLoader.TableInfo.TextCell.HighlightedColor):new OBColor(OBThemeLoader.TableInfo.TextCell.DefaultColor));
 	};
 	return cell;
 };
@@ -138,8 +138,12 @@ window.OBTable=Class.create(OBView,{
 		var i=0;
 		var smr=Math.max(this.selected-row,-1);
 		for(i=0;i<maxDisp;i++){
-			this.ctx.fillStyle=(i==smr)?this.ctx.createPattern(OBThemeLoader.Selection,'repeat'):((i%2)?OBThemeLoader.TableInfo.RowBackground:OBThemeLoader.TableInfo.AlternateRowBackground);
-			this.ctx.fillRect(0,y,this.attr("width"),this.rowHeight);
+			if(i==smr){
+				this.ctx.drawImage(OBThemeLoader.Selection,0,y,this.attr("width"),this.rowHeight);
+			}else{
+				this.ctx.fillStyle=((i%2)?OBThemeLoader.TableInfo.RowBackground:OBThemeLoader.TableInfo.AlternateRowBackground);
+				this.ctx.fillRect(0,y,this.attr("width"),this.rowHeight);
+			}
 			y+=vd;
 		}
 		this.columns.each(function OBTable_redraw_sub(col){
@@ -182,9 +186,7 @@ window.OBTable=Class.create(OBView,{
 		var max=Math.min(this.data.length,maxDisp);
 		var vd=this.rowHeight+OBThemeLoader.TableInfo.HSeperator.size;
 		var y=(this.showHeader?OBThemeLoader.TableHeader.height:0)+vd;
-		console.info("p.y="+p.y);
 		for(i=0;i<max;i++){
-			console.info("y="+y);
 			if(p.y<=y){
 				return i+row;
 			}
