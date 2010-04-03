@@ -831,9 +831,7 @@ if(!window.ob){
 			this.attr('size',new OBSize(this.attr('width'),v));
 		},
 		getter_center:function OBView_getter_center(){
-			var c=this._rcenter.clone();
-			c.add(this.attr("origin"));
-			return c;
+			return new OBPoint(this.attr("width")/2,this.attr("height")/2);
 		},
 		setter_center:function OBView_setter_center(c){
 			c=c.clone();

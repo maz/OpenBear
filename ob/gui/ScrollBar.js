@@ -39,7 +39,9 @@ window.OBScrollBar=Class.create(OBView,{
 	selected:-1,
 	buttonScrollInterval:250,
 	buttonScrollDelta:1,
-	setup:function OBScrollBar_setup(max,value){
+	vertical:false,
+	setup:function OBScrollBar_setup(max,value,vertical){
+		this.vertical=!!vertical;
 		if(max){
 			this.attr("max",max||10);
 		}
@@ -47,13 +49,13 @@ window.OBScrollBar=Class.create(OBView,{
 			this.attr("value",value||0);
 		}
 		var s=this.attr("size").clone();
-		s.height=17;
+		s[this.vertical?"width":"height"]=17;
 		this.observe("size_changed",this._size_changed.bind(this));
 		this.attr("size",s);
 	},
 	_size_changed:function OBScrollBar__size_changed(){
-		this.leftRect=new OBRect(0,0,OBThemeLoader.ScrollerLeftArrow.width,17);
-		this.rightRect=new OBRect(this.attr("width")-OBThemeLoader.ScrollerRightArrow.width,0,OBThemeLoader.ScrollerRightArrow.width,17);
+		this.leftRect=new OBRect(0,0,this.vertical?17:OBThemeLoader.ScrollerLeftArrow.width,this.vertical?OBThemeLoader.ScrollerLeftArrow.width:17);
+		this.rightRect=new OBRect(this.vertical?0:(this.attr("width")-OBThemeLoader.ScrollerRightArrow.width),this.vertical?(this.attr("height")-OBThemeLoader.ScrollerRightArrow.width):0,this.vertical?17:OBThemeLoader.ScrollerRightArrow.width,this.vertical?OBThemeLoader.ScrollerRightArrow.width:17);
 		this._recalcUnit();
 	},
 	setter_max:function OBScrollBar_setter_max(max){
@@ -63,10 +65,16 @@ window.OBScrollBar=Class.create(OBView,{
 		this.update();
 	},
 	_recalcUnit:function OBScrollBar__recalcUnit(){
-		this.unit=(this.attr("width")-(OBThemeLoader.ScrollerRightArrow.width*2))/this.max;
+		this.unit=(this.attr(this.vertical?"height":"width")-(OBThemeLoader.ScrollerRightArrow.width*2))/this.max;
 	},
 	redraw:function OBScrollBar_redraw(){
-		this.ctx.drawImage(OBThemeLoader.ScrollerHorizontalTrack,0,0,this.attr('width'),OBThemeLoader.ScrollerHorizontalTrack.height);
+		if(this.vertical){
+			this.ctx.save();
+			var c=new OBPoint(this.attr('height')/2,this.attr("width")/2);
+			this.ctx.rotate((90).toRadians());
+			this.ctx.translate(0,-17);
+		}
+		this.ctx.drawImage(OBThemeLoader.ScrollerHorizontalTrack,0,0,this.attr(this.vertical?'height':'width'),OBThemeLoader.ScrollerHorizontalTrack.height);
 		if(this.max){
 			this.knobWidth=Math.max(this.unit,18);
 			this.knobX=((this.unit*this.value)-(this.knobWidth*(this.value/this.max)))+OBThemeLoader.ScrollerLeftArrow.width;
@@ -74,12 +82,15 @@ window.OBScrollBar=Class.create(OBView,{
 				this.selected==0?OBThemeLoader.ScrollerLeftArrowHighlighted:OBThemeLoader.ScrollerLeftArrow,
 				OBThemeLoader.ScrollerHorizontalTrack,
 				this.selected==2?OBThemeLoader.ScrollerRightArrowHighlighted:OBThemeLoader.ScrollerRightArrow
-			],0,0,this.attr("width"));
+			],0,0,this.attr(this.vertical?"height":"width"));
 			this.ctx.drawSlicedImage([
 				OBThemeLoader.ScrollerHorizontalKnobLeft,
 				OBThemeLoader.ScrollerHorizontalKnobCenter,
 				OBThemeLoader.ScrollerHorizontalKnobRight
 			],this.knobX,OBThemeLoader.ScrollBarInfo.KnobY,this.knobWidth);
+		}
+		if(this.vertical){
+			this.ctx.restore();
 		}
 	},
 	mousedown:function OBScrollBar_mousedown(evt){
@@ -97,12 +108,12 @@ window.OBScrollBar=Class.create(OBView,{
 			this.timer=window.setInterval(function OBScrollBar_mousedown_right(){
 				self.attr("value",self.attr("value")+self.buttonScrollDelta);
 			},this.buttonScrollInterval);
-		}else if(evt.point.x<=(this.knobX+this.knobWidth) && evt.point.x>=this.knobX){
+		}else if((this.vertical?evt.point.y:evt.point.x)<=(this.knobX+this.knobWidth) && (this.vertical?evt.point.y:evt.point.x)>=this.knobX){
 			this.selected=1;
-			this._setValueToPoint(evt.point.x);
+			this._setValueToPoint(this.vertical?evt.point.y:evt.point.x);
 		}else{
 			this.selected=-1;
-			this._setValueToPoint(evt.point.x);
+			this._setValueToPoint(this.vertical?evt.point.y:evt.point.x);
 		}
 		this.update();
 	},
@@ -113,7 +124,7 @@ window.OBScrollBar=Class.create(OBView,{
 	},
 	mousedrag:function OBScrollBar_mousedrag(evt){
 		if(this.selected==1 && !this.leftRect.intersects(evt.point) && !this.rightRect.intersects(evt.point)){
-			this._setValueToPoint(evt.point.x);
+			this._setValueToPoint(this.vertical?evt.point.y:evt.point.x);
 		}
 	},
 	mouseup:function OBScrollBar_mouseup(evt){
