@@ -1236,8 +1236,9 @@ window.I18n={
 	
 	window.OBCurrentTheme=window.OBCurrentTheme||"Default";
 	
-	Array.prototype.complement=function OpenBear_Array_Complement(arr){
+	Array.prototype.complement=function OpenBear_Array_Complement(z){
 		var a=[];
+		var arr=z;
 		this.each(function OpenBear_Array_Complement_sub1(elem){
 			if(arr.indexOf(elem)!=-1){
 				a.push(elem);
@@ -1250,9 +1251,16 @@ window.I18n={
 		document.body.removeChild($("LoadingBox"));
 	});
 	
-	//FIXME: When (in safari at least) you click the search box, you can't click back into the web page
+	//FIXME: Safari always changes the cursor to the text cursor on mouse down
 	
 	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
+		if(!window.console){
+			window.console={
+				info:Prototype.emptyFunction,
+				warning:Prototype.emptyFunction,
+				error:Prototype.emptyFunction
+			};
+		}
 		document.body.innerHTML="<div id=\"LoadingBox\" style=\"text-align:center;\"><img src=\""+ob.moduleUrl("ob.themes."+OBCurrentTheme,"loading.gif")+"\"/></div>";
 		document.body.style.overflow="hidden";
 		var demin=document.viewport.getDimensions();
@@ -1331,7 +1339,7 @@ window.I18n={
 				left:left
 			});
 			ob._onRun=false;
-			evt.stop();
+			//evt.stop();
 		}.bindAsEventListener(window));
 		document.observe("dblclick",function OBEvntHandler_dblclick(evt){
 			evt=Event.extend(evt);
@@ -1365,8 +1373,8 @@ window.I18n={
 				left:left
 			});
 			document.body.style.cursor=ob._over[ob._over.length-1].cursor;
-			//TODO: implement accurate mouseover, mouseout
-			/*
+			//TODO: finish accurately implementing mouseover, mouseout
+			
 			var a=$A(old);
 			a=a.complement(ob._over);
 			a.each(function OBEvntHandler_mousemove_mouseout(view){
@@ -1379,7 +1387,6 @@ window.I18n={
 				v.mouseover();
 			});
 			//console.info("over",a);
-			*/
 		}.bindAsEventListener(window));
 		
 		var scrollName="mousewheel";//(document.addEventListener?"DOMMouseScroll":"mousewheel");

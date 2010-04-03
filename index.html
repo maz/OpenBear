@@ -23,9 +23,9 @@
 					this.ctx.strokeStyle="blue";
 					this.ctx.lineWidth=50;
 					this.ctx.strokeRect(0,0,this.attr('width'),this.attr('height'));
-				}//,
-				//mouseover:function(){console.info("mouseover");},
-				//mouseout:function(){console.info("mouseout");}
+				}/*,
+				mouseover:function(){console.info("mouseover weridview");},
+				mouseout:function(){console.info("mouseout weirdview");}*/
 			});
 			window.Clicker=Class.create(OBView,{
 				setup:function(){
@@ -102,9 +102,9 @@
 						this.m.show(new OBRect(o,new OBSize(200,300)));
 						this.m=null;
 					}
-				}//,
-				//mouseover:function(){console.info("mouseover");},
-				//mouseout:function(){console.info("mouseout");}
+				}/*,
+				mouseover:function(){console.info("mouseover clicker");},
+				mouseout:function(){console.info("mouseout clicker");}*/
 			});
 			function testAnim(){
 				var a=new OBViewAnimation(window.z);
@@ -127,7 +127,7 @@
 				tf.observe("trigger",function(){
 					alert("Hello "+tf.attr("text"));
 				});
-				window.table=new OBTable(null,new OBRect(400,10,300,300),[new OBTableColumn("name","Name"),new OBTableColumn("age","Age",50)]);
+				window.table=new OBTable(null,new OBRect(575,10,300,300),[new OBTableColumn("name","Name"),new OBTableColumn("age","Age",50)]);
 				table.data.push({name:"Joe",age:18});
 				table.data.push({name:"Bob",age:58});
 				table.update();
@@ -143,7 +143,8 @@
 					var m=new OBMenu([
 						tr("Clear"),
 						tr("Print Selected Color"),
-						tr("Print All Colors")
+						tr("Print All Colors"),
+						tr("Play Animation")
 					]);
 					m.observe("selected",function(x){
 						if(x==tr("Print Selected Color")){
@@ -152,6 +153,9 @@
 							c.points=click.points;
 							c.update();
 							OBView.print([c],"One Color");
+						}else if(x==tr("Play Animation")){
+							var anim=new OBViewAnimation(window.z);
+							anim.attr("x",50).attr("y",50).attr("width",500).attr("opacity",0.5).start();
 						}else if(x==tr("Print All Colors")){
 							var arr=[];
 							var colors=[

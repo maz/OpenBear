@@ -128,7 +128,7 @@ window.OBTable=Class.create(OBView,{
 	redraw:function OBTable_redraw(){
 		var dlrh=this.data.length*this.rowHeight;
 		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
-		var maxDisp=Math.floor(aheight/this.rowHeight);
+		var maxDisp=Math.ceil(aheight/this.rowHeight);
 		this.vbar.attr("max",((dlrh>aheight)?(dlrh-maxDisp):0));
 		var row=Math.floor(this.vbar.attr("value")/this.rowHeight);
 		var x=0;
@@ -175,7 +175,7 @@ window.OBTable=Class.create(OBView,{
 	},
 	rowFromPoint:function OBTable_rowFromPoint(p){
 		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
-		var maxDisp=Math.floor(aheight/this.rowHeight);
+		var maxDisp=Math.ceil(aheight/this.rowHeight);
 		p=p.clone();
 		if(p.y<=(this.showHeader?OBThemeLoader.TableHeader.height:0)||p.y>=Math.min(Math.min(maxDisp*this.rowHeight,aheight),this.data.length*this.rowHeight)){
 			return -1;
