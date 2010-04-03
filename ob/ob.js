@@ -1349,7 +1349,7 @@ window.I18n={
 				left:left
 			});
 			ob._onRun=false;
-			//evt.stop();
+			evt.stop();
 		}.bindAsEventListener(window));
 		document.observe("dblclick",function OBEvntHandler_dblclick(evt){
 			evt=Event.extend(evt);
