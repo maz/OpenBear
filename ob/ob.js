@@ -944,7 +944,6 @@ if(!window.ob){
 		},
 		adjustParentPoint:function OBView_adjustParentPoint(point){
 			var clip=this.attr('clip');
-			point=point.clone();
 			point.attr('x',(point.attr('x')-this.attr('x'))+clip.attr('x'));
 			point.attr('y',(point.attr('y')-this.attr('y'))+clip.attr('y'));
 			if(this.rotation){
@@ -964,7 +963,7 @@ if(!window.ob){
 		},
 		_handleEvt:function OBView__handleEvt(name,e){
 			ob._over.push(this);
-			var evt=e;
+			var evt=OBView._cloneEvent(e);
 			if(this.acceptsEvents){
 				evt.point=this.adjustParentPoint(evt.point);
 				var c=null;
@@ -980,6 +979,7 @@ if(!window.ob){
 				}else if(name=='mouseup'){
 					this._md=false;
 				}
+				//subviews have the option of returning true for an event to prevent it from bubbling up
 				if((c && !c._handleEvt(name,evt)) || !c){
 					return this[name](evt);
 				}else{
@@ -994,6 +994,14 @@ if(!window.ob){
 	OBView.focused=null;
 	OBView.FocusColor=OBColor.Orange;
 	OBView.FocusWidth=5;
+	
+	OBView._cloneEvent=function OBView__cloneEvent(e){
+		return {
+			point:e.point.clone(),
+			left:e.left,
+			right:e.right
+		};
+	};
 	
 	OBView.Autoresize={
 		LockTopLeft:0,
