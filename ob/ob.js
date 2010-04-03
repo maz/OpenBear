@@ -391,9 +391,11 @@ if(!window.ob){
 			}else if(r instanceof OBColor){
 				return this.initialize(r.attr("r"),r.attr("g"),r.attr("b"),g);
 			}else if(Object.isString(r)){
-				r=r.replace("rgba(","").replace("rgb(","").replace(")","");
-				var arr=r.split(",");
-				this.initialize.apply(this,arr.map(parseInt));
+				var arr=r.replace("rgba(","").replace("rgb(","").replace(")","").split(",");
+				for(var i=0;i<arr.length;i++){
+					arr[i]=parseFloat(arr[i]);
+				}
+				this.initialize.apply(this,arr);
 			}else{
 				this.red=(r<1 && r!=0)?r*255:r;
 				this.green=(g<1 && g!=0)?g*255:g;
