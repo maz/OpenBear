@@ -174,17 +174,21 @@ window.OBTable=Class.create(OBView,{
 		}
 	},
 	rowFromPoint:function OBTable_rowFromPoint(p){
+		var row=Math.floor(this.vbar.attr("value")/this.rowHeight);
 		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
 		var maxDisp=Math.ceil(aheight/this.rowHeight);
-		p=p.clone();
-		if(p.y<=(this.showHeader?OBThemeLoader.TableHeader.height:0)||p.y>=Math.min(Math.min(maxDisp*this.rowHeight,aheight),this.data.length*this.rowHeight)){
-			return -1;
-		}
-		p.y-=(this.showHeader?OBThemeLoader.TableHeader.height:0);
-		for(var i=0;i<maxDisp;i++){
-			if(p.y<=((i+1)*this.rowHeight)){
-				return i+Math.floor(this.vbar.attr("value")/this.rowHeight);
+		var i=0;
+		var smr=Math.max(this.selected-row,-1);
+		var max=Math.min(this.data.length,maxDisp);
+		var vd=this.rowHeight+OBThemeLoader.TableInfo.HSeperator.size;
+		var y=(this.showHeader?OBThemeLoader.TableHeader.height:0)+vd;
+		console.info("p.y="+p.y);
+		for(i=0;i<max;i++){
+			console.info("y="+y);
+			if(p.y<=y){
+				return i+row;
 			}
+			y+=vd;
 		}
 		return -1;
 	}
