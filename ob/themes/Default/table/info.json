@@ -13,10 +13,13 @@
 		"style":"dotted"
 	},
 	"Header":{
-		
+		"TextColor":"rgb(20,20,20)",
+		"TextOffset":5,
+		"Font":"12pt bold Arial"
 	},
 	"TextCell":{
 		"DefaultColor":"rgb(0,0,0)",
 		"HighlightedColor":"rgb(255,255,255)"
-	}
+	},
+	"MinimumColumnWidth":25
 }

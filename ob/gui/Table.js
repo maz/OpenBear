@@ -94,16 +94,10 @@ window.OBTable=Class.create(OBView,{
 		this.data=[];
 		this.rowHeight=OBThemeLoader.TableInfo.RowHeight;
 		this.columns=columns;
-		var p=new OBPoint(this.attr("width")-17,0);
-		p.rotate((-90).toRadians(),new OBPoint(this.attr("width")-8.5,(this.attr("height")-17)/2));
-		p.y=((this.attr("height")-17)/2)-16.5;
-		this.vbar=new OBScrollBar(this,new OBRect(p,new OBSize(this.attr("height")-17,17)));
-		this.vbar.attr("autoresize",OBView.Autoresize.Width);
-		this.vbar.attr("rotation",(90).toRadians());
-		this.hbar=new OBScrollBar(this,new OBRect(0,this.attr("height")-17,this.attr("width"),17));
-		this.hbar.attr("autoresize",OBView.Autoresize.Width);
-		this.vbar.attr("max",0);
-		this.hbar.attr("max",0);
+		this.vbar=new OBScrollBar(this,new OBRect(this.attr("width")-17,(this.showHeader?OBThemeLoader.TableHeader.height:0),17,this.attr("height")-(this.showHeader?OBThemeLoader.TableHeader.height:0)/*-17*/),0,0,true);
+		this.vbar.attr("autoresize",OBView.Autoresize.LockTopRight|OBView.Autoresize.Height);
+		//this.hbar=new OBScrollBar(this,new OBRect(0,this.attr("height")-17,this.attr("width")-17,17),0,0);
+		//this.hbar.attr("autoresize",OBView.Autoresize.Width);
 		var w=this.attr("width")-17;
 		var i;
 		var x=this.columns.length;
@@ -113,12 +107,19 @@ window.OBTable=Class.create(OBView,{
 				x--;
 			}
 		}
-		x=w/x;
+		x=Math.max(w/x,OBThemeLoader.TableInfo.MinimumColumnWidth);
 		for(i=0;i<this.columns.length;i++){
 			if(!this.columns[i].width){
 				this.columns[i].width=x;
 			}
 		}
+	},
+	setter_showHeader:function OBTable_setter_showHeader(flag){
+		this.showHeader=flag;
+		this.buffer();
+		this.vbar.attr("y",(this.showHeader?OBThemeLoader.TableHeader.height:0));
+		this.vbar.attr("height",(this.showHeader?OBThemeLoader.TableHeader.height:0));
+		this.commit();
 	},
 	selectedRow:-1,
 	setter_rowHeight:function OBTable_setter_rowHeight(rh){
@@ -146,7 +147,15 @@ window.OBTable=Class.create(OBView,{
 			}
 			y+=vd;
 		}
+		if(this.showHeader){
+			this.ctx.drawImage(OBThemeLoader.TableHeader,0,0,this.attr("width"),OBThemeLoader.TableHeader.height);
+		}
+		this.ctx.font=OBThemeLoader.TableInfo.Header.Font;
+		this.ctx.fillStyle=OBThemeLoader.TableInfo.Header.TextColor;
 		this.columns.each(function OBTable_redraw_sub(col){
+			if(this.showHeader){
+				this.ctx.fillText(col.name,x,OBThemeLoader.TableHeader.height-OBThemeLoader.TableInfo.Header.TextOffset);
+			}
 			col.draw(this,vd,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),rowSelection,smr);
 			x+=col.width;
 			DrawStyledLine(this.ctx,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),aheight,true,OBThemeLoader.TableInfo.VSeperator);
@@ -157,7 +166,6 @@ window.OBTable=Class.create(OBView,{
 			DrawStyledLine(this.ctx,0,y,this.attr("width"),false,OBThemeLoader.TableInfo.HSeperator);
 			y+=vd;
 		}
-		
 	},
 	setter_data:function OBTable_setter_data(data){
 		/**
@@ -174,6 +182,7 @@ window.OBTable=Class.create(OBView,{
 	setter_selected:function OBTable_selected(x){
 		if(this.selected!=x){
 			this.selected=x;
+			this.fire("selection_changed");
 			this.update();
 		}
 	},
