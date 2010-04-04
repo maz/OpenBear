@@ -578,6 +578,84 @@ if(!window.ob){
 	OBColor.SlateGray=new OBColor(112,128,144);
 	OBColor.DarkSlateGray=new OBColor(47,79,79);
 	OBColor.Black=new OBColor(0,0,0);
+	window.OBFont=Class.create(OBAttr,{
+		initialize:function OBFont_constructor(name,size,bold,italic){
+			this.name=name?name:OBFont.Default.name;
+			this.size=size?size:OBFont.Default.size;
+			this.bold=Object.isUndefined(bold)?OBFont.Default.bold:bold;
+			this.italic=Object.isUndefined(italic)?OBFont.Default.italic:italic;
+		},
+		clone:function OBFont_clone(){
+			var f=new OBFont();
+			f.name=this.name;
+			f.size=this.size;
+			f.bold=this.bold;
+			f.italic=this.italic;
+			return f;
+		},
+		toString:function OBFont_toString(){
+			return (this.italic?"italic ":"")+(this.bold?"bold ":"")+this.size+"pt "+this.name;
+		}
+	});
+	OBFont.Default=new OBFont("Arial",12,false,false);
+	
+	OBFont.installed=["Arial","Times New Roman","Arial Black","Arial Narrow","Comic Sans MS","Courier New","Garamond","Georgia","Tahoma","Trebuchet MS","Verdana"];
+	
+	//assume that one of the listed fonts is the default
+	OBFont.isAvailable=function OBFont_isAvailable(font){
+		if(OBFont.installed.indexOf(font)!=-1){
+			return true;
+		}
+		if(!OBFont._tester){
+			OBFont._tester=document.createElement("div");
+			OBFont._tester.style.position="absolute";
+			OBFont._tester.style.top="-100000px";
+			OBFont._tester.style.left="-100000px";
+			OBFont._tester.style.zIndex="1";
+			OBFont._tester.style.fontFamily="Comic Sans MS";//try to make it that
+			document.body.appendChild(OBFont._tester);
+			OBFont._testerSub=document.createElement("div");
+			OBFont._testerSub.innerHTML=OBFont._testString;
+			OBFont._tester.appendChild(OBFont._testerSub);
+			OBFont._testerSub.style.fontFamily="Jjdflaksdjflsdjflksd";//non-existant font
+			OBFont._testerSub.innerHTML=OBFont._testString;
+			OBFont._defaultSize=new OBSize(OBFont._tester.offsetWidth,OBFont._tester.offsetHeight);
+		}
+		OBFont._testerSub.style.fontFamily=font;
+		var flag=(OBFont._defaultSize.width!=OBFont._tester.offsetWidth && OBFont._defaultSize.height!=OBFont._tester.width);
+		if(flag){
+			OBFont.installed.push(font);
+		}
+		return flag;
+	};
+	
+	OBFont._testString="1234567890qwertyuiopasdfghjkzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNMl";
+	
+	//FIXME: this currently only works for single-word font names
+	OBFont.fromCSS=function OBFont_fromCSS(css){
+		var parts=css.split(" ");
+		var name=parts.pop();
+		var size=parts.pop();
+		size=parseInt(size);
+		var bold=false;
+		var italic=false;
+		while(parts.length){
+			var x=parts.pop();
+			if(x=="bold"){
+				bold=true;
+			}else if(x=="italic"){
+				italic=true;
+			}
+		}
+		return new OBFont(name,size,bold,italic);
+	};
+	
+	document.observe("theme:loaded",function OBFont_ThemeSetterLoader(){
+		if(OBThemeLoader.DefaultFont){
+			OBFont.Defualt=OBFont.fromCSS(OBThemeLoader.DefaultFont);
+		}
+	});
+	
 	window.OBResponder={
 		observe:function OBResponder_observe(name,handler){
 			if(!this._evts){
