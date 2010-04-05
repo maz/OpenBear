@@ -56,6 +56,12 @@ window.OBTableColumn=Class.create(OBAttr,{
 		this.sort=sort?sort:OBTableColumn.DefaultSortFunction;
 	},
 	_sort:0,
+	name:"",
+	identifier:"",
+	width:0,
+	editable:false,
+	cell:null,
+	sort:null,
 	sortable:true,
 	draw:function OBTableColumn_draw(table,verticalDelta,x,y,rows,selected){
 		var i=0;
