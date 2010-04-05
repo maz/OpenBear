@@ -22,6 +22,8 @@ ob.load("ob.TextView");
 OBThemeLoader.TableInfo="table/info.json";
 OBThemeLoader.TableHeader="table/Header.png";
 OBThemeLoader.Selection="selection.png";
+OBThemeLoader.ArrowUp="ArrowUp.png";
+OBThemeLoader.ArrowDown="ArrowDown.png";
 
 var DrawStyledLine=function OBTableUtility_DrawStyledLine(ctx,x,y,length,vertical,hash){
 	if(!hash.size)
@@ -40,7 +42,7 @@ var DrawStyledLine=function OBTableUtility_DrawStyledLine(ctx,x,y,length,vertica
 };
 
 window.OBTableColumn=Class.create(OBAttr,{
-	initialize:function OBTableColumn_constructor(identifier,name,width,editable,cell){
+	initialize:function OBTableColumn_constructor(identifier,name,width,editable,cell,sort){
 		this.identifier=identifier;
 		this.name=name?name:identififer;
 		this.editable=!!editable;
@@ -51,7 +53,10 @@ window.OBTableColumn=Class.create(OBAttr,{
 		}
 		this._cells=[];
 		this.width=width?width:0;
+		this.sort=sort?sort:OBTableColumn.DefaultSortFunction;
 	},
+	_sort:0,
+	sortable:true,
 	draw:function OBTableColumn_draw(table,verticalDelta,x,y,rows,selected){
 		var i=0;
 		for(i=0;i<rows.length;i++){
@@ -75,6 +80,20 @@ window.OBTableColumn=Class.create(OBAttr,{
 	}
 });
 
+OBTableColumn.DefaultSortFunction=function OBTableColumn_DefaultSortFunction(a,b){
+	if(a==b)
+		return 0;
+	if(Object.isString(a)){//assume b is also
+		var arr=[a,b];
+		arr.sort();
+		return (arr[0]==a)?-1:1;
+	}else if(a<b){
+		return -1;
+	}else{
+		return 1;
+	}
+};
+
 OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
 	var cell=new OBTextView(v,new OBRect(x,y,w,h));
 	cell.setData=function OBTableColumn_BasicTextCell_setData(z){
@@ -96,6 +115,7 @@ window.OBTable=Class.create(OBView,{
 		this.columns=columns;
 		this.vbar=new OBScrollBar(this,new OBRect(this.attr("width")-17,(this.showHeader?OBThemeLoader.TableHeader.height:0),17,this.attr("height")-(this.showHeader?OBThemeLoader.TableHeader.height:0)/*-17*/),0,0,true);
 		this.vbar.attr("autoresize",OBView.Autoresize.LockTopRight|OBView.Autoresize.Height);
+		this.vbar.buttonScrollDelta=Math.round(this.rowHeight/2);
 		//this.hbar=new OBScrollBar(this,new OBRect(0,this.attr("height")-17,this.attr("width")-17,17),0,0);
 		//this.hbar.attr("autoresize",OBView.Autoresize.Width);
 		var w=this.attr("width")-17;
@@ -155,6 +175,11 @@ window.OBTable=Class.create(OBView,{
 		this.columns.each(function OBTable_redraw_sub(col){
 			if(this.showHeader){
 				this.ctx.fillText(col.name,x,OBThemeLoader.TableHeader.height-OBThemeLoader.TableInfo.Header.TextOffset);
+				if(col._sort!=0){
+					var s=this.ctx.measureText(col.name);
+					var img=(col._sort<0)?OBThemeLoader.ArrowDown:OBThemeLoader.ArrowUp;
+					this.ctx.drawImage(img,x+s.width,2);
+				}
 			}
 			col.draw(this,vd,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),rowSelection,smr);
 			x+=col.width;
@@ -177,7 +202,37 @@ window.OBTable=Class.create(OBView,{
 		this.update();
 	},
 	mousedown:function OBTable_mousedown(evt){
+		if(this.showHeader && evt.point.y<=OBThemeLoader.TableHeader.height){
+			var x=0;
+			var i=0;
+			for(i=0;i<this.columns.length;i++){
+				x+=this.columns[i].width;
+				if(evt.point.x<=x){
+					if(!this.columns[i].sortable)
+						return;
+					for(var a=0;a<this.columns.length;a++){
+						if(a!=i)
+							this.columns[a]._sort=0;
+					}
+					if(this.columns[i]._sort==1){
+						this.columns[i]._sort=-1;
+					}else{
+						this.columns[i]._sort=1;
+					}
+					this._sortDataByColumn(i);
+					this.update();
+					return;
+				}
+			}
+		}
 		this.attr('selected',this.rowFromPoint(evt.point));
+	},
+	_sortDataByColumn:function OBTable__sortDataByColumn(i){
+		var col=this.columns[i];
+		this.data.sort(function OBTable__sortDataByColumn_sub(a,b){
+			return col._sort*col.sort(a[col.identifier],b[col.identifier]);
+			//we can do this because col._sort is either 1 or -1 with the latter meaning the reverse
+		});
 	},
 	setter_selected:function OBTable_selected(x){
 		if(this.selected!=x){
