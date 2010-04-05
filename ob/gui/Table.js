@@ -275,14 +275,16 @@ window.OBTable=Class.create(OBView,{
 		}
 	},
 	rowFromPoint:function OBTable_rowFromPoint(p){
-		var row=Math.floor(this.vbar.attr("value")/this.rowHeight);
 		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)/*+17*/);//availableHeight
 		var maxDisp=Math.ceil(aheight/this.rowHeight);
+		var i=this.vbar.attr("value")/this.rowHeight;
+		var row=Math.floor(i);
 		var i=0;
 		var smr=Math.max(this.selected-row,-1);
 		var max=Math.min(this.data.length,maxDisp);
 		var vd=this.rowHeight+OBThemeLoader.TableInfo.HSeperator.size;
-		var y=(this.showHeader?OBThemeLoader.TableHeader.height:0)+vd;
+		var initialY=(this.showHeader?OBThemeLoader.TableHeader.height:0)+((this.vbar.attr("value")%this.rowHeight)*-1);
+		var y=initialY+vd;
 		for(i=0;i<max;i++){
 			if(p.y<=y){
 				return i+row;
