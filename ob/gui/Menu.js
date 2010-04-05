@@ -148,7 +148,8 @@ window.OBMenu=Class.create(OBAttr,OBResponder,{
 		this.view.remove();
 		this.view=null;//dealloc
 		this.next=false;
-		this.buffer.focus();
+		if(this.buffer)
+			this.buffer.focus();
 	},
 	handleEvent:function(name, e){
 		ob._over.push({cursor:"default"});
