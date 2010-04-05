@@ -127,7 +127,7 @@
 				tf.observe("trigger",function(){
 					alert("Hello "+tf.attr("text"));
 				});
-				window.table=new OBTable(null,new OBRect(575,10,300,300),[new OBTableColumn("name","Name"),new OBTableColumn("age","Age",50)]);
+				window.table=new OBTable(null,new OBRect(575,10,300,300),[new OBTableColumn("name",tr("Name")),new OBTableColumn("age",tr("Age"),50)]);
 				table.data=[{"name": "Joe", "age": 18}, {"name": "Bob", "age": 58}, {"name": "Fred", "age": 0}, {"name": "Alex", "age": 1}, {"name": "John", "age": 2}, {"name": "Jerk", "age": 3}, {"name": "Idiot", "age": 4}, {"name": "Adam", "age": 5}, {"name": "Jane", "age": 6}, {"name": "Tom", "age": 0}, {"name": "Dick", "age": 1}, {"name": "Harry", "age": 2}, {"name": "Cobley", "age": 3}, {"name": "Buddy", "age": 4}, {"name": "Bloggs", "age": 5}, {"name": "Fnu", "age": 6}, {"name": "Lnu", "age": 7}, {"name": "Vic", "age": 8}, {"name": "RandomX", "age": 9}];
 				table.update();
 				window.img=new OBImageView(null, new OBRect(300,400,100,100));

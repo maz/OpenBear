@@ -9,5 +9,7 @@
 	"yellow":"jaune",
 	"purple":"violet",
 	"white":"blanc",
-	"Play Animation":"mettre une animation"
+	"Play Animation":"mettre une animation",
+	"Name":"prénom",
+	"Age":"âge"
 }
