@@ -105,17 +105,42 @@ OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
 	return cell;
 };
 
+window.OBTableHeader=Class.create(OBView,{
+	acceptsFocus:false,
+	setup:function OBTableHeader_setup(t){
+		this.table=t;
+	},
+	redraw:function OBTableHeader_redraw(){
+		this.ctx.font=OBThemeLoader.TableInfo.Header.Font;
+		this.ctx.fillStyle=OBThemeLoader.TableInfo.Header.TextColor;
+		this.ctx.drawImage(OBThemeLoader.TableHeader,0,0,this.attr("width"),OBThemeLoader.TableHeader.height);
+		x=0;
+		this.table.columns.each(function OBTableHeader_redraw_sub(col){
+			this.ctx.fillText(col.name,x,OBThemeLoader.TableHeader.height-OBThemeLoader.TableInfo.Header.TextOffset);
+			if(col._sort!=0){
+				var s=this.ctx.measureText(col.name);
+				var img=(col._sort<0)?OBThemeLoader.ArrowDown:OBThemeLoader.ArrowUp;
+				this.ctx.drawImage(img,x+s.width,2);
+			}
+			x+=col.width;
+			x+=OBThemeLoader.TableInfo.VSeperator.size;
+		},this);
+	}
+});
+
 window.OBTable=Class.create(OBView,{
 	acceptsFocus:false,
 	data:null,//[{with <columnIdentifier>:<value>}]
 	showHeader:true,
+	_header:null,
 	setup:function OBTable_setup(columns){
 		this.data=[];
 		this.rowHeight=OBThemeLoader.TableInfo.RowHeight;
 		this.columns=columns;
 		this.vbar=new OBScrollBar(this,new OBRect(this.attr("width")-17,(this.showHeader?OBThemeLoader.TableHeader.height:0),17,this.attr("height")-(this.showHeader?OBThemeLoader.TableHeader.height:0)/*-17*/),0,0,true);
 		this.vbar.attr("autoresize",OBView.Autoresize.LockTopRight|OBView.Autoresize.Height);
-		this.vbar.buttonScrollDelta=Math.round(this.rowHeight/2);
+		this.vbar.buttonScrollDelta=Math.round(this.rowHeight/3);
+		this.vbar.observe("changed",this.update.bind(this));
 		//this.hbar=new OBScrollBar(this,new OBRect(0,this.attr("height")-17,this.attr("width")-17,17),0,0);
 		//this.hbar.attr("autoresize",OBView.Autoresize.Width);
 		var w=this.attr("width")-17;
@@ -133,10 +158,13 @@ window.OBTable=Class.create(OBView,{
 				this.columns[i].width=x;
 			}
 		}
+		this._header=new OBTableHeader(this,new OBRect(0,0,this.attr("width"),OBThemeLoader.TableHeader.height),this);
+		this._header.attr("autoresize",OBView.Autoresize.Width);
 	},
 	setter_showHeader:function OBTable_setter_showHeader(flag){
 		this.showHeader=flag;
 		this.buffer();
+		this._header.attr("visible",flag);
 		this.vbar.attr("y",(this.showHeader?OBThemeLoader.TableHeader.height:0));
 		this.vbar.attr("height",(this.showHeader?OBThemeLoader.TableHeader.height:0));
 		this.commit();
@@ -147,16 +175,22 @@ window.OBTable=Class.create(OBView,{
 		this.update();
 	},
 	redraw:function OBTable_redraw(){
+		if(this.children[this.children.length-1]!=this._header){
+			this.children[this.children.indexOf(this._header)]=this.children[this.children.length-1];
+			this.children[this.children.length-1]=this._header;
+		}
 		var dlrh=this.data.length*this.rowHeight;
-		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
+		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)/*+17*/);//availableHeight
 		var maxDisp=Math.ceil(aheight/this.rowHeight);
-		this.vbar.attr("max",((dlrh>aheight)?(dlrh-maxDisp):0));
-		var row=Math.floor(this.vbar.attr("value")/this.rowHeight);
+		this.vbar.attr("max",Math.max(this.rowHeight*(this.data.length-maxDisp),0));
+		var i=this.vbar.attr("value")/this.rowHeight;
+		var row=Math.floor(i);
 		var x=0;
 		var rowSelection=this.data.slice(row,row+maxDisp);
 		var vd=this.rowHeight+OBThemeLoader.TableInfo.HSeperator.size;
-		var y=(this.showHeader?OBThemeLoader.TableHeader.height:0);
-		var i=0;
+		var initialY=(this.showHeader?OBThemeLoader.TableHeader.height:0)+((this.vbar.attr("value")%this.rowHeight)*-1);
+		var y=initialY;
+		i=0;
 		var smr=Math.max(this.selected-row,-1);
 		for(i=0;i<maxDisp;i++){
 			if(i==smr){
@@ -167,26 +201,13 @@ window.OBTable=Class.create(OBView,{
 			}
 			y+=vd;
 		}
-		if(this.showHeader){
-			this.ctx.drawImage(OBThemeLoader.TableHeader,0,0,this.attr("width"),OBThemeLoader.TableHeader.height);
-		}
-		this.ctx.font=OBThemeLoader.TableInfo.Header.Font;
-		this.ctx.fillStyle=OBThemeLoader.TableInfo.Header.TextColor;
-		this.columns.each(function OBTable_redraw_sub(col){
-			if(this.showHeader){
-				this.ctx.fillText(col.name,x,OBThemeLoader.TableHeader.height-OBThemeLoader.TableInfo.Header.TextOffset);
-				if(col._sort!=0){
-					var s=this.ctx.measureText(col.name);
-					var img=(col._sort<0)?OBThemeLoader.ArrowDown:OBThemeLoader.ArrowUp;
-					this.ctx.drawImage(img,x+s.width,2);
-				}
-			}
-			col.draw(this,vd,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),rowSelection,smr);
+		this.columns.each(function OBTable_redraw_sub1(col){
+			col.draw(this,vd,x,initialY,rowSelection,smr);
 			x+=col.width;
 			DrawStyledLine(this.ctx,x,(this.showHeader?OBThemeLoader.TableHeader.height:0),aheight,true,OBThemeLoader.TableInfo.VSeperator);
 			x+=OBThemeLoader.TableInfo.VSeperator.size;
 		},this);
-		y=(this.showHeader?OBThemeLoader.TableHeader.height:0);
+		y=initialY;
 		for(i=0;i<rowSelection.length;i++){
 			DrawStyledLine(this.ctx,0,y,this.attr("width"),false,OBThemeLoader.TableInfo.HSeperator);
 			y+=vd;
@@ -196,9 +217,10 @@ window.OBTable=Class.create(OBView,{
 		/**
 		DON'T OVERUSE THIS: remember that arrays are represented by pointers.
 		This means that one can set an array to the data of a table and then perform operations on it.
-		If update() is then called on the table, then the new data will be properly displayed, eliminating the need to set the data attribute again
+		If resort() and then update() are called on the table, then the new data will be properly displayed, eliminating the need to set the data attribute again
 		**/
 		this.data=data;
+		this.resort();
 		this.update();
 	},
 	mousedown:function OBTable_mousedown(evt){
@@ -220,10 +242,13 @@ window.OBTable=Class.create(OBView,{
 						this.columns[i]._sort=1;
 					}
 					this._sortDataByColumn(i);
+					this._header.update();
 					this.update();
 					return;
 				}
 			}
+		}else if(evt.point.x>=(this.attr("width")-17)){
+			return;
 		}
 		this.attr('selected',this.rowFromPoint(evt.point));
 	},
@@ -234,6 +259,14 @@ window.OBTable=Class.create(OBView,{
 			//we can do this because col._sort is either 1 or -1 with the latter meaning the reverse
 		});
 	},
+	resort:function OBTable_resort(){
+		for(var i=0;i<this.columns.length;i++){
+			if(this.columns[i]._sort!=0){
+				this._sortDataByColumn(i);
+				return;
+			}
+		}
+	},
 	setter_selected:function OBTable_selected(x){
 		if(this.selected!=x){
 			this.selected=x;
@@ -243,7 +276,7 @@ window.OBTable=Class.create(OBView,{
 	},
 	rowFromPoint:function OBTable_rowFromPoint(p){
 		var row=Math.floor(this.vbar.attr("value")/this.rowHeight);
-		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)+17);//availableHeight
+		var aheight=this.attr("height")-((this.showHeader?OBThemeLoader.TableHeader.height:0)/*+17*/);//availableHeight
 		var maxDisp=Math.ceil(aheight/this.rowHeight);
 		var i=0;
 		var smr=Math.max(this.selected-row,-1);

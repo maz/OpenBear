@@ -738,10 +738,17 @@ if(!window.ob){
 				return;
 			}
 			this._ctx.clearRect(0,0,this.attr("width"),this.attr("height"));
-			this._ctx.drawImage(this._can,0,0);
-			this.children.each(function(chld){
-				chld._drawIntoParent();
-			});
+			if(this.drawChildrenFirst){
+				this.children.each(function(chld){
+					chld._drawIntoParent();
+				});
+				this._ctx.drawImage(this._can,0,0);
+			}else{
+				this._ctx.drawImage(this._can,0,0);
+				this.children.each(function(chld){
+					chld._drawIntoParent();
+				});
+			}
 			if(this.attr('focused')){
 				this.drawFocusRing();
 			}
@@ -749,6 +756,7 @@ if(!window.ob){
 				this.parent.updateBig();
 			}
 		},
+		drawChildrenFirst:false,
 		buffer:function OBView_buffer(){
 			this._buffer=true;
 		},
