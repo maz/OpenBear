@@ -15,7 +15,7 @@
 	"Header":{
 		"TextColor":"rgb(20,20,20)",
 		"TextOffset":5,
-		"Font":"12pt bold Arial"
+		"Font":"bold 12pt Arial"
 	},
 	"TextCell":{
 		"DefaultColor":"rgb(0,0,0)",
