@@ -117,6 +117,8 @@ window.OBTableHeader=Class.create(OBView,{
 		this.table=t;
 	},
 	redraw:function OBTableHeader_redraw(){
+		this.ctx.fillStyle="rgb(255,255,255)";//to ensure that this is not transparent
+		this.ctx.fillRect(0,0,this.attr("width"),this.attr("height"));
 		this.ctx.font=OBThemeLoader.TableInfo.Header.Font;
 		this.ctx.fillStyle=OBThemeLoader.TableInfo.Header.TextColor;
 		this.ctx.drawImage(OBThemeLoader.TableHeader,0,0,this.attr("width"),OBThemeLoader.TableHeader.height);
