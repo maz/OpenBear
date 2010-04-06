@@ -693,7 +693,7 @@ if(!window.ob){
 		_can:null,
 		ctx:null,
 		parent:null,
-		childern:null,
+		children:null,
 		visible:true,
 		opacity:1.0,
 		rotation:0,//radians
@@ -717,10 +717,12 @@ if(!window.ob){
 			arr.splice(0,2);//remove parent,frame
 			this.buffer();
 			this.setup.apply(this,arr);
-			if(this.parent){
-				this.parent.fire("added_child",this);
-			}
 			this.commit();
+			setTimeout((function OBView_constructor_sub(){
+				if(this.parent){
+					this.parent.fire("added_child",this);
+				}
+			}).bind(this),0);
 		},
 		setup:function OBView_setup(){},
 		update:function OBView_update(){
