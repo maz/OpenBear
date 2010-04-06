@@ -170,9 +170,53 @@ if(!window.ob){
 				}
 				return w;
 			};
+			if(ob._onePixelError){
+				ctx._drawImage=ctx.drawImage;
+				ctx.drawImage=function Ob_createCanvas_drawImage(img,x,y,w,h){
+					if(img.width==1 && w){
+						while(w){
+							ctx._drawImage(img,x,y);
+							w--;
+							x++;
+						}
+					}else{
+						ctx._drawImage.apply(ctx,arguments);
+					}
+				};
+			}
 			return [elem,ctx];
 		},
-		mouseHandlers:[]
+		mouseHandlers:[],
+		_onePixelError:false,
+		checkOnePixelError:function ob_checkOnePixelError(){
+			var img=new Image();
+			img.onload=function ob_checkOnePixelError_sub(){
+				var arr=ob.createCanvas(new OBSize(50,img.height));
+				var ctx=arr[1];
+				ctx.drawImage(img,0,0);
+				var ImgData=ctx.getImageData(0,0,1,img.height);
+				if(ImgData.data){
+					ImgData=ImgData.data;
+				}
+				ctx.clearRect(0,0,arr[0].width,arr[0].height);
+				ctx.drawImage(img,0,0,50,img.height);
+				for(var x=0;x<25;x++){
+					var ScaledImgData=ctx.getImageData(x,0,1,img.height);
+					if(ScaledImgData.data){
+						ScaledImgData=ScaledImgData.data;
+					}
+					var i=0;
+					for(i=0;i<ScaledImgData.length;i++){
+						if(ImgData[i]!=ScaledImgData[i]){
+							ob._onePixelError=true;
+							break;
+						}
+					}
+				}
+				document.fire("ob:onePixelErrorChecked");
+			};
+			img.src=ob.moduleUrl('ob','onePixelImg.png');
+		}
 	};
 	/** @id OBAttr */
 	window.OBAttr={
@@ -1349,7 +1393,9 @@ window.I18n={
 	
 	//FIXME: Safari always changes the cursor to the text cursor on mouse down
 	
-	document.observe("dom:loaded",function OBEvntHandler_DomLoaded(){
+	document.observe('dom:loaded',ob.checkOnePixelError);
+	
+	document.observe("ob:onePixelErrorChecked",function OBEvntHandler_DomLoaded(){
 		if(!window.console){
 			window.console={
 				info:Prototype.emptyFunction,

@@ -102,8 +102,12 @@ OBTableColumn.DefaultSortFunction=function OBTableColumn_DefaultSortFunction(a,b
 
 OBTableColumn.BasicTextCell=function OBTableColumn_BasicTextCell(v,x,y,w,h){
 	var cell=new OBTextView(v,new OBRect(x,y,w,h));
+	cell.buffer();
+	cell.attr("font",OBThemeLoader.TableInfo.TextCell.Font);
+	cell.attr("color",OBThemeLoader.TableInfo.TextCell.DefaultColor);
+	cell.commit(true);
 	cell.setData=function OBTableColumn_BasicTextCell_setData(z){
-		cell.attr("text",z);
+		cell.attr("text",""+z/*convert to string*/);
 	};
 	cell.setSelected=function OBTableColumn_BasicTextCell_setSelected(flag){
 		cell.attr('color',flag?new OBColor(OBThemeLoader.TableInfo.TextCell.HighlightedColor):new OBColor(OBThemeLoader.TableInfo.TextCell.DefaultColor));
@@ -117,8 +121,6 @@ window.OBTableHeader=Class.create(OBView,{
 		this.table=t;
 	},
 	redraw:function OBTableHeader_redraw(){
-		this.ctx.fillStyle="rgb(255,255,255)";//to ensure that this is not transparent
-		this.ctx.fillRect(0,0,this.attr("width"),this.attr("height"));
 		this.ctx.font=OBThemeLoader.TableInfo.Header.Font;
 		this.ctx.fillStyle=OBThemeLoader.TableInfo.Header.TextColor;
 		this.ctx.drawImage(OBThemeLoader.TableHeader,0,0,this.attr("width"),OBThemeLoader.TableHeader.height);
