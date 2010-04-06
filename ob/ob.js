@@ -647,6 +647,8 @@ if(!window.ob){
 	
 	//assume that one of the listed fonts is the default
 	OBFont.isAvailable=function OBFont_isAvailable(font){
+		if(Prototype.Browser.Firefox)
+			console.warning("OBFont.isAvailable() may or may not work in FireFox.");
 		if(OBFont.installed.indexOf(font)!=-1){
 			return true;
 		}
@@ -655,17 +657,13 @@ if(!window.ob){
 			OBFont._tester.style.position="absolute";
 			OBFont._tester.style.top="-100000px";
 			OBFont._tester.style.left="-100000px";
-			OBFont._tester.style.zIndex="1";
-			OBFont._tester.style.fontFamily="Comic Sans MS";//try to make it that
 			document.body.appendChild(OBFont._tester);
-			OBFont._testerSub=document.createElement("div");
-			OBFont._testerSub.innerHTML=OBFont._testString;
-			OBFont._tester.appendChild(OBFont._testerSub);
-			OBFont._testerSub.style.fontFamily="Jjdflaksdjflsdjflksd";//non-existant font
-			OBFont._testerSub.innerHTML=OBFont._testString;
+			OBFont._tester.style.zIndex="1";
+			OBFont._tester.style.fontFamily="'Jjdflaksdjflsdjflksd','Comic Sans MS'";//non-existant font
+			OBFont._tester.innerHTML=OBFont._testString;
 			OBFont._defaultSize=new OBSize(OBFont._tester.offsetWidth,OBFont._tester.offsetHeight);
 		}
-		OBFont._testerSub.style.fontFamily=font;
+		OBFont._tester.style.fontFamily="'"+font+"','Comic Sans MS'";
 		var flag=(OBFont._defaultSize.width!=OBFont._tester.offsetWidth && OBFont._defaultSize.height!=OBFont._tester.width);
 		if(flag){
 			OBFont.installed.push(font);
