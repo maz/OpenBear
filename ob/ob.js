@@ -669,6 +669,42 @@ if(!window.ob){
 		return flag;
 	};
 	
+	OBFont.detectFonts=function OBFont_detectFonts(){
+		OBFont.isAvailable("cursive");
+		OBFont.isAvailable("monospace");
+		OBFont.isAvailable("serif");
+		OBFont.isAvailable("sans-serif");
+		OBFont.isAvailable("fantasy");
+		OBFont.isAvailable("default");
+		OBFont.isAvailable("Arial");
+		OBFont.isAvailable("Arial Black");
+		OBFont.isAvailable("Arial Narrow");
+		OBFont.isAvailable("Arial Rounded MT Bold");
+		OBFont.isAvailable("Bookman Old Style");
+		OBFont.isAvailable("Bradley Hand ITC");
+		OBFont.isAvailable("Century");
+		OBFont.isAvailable("Century Gothic");
+		OBFont.isAvailable("Comic Sans MS");
+		OBFont.isAvailable("Courier");
+		OBFont.isAvailable("Courier New");
+		OBFont.isAvailable("Georgia");
+		OBFont.isAvailable("Gentium");
+		OBFont.isAvailable("Impact");
+		OBFont.isAvailable("King");
+		OBFont.isAvailable("Lucida Console");
+		OBFont.isAvailable("Lalit");
+		OBFont.isAvailable("Modena");
+		OBFont.isAvailable("Monotype Corsiva");
+		OBFont.isAvailable("Papyrus");
+		OBFont.isAvailable("Tahoma");
+		OBFont.isAvailable("TeX");
+		OBFont.isAvailable("Times");
+		OBFont.isAvailable("Times New Roman");
+		OBFont.isAvailable("Trebuchet MS");
+		OBFont.isAvailable("Verdana");
+		OBFont.isAvailable("Verona");
+	};
+	
 	OBFont._testString="1234567890qwertyuiopasdfghjkzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNMl";
 	
 	//FIXME: this currently only works for single-word font names
