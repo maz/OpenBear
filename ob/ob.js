@@ -647,8 +647,6 @@ if(!window.ob){
 	
 	//assume that one of the listed fonts is the default
 	OBFont.isAvailable=function OBFont_isAvailable(font){
-		if(Prototype.Browser.Firefox)
-			console.warning("OBFont.isAvailable() may or may not work in FireFox.");
 		if(OBFont.installed.indexOf(font)!=-1){
 			return true;
 		}
