@@ -83,6 +83,12 @@ window.OBTableColumn=Class.create(OBAttr,{
 		for(i=i;i<this._cells.length;i++){
 			this._cells[i].attr("visible",false);
 		}
+	},
+	setter_width:function OBTableColumn_setter_width(w){
+		this.width=w;
+		for(var i=0;i<this._cells.length;i++){
+			this._cells[i].attr("width",this.width);
+		}
 	}
 });
 
@@ -170,6 +176,11 @@ window.OBTable=Class.create(OBView,{
 		}
 		this._header=new OBTableHeader(this,new OBRect(0,0,this.attr("width"),OBThemeLoader.TableHeader.height),this);
 		this._header.attr("autoresize",OBView.Autoresize.Width);
+		this.observe("size_changed",function OBTable_setup_sizeChanged(){
+			if(this.columns.length==1){
+				this.columns[0].attr("width",this.attr("width")-17);
+			}
+		}.bind(this));
 	},
 	setter_showHeader:function OBTable_setter_showHeader(flag){
 		this.showHeader=flag;
