@@ -22,6 +22,7 @@ OBThemeLoader.SplitViewKnob="splitview/knob.png";
 
 window.OBSplitView=Class.create(OBView,{
 	acceptsFocus:false,
+	drawChildrenFirst:true,
 	setup:function OBSplitView_setup(vertical){
 		this.vertical=vertical;
 		this.observe("added_child",this._addedChild.bind(this));
@@ -43,11 +44,12 @@ window.OBSplitView=Class.create(OBView,{
 			v.attr("origin",new OBPoint(0,0));
 		}
 		this.update();
+		this._c=this.children[0].attr(this.vertical?"width":"width");
 	},
 	redraw:function OBSplitView_redraw(){
 		if(this.children.length){
-			var x=this.vertical?this.children[0].attr("width"):0;
-			var y=this.vertical?0:this.children[0].attr("height");
+			var x=this.vertical?this._c:0;
+			var y=this.vertical?0:this._c;
 			this._rect.origin.x=x;
 			this._rect.origin.y=y;
 			this._rect.size.width=this.vertical?OBThemeLoader.SplitViewVerticalTrack.width:this.attr("width");
@@ -64,7 +66,12 @@ window.OBSplitView=Class.create(OBView,{
 	mousedrag:function OBSplitView_mousedrag(evt){
 		if(!this._go)
 			return;
+		this._c=evt.point[this.vertical?"x":"y"]-this._offset;
+		this.update();
+	},
+	mouseup:function OBSplitView_mouseup(evt){
 		var c=evt.point[this.vertical?"x":"y"]-this._offset;
+		this._c=c;
 		this.children[0].attr((this.vertical?"width":"height"),c-(this.vertical?(OBThemeLoader.SplitViewVerticalTrack.width/2):(OBThemeLoader.SplitViewHorizontalTrack.height/2)));
 		c+=(this.vertical?OBThemeLoader.SplitViewVerticalTrack.width:OBThemeLoader.SplitViewHorizontalTrack.height);
 		this.children[1].buffer();
