@@ -29,6 +29,8 @@ window.OBSplitView=Class.create(OBView,{
 		this._rect=new OBRect(0,0,0,0);
 	},
 	_addedChild:function OBSplitView__addedChild(v){
+		if(this.children.length>2)
+			throw new Error("OBSplitView does not currently support more than 2 views");
 		v.attr(this.vertical?"height":"width",this.attr(this.vertical?"height":"width"));
 		v.attr("autoresize",OBView.Autoresize[this.vertical?"height":"width"]);
 		if(this.children.length==2){
