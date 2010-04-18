@@ -176,7 +176,7 @@ window.OBTable=Class.create(OBView,{
 		this.buffer();
 		this._header.attr("visible",flag);
 		this.vbar.attr("y",(this.showHeader?OBThemeLoader.TableHeader.height:0));
-		this.vbar.attr("height",(this.showHeader?OBThemeLoader.TableHeader.height:0));
+		this.vbar.attr("height",this.attr("height")-(this.showHeader?OBThemeLoader.TableHeader.height:0));
 		this.commit();
 	},
 	selectedRow:-1,
