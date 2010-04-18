@@ -202,11 +202,15 @@ window.OBTable=Class.create(OBView,{
 		var y=initialY;
 		i=0;
 		var smr=Math.max(this.selected-row,-1);
+		var flag=false;
 		for(i=0;i<maxDisp;i++){
 			if(i==smr){
 				this.ctx.drawImage(OBThemeLoader.Selection,0,y,this.attr("width"),this.rowHeight);
 			}else{
-				this.ctx.fillStyle=((i%2)?OBThemeLoader.TableInfo.RowBackground:OBThemeLoader.TableInfo.AlternateRowBackground);
+				flag=(i%2);
+				if(row%2)
+					flag=!flag;
+				this.ctx.fillStyle=(flag?OBThemeLoader.TableInfo.RowBackground:OBThemeLoader.TableInfo.AlternateRowBackground);
 				this.ctx.fillRect(0,y,this.attr("width"),this.rowHeight);
 			}
 			y+=vd;
