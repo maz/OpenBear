@@ -794,11 +794,11 @@ if(!window.ob){
 			this.buffer();
 			this.setup.apply(this,arr);
 			this.commit();
-			setTimeout((function OBView_constructor_sub(){
-				if(this.parent){
-					this.parent.fire("added_child",this);
-				}
-			}).bind(this),0);
+			//setTimeout((function OBView_constructor_sub(){
+			if(this.parent){
+				this.parent.fire("added_child",this);
+			}
+			//}).bind(this),0);
 		},
 		setup:function OBView_setup(){},
 		update:function OBView_update(){

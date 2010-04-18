@@ -14,6 +14,7 @@
 			ob.load("ob.gui.ScrollBar");
 			ob.load("ob.gui.Copier");
 			ob.load("ob.gui.Table");
+			ob.load("ob.gui.SplitView");
 			//ob.load("ob.Debug");
 			
 			window.WeirdView=Class.create(OBView,{
@@ -130,12 +131,14 @@
 				window.table=new OBTable(null,new OBRect(575,10,300,300),[new OBTableColumn("name",tr("Name")),new OBTableColumn("age",tr("Age"),50)]);
 				table.data=[{"name": "Joe", "age": 18}, {"name": "Bob", "age": 58}, {"name": "Fred", "age": 0}, {"name": "Alex", "age": 1}, {"name": "John", "age": 2}, {"name": "Jerk", "age": 3}, {"name": "Idiot", "age": 4}, {"name": "Adam", "age": 5}, {"name": "Jane", "age": 6}, {"name": "Tom", "age": 0}, {"name": "Dick", "age": 1}, {"name": "Harry", "age": 2}, {"name": "Cobley", "age": 3}, {"name": "Buddy", "age": 4}, {"name": "Bloggs", "age": 5}, {"name": "Fnu", "age": 6}, {"name": "Lnu", "age": 7}, {"name": "Vic", "age": 8}, {"name": "RandomX", "age": 9}];
 				table.update();
-				window.img=new OBImageView(null, new OBRect(300,400,100,100));
+				window.split=new OBSplitView(null,new OBRect(10,425,475,200),true);
+				window.img=new OBImageView(split, new OBRect(300,400,100,100));
 				window.Tux=new Image();
 				Tux.onload=function(){
 					img.attr("image",Tux);
 				};
 				Tux.src="http://commons.wikimedia.org/w/thumb.php?f=Tux.svg&width=75px";
+				var wv=new WeirdView(split,new OBRect(0,0,100,100))
 				window.scrollbar=new OBScrollBar(null, new OBRect(600,400,200,17),10);
 				window.cb=new OBButton(null, new OBRect(10,400,0,0),I18n.get("Actions"));
 				cb.observe("click",function(){
