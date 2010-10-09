@@ -175,7 +175,7 @@ if(!window.ob){
 				ctx.drawImage=function Ob_createCanvas_drawImage(img,x,y,w,h){
 					if(img.width==1 && w){
 						while(w){
-							ctx._drawImage(img,x,y);
+							ctx._drawImage(img,x,y,1,h);
 							w--;
 							x++;
 						}
