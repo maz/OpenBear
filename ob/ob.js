@@ -212,6 +212,8 @@ if(!window.ob){
 							break;
 						}
 					}
+					if(ob._onePixelError)
+						break;
 				}
 				document.fire("ob:onePixelErrorChecked");
 			};
